@@ -14,12 +14,6 @@ class LuaState
 	bool owner = false;
 	
 	public:
-	static LuaState byPointer(lua_State* L)
-	{
-		lua_getfield(L, LUA_REGISTRYINDEX, "__luadstate");
-		return cast(LuaState)lua_touserdata(L, -1);
-	}
-		
 	alias globals this;
 		
 	this()
