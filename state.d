@@ -11,14 +11,21 @@ class LuaState
 	private:
 	lua_State* L;
 	LuaTable _G, _R;
-	bool owner = true;
+	bool owner = false;
 	
 	public:
+	static LuaState byPointer(lua_State* L)
+	{
+		lua_getfield(L, LUA_REGISTRYINDEX, "__luadstate");
+		return cast(LuaState)lua_touserdata(L, -1);
+	}
+		
 	alias globals this;
 		
 	this()
 	{
 		lua_State* L = luaL_newstate();
+		owner = true;
 			
 		extern(C) static int panic(lua_State* L)
 		{
@@ -34,9 +41,11 @@ class LuaState
 	this(lua_State* L)
 	{
 		this.L = L;
-		owner = false;
 		_G = new LuaTable(L, LUA_GLOBALSINDEX);
 		_R = new LuaTable(L, LUA_REGISTRYINDEX);
+		
+		lua_pushlightuserdata(L, cast(void*)this);
+		lua_setfield(L, LUA_REGISTRYINDEX, "__luadstate");
 	}
 	
 	~this()
@@ -73,27 +82,27 @@ class LuaState
 	}
 }
 
+import std.stdio;
+import luad.base;
 unittest
 {
 	auto lua = new LuaState;
 	lua.openLibs();
 	
-	lua.set("integer", 123);
-	assert(lua.get!int("integer") == 123);
-	
-	bool threw = false;
+	string msg;
 	try
 	{
-		lua.get!string("integer");
+		lua.doString(`error("Hello, D!")`);
 	}
-	catch(LuaError) //expected number, got string
+	catch(LuaError e)
 	{
-		threw = true;
+		msg = e.msg;
 	}
+	assert(msg == `[string "error("Hello, D!")"]:1: Hello, D!`);
 	
-	assert(threw);
+	lua.set("success", false);
+	assert(!lua.get!bool("success"));
 	
-	lua.doString(`executed = true`);
-	assert(lua.get!bool("executed"));
+	lua.doString(`success = true`);
+	assert(lua.get!bool("success"));
 }
-

@@ -5,19 +5,29 @@ import std.string : toStringz;
 
 import luad.c.all;
 
-import luad.conversions.tablearray, 
-	   luad.conversions.dfunction, 
+import luad.base;
+import luad.table;
+
+import luad.conversions.tablearray,
+	   luad.conversions.assocarray,
+	   luad.conversions.dfunction,
 	   luad.conversions.tablestruct;
 
 /**
  * Push a value of any type
  * Type precedence: 
  *    bool => lua_Integer => lua_Number => string => const(char)* =>
- *    array => struct => function/delegate
+ *    associative array => array => struct => function/delegate
  */
 void pushValue(T)(lua_State* L, T value)
 {
-	static if(is(T == bool))
+	static if(is(T : LuaObject))
+		value.push();
+	
+	else static if(is(T == Nil))
+		lua_pushnil(L);
+	
+	else static if(is(T == bool))
 		lua_pushboolean(L, value);
 	
 	else static if(is(T : lua_Integer))
@@ -31,6 +41,9 @@ void pushValue(T)(lua_State* L, T value)
 	
 	else static if(is(T : const(char)*))
 		lua_pushstring(L, value);
+	
+	else static if(isAssociativeArray!T)
+		pushAssocArray(L, value);
 	
 	else static if(isArray!T)
 		pushArray(L, value);
@@ -50,13 +63,16 @@ int luaTypeOf(T)()
 	static if(is(T == bool))
 		return LUA_TBOOLEAN;
 	
+	else static if(is(T == Nil))
+		return LUA_TNIL;
+	
 	else static if(is(T : lua_Integer) || is(T : lua_Number))
 		return LUA_TNUMBER;
 	
 	else static if(is(T : string) || is(T : const(char)*))
 		return LUA_TSTRING;
 	
-	else static if(isArray!T || is(T == struct))
+	else static if(isArray!T || isAssociativeArray!T || is(T == struct) || is(T == LuaTable))
 		return LUA_TTABLE;
 	
 	else
@@ -82,6 +98,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		scope(success) assert(lua_gettop(L) == _top);
 	}
 	
+	static if(!is(T == LuaObject))
 	{
 		int type = lua_type(L, idx);
 		int expectedType = luaTypeOf!T();
@@ -89,7 +106,13 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 			typeMismatchHandler(L, type, expectedType);
 	}
 	
-	static if(is(T == bool))
+	static if(is(T : LuaObject))
+		return new T(L, idx);
+	
+	else static if(is(T == Nil))
+		return nil;
+	
+	else static if(is(T == bool))
 		return lua_toboolean(L, idx);
 	
 	else static if(is(T : lua_Integer))
@@ -107,6 +130,9 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	else static if(is(T : const(char)*))
 		return lua_tostring(L, idx);
 	
+	else static if(isAssociativeArray!T)
+		return getAssocArray!T(L, idx);
+	
 	else static if(isArray!T)
 		return getArray!T(L, idx);
 	
@@ -122,10 +148,10 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 /**
  * Pops a value of any type from the top of the stack
  */
-T popValue(T)(lua_State* L)
+T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
 {
 	scope(success) lua_pop(L, 1);
-	return getValue!T(L, -1);
+	return getValue!(T, typeMismatchHandler)(L, -1);
 }
 
 version(unittest)

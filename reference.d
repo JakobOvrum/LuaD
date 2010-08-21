@@ -4,10 +4,8 @@ import luad.c.all;
 
 package struct LuaReference
 {
-	private:
-	int r = LUA_NOREF;
-	
 	public:
+	int r = LUA_NOREF;
 	lua_State* L;
 	
 	this(lua_State* L, int idx)
