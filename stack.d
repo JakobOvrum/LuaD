@@ -75,6 +75,9 @@ int luaTypeOf(T)()
 	else static if(isArray!T || isAssociativeArray!T || is(T == struct) || is(T == LuaTable))
 		return LUA_TTABLE;
 	
+	else static if(isSomeFunction!T)
+		return LUA_TFUNCTION;
+	
 	else
 		static assert(false, "No Lua type defined for `" ~ T.stringof ~ "`");
 }
@@ -138,6 +141,9 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	
 	else static if(is(T == struct))
 		return getStruct!T(L, idx);
+	
+	else static if(isSomeFunction!T)
+		return getFunction!T(L, idx);
 	
 	else
 	{
