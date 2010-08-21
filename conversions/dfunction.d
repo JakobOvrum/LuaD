@@ -70,6 +70,51 @@ void pushFunction(T)(lua_State* L, T func) if (isSomeFunction!T)
 	lua_pushcclosure(L, &functionWrapper!T, 1);
 }
 
+/**
+ * Currently this function allocates a reference in the registry that is never deleted,
+   one for each call...
+ */
+T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
+{
+	alias ReturnType!T RetType;
+	enum hasReturnValue = !is(RetType == void);
+	
+	alias ParameterTypeTuple!T Args;
+	
+	auto func = new class
+	{
+		int lref;
+		this()
+		{
+			lua_pushvalue(L, idx);
+			lref = luaL_ref(L, LUA_REGISTRYINDEX);
+		}
+		
+		~this()
+		{
+			//Alright... how to fix this!?
+			//luaL_unref(L, LUA_REGISTRYINDEX, lref);
+		}
+		
+		void push()
+		{
+			lua_rawgeti(L, LUA_REGISTRYINDEX, lref);
+		}
+	};
+	
+	return delegate RetType(Args args)
+	{
+		func.push();
+		
+		foreach(arg; args)
+			pushValue(L, arg);
+		
+		lua_call(L, args.length, hasReturnValue? 1 : 0);
+		static if(hasReturnValue)
+			return popValue!RetType(L);
+	};
+}
+
 unittest
 {
 	lua_State* L = luaL_newstate();
