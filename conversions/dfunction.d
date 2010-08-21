@@ -153,4 +153,14 @@ unittest
 	unittest_lua(L, `
 		assert(circle(2) == 3.14 * 4, "closure return type mismatch!")
 	`, __FILE__);
+	
+	{
+		lua_getglobal(L, "string");
+		lua_getfield(L, -1, "match");
+		auto match = popValue!(string delegate(string, string))(L); 
+		lua_pop(L, 1);
+		
+		auto result = match("foobar@example.com", "([^@]+)@example.com");
+		assert(result == "foobar");
+	}
 }
