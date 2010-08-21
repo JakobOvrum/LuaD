@@ -26,6 +26,24 @@ void pushStruct(T)(lua_State* L, ref T value) if (is(T == struct))
 	}
 }
 
+T getStruct(T)(lua_State* L, int idx) if(is(T == struct))
+{
+	T s;
+	
+	foreach(field; __traits(allMembers, T))
+	{	
+		//God damn __traits documentation
+		//if not the constructor (_ctor? Where are you?) and not a member function
+		static if(field != "this" && !mixin("is(typeof(&value." ~ field ~ ") == delegate)"))
+		{
+			lua_getfield(L, idx, field);
+			mixin("s." ~ field ~ " = popValue!(typeof(s." ~ field ~ "))(L);");
+		}
+	}
+	
+	return s;
+}
+
 
 unittest
 {
