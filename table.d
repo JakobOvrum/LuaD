@@ -43,6 +43,12 @@ class LuaTable : LuaObject
 		pushValue(state, value);
 		lua_settable(state, -3);
 	}
+	
+	T toStruct(T)() if (is(T == struct))
+	{
+		push();
+		return popValue!T(state);
+	}
 }
 
 unittest
