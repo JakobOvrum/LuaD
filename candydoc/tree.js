@@ -100,7 +100,7 @@ function TreeNode(text, iconSrc, hrefMode)
         if (name == "")
             name = "shim";
         
-        return "candydoc/img/tree/" + name + ".gif";
+        return "/LuaD/candydoc/img/tree/" + name + ".gif";
     }
     
     function setSrc(icon, src)
