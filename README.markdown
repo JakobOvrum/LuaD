@@ -22,25 +22,25 @@ LuaD also includes bindings for the Lua C API. To use it, import the module `lua
 Goals
 ============================================
 Current progress noted in parentheses:
-- Run Lua code from D, and D code from Lua (*Yes*)
-- Support automatic conversions between any D type and its Lua equivalent (*Yes* - except classes, but including structs)
-- Support automatic conversions between D classes and Lua userdata (No)
-- Support D1 and Tango (No. The D1 version will not allow conversions between D classes and Lua userdata)
-- Provide access to the entire underlying Lua C API (*Yes*)
+* Run Lua code from D, and D code from Lua (*Yes*)
+* Support automatic conversions between any D type and its Lua equivalent (*Yes* - except classes, but including structs)
+* Support automatic conversions between D classes and Lua userdata (No)
+* Support D1 and Tango (No. The D1 version will not allow conversions between D classes and Lua userdata)
+* Provide access to the entire underlying Lua C API (*Yes*)
 
 Usage
 ============================================
-LuaD is currently only being tested with DMD 2.048. Once D1 support comes around, testing will be done on other compilers as well as with Tango.
+LuaD is currently only being tested with DMD 2.048. Once D1 support comes around, testing will be done on other compilers as well as with the Tango library.
 
-To use, import the luad.all module in your project and compile all the files in the luad package. You must also link Lua 5.1; on Unix-like systems, the library is typically called liblua5.1.a or similar. On Windows, you need a lua51.lib in OMF format to be linkable with DMD.
+To use, import the `luad.all` module in your project and compile all the files in the `luad` package. You must also link Lua 5.1; on Unix-like systems, the library is typically called `liblua5.1.a` or similar. On Windows, you need a `lua51.lib` in OMF format to be linkable with DMD.
 
 An example/ subdirectory with extensive examples is coming soon.
 
-(I'm planning on putting up a binaries branch with lua51.lib in the correct format for convenience as well as links to pre-compiled GCC libraries for Unix systems)
+(I'm planning on putting up a binaries branch with lua51.lib in the correct format for convenience, as well as links to pre-compiled GCC libraries for use on Unix systems)
 
 Documentation
 ============================================
-You can find automatically generated documentation in the gh-pages branch, or you can [browse it online](http://jakobovrum.github.com/LuaD/).
+You can find automatically generated documentation in the `gh-pages` branch, or you can [browse it online](http://jakobovrum.github.com/LuaD/).
 
 License
 ============================================
