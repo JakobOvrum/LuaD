@@ -6,6 +6,9 @@ import luad.c.all;
 
 import luad.table, luad.error;
 
+/**
+ * Class representing a Lua state instance.
+ */
 class LuaState
 {
 	private:
@@ -15,7 +18,11 @@ class LuaState
 	
 	public:
 	alias globals this;
-		
+	
+	/**
+	 * Create a new empty Lua state.
+	 * See_Also: openLibs
+	 */
 	this()
 	{
 		lua_State* L = luaL_newstate();
@@ -32,6 +39,10 @@ class LuaState
 		this(L);
 	}
 	
+	/**
+	 * Create a D wrapper for an existing Lua state.
+	 * The panic function is not changed - a Lua panic will not throw a D exception.
+	 */
 	this(lua_State* L)
 	{
 		this.L = L;
@@ -48,27 +59,40 @@ class LuaState
 			lua_close(L);
 	}
 	
+	/// Opens the standard library.
 	void openLibs()
 	{
 		luaL_openlibs(L);
 	}
 	
+	/// The global table for this instance.
 	@property LuaTable globals()
 	{
 		return _G;
 	}
 	
+	/// The registry table for this instance.
 	@property LuaTable registry()
 	{
 		return _R;
 	}
 	
+	/**
+	 * Execute a string of Lua code.
+	 * Params:
+	 *     code = code to run
+	 */
 	void doString(string code)
 	{
 		if(luaL_dostring(L, toStringz(code)) == 1)
 			lua_error(L);
 	}
 	
+	/**
+	 * Execute a file with Lua code.
+	 * Params:
+	 *     path = path to file
+	 */
 	void doFile(string path)
 	{
 		if(luaL_dofile(L, toStringz(path)) == 1)
