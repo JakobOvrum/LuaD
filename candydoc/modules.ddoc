@@ -1,0 +1,7 @@
+MODULES = 
+	$(MODULE luad.all)
+	$(MODULE luad.state)
+	$(MODULE luad.base)
+	$(MODULE luad.table)
+	
+	$(MODULE luad.c.all)
