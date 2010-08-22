@@ -1,4 +1,4 @@
-module luad.conversions.tablearray;
+module luad.conversions.arrays;
 
 import std.traits;
 

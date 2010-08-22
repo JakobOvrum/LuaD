@@ -1,4 +1,4 @@
-module luad.conversions.assocarray;
+module luad.conversions.assocarrays;
 
 import luad.c.all;
 import std.traits;

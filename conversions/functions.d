@@ -1,4 +1,4 @@
-module luad.conversions.dfunction;
+module luad.conversions.functions;
 
 import core.memory;
 import std.traits;

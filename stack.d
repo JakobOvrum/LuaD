@@ -8,10 +8,10 @@ import luad.c.all;
 import luad.base;
 import luad.table;
 
-import luad.conversions.tablearray,
-	   luad.conversions.assocarray,
-	   luad.conversions.dfunction,
-	   luad.conversions.tablestruct;
+import luad.conversions.functions;
+import luad.conversions.arrays;
+import luad.conversions.structs;
+import luad.conversions.assocarrays;
 
 /**
  * Push a value of any type

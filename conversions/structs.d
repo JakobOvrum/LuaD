@@ -1,4 +1,4 @@
-module luad.conversions.tablestruct;
+module luad.conversions.structs;
 
 import luad.c.all;
 
