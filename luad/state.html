@@ -27,7 +27,7 @@
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Class representing a Lua state instance.<br><br>
+<dd>Represents a Lua state instance.<br><br>
 
 
 <script>explorer.outline.incSymbolLevel();</script>
@@ -38,7 +38,12 @@
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Create a new empty Lua state.
+<dd>Create a new, empty Lua state. The standard library is not loaded.
+<br><br>
+If an uncaught error for any operation on this state
+ causes a Lua panic for the underlying state,
+ an exception of type LuaError is thrown.
+
 <br><br>
 <b>See Also:</b><br>
 openLibs<br><br>
@@ -52,7 +57,20 @@ openLibs<br><br>
 
 
 <dd>Create a D wrapper for an existing Lua state.
- The panic function is not changed - a Lua panic will not throw a D exception.<br><br>
+<br><br>
+The new LuaState does not assume ownership of the state.
+
+<br><br>
+<b>Note:</b><br>
+the panic function is not changed - a Lua panic will not throw a D exception!
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">lua_State* <span class="funcparam">L</span></td>
+
+               
+<td>state to wrap.</td></tr>
+</table><br>
 
 </dd>
 
@@ -158,7 +176,7 @@ openLibs<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sun Aug 22 22:15:45 2010
+			on Mon Aug 23 00:51:36 2010
 
 		</td></tr>
 	</table>
