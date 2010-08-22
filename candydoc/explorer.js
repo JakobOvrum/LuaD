@@ -229,12 +229,7 @@ function PackageExplorer()
             if (path.length == i + 1)
 			{
 				var fullPath = mod.replace(/\./g, "/");
-				
-				//hack!
-				if(fullPath.match("^luad/luad"))
-					fullPath = fullPath.substring(5);
-				
-                node.setRef(fullPath + ".html");
+                node.setRef("/LuaD/" + fullPath + ".html");
 			}
         }
     }
