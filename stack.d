@@ -13,14 +13,17 @@ $(DL
 		$(DD string or implicitly convertible to const(char)*)
 	)
 	$(DT table
-		$(DD associative arrays, arrays, structs)
+		$(DD associative arrays, arrays, structs, LuaTable)
 	)
 	$(DT function
-		$(DD function pointers, delegates)
+		$(DD function pointers, delegates, LuaFunction)
 	)
 	$(DT userdata
 		$(DD classes)
-	) 
+	)
+	$(DT any of the above
+		$(DD LuaObject)
+	)
 )
 The conversions are checked in the specified order. For example, even though bool is implicitly convertible
 to lua_Integer, it will be converted to a boolean because boolean has precedence.
