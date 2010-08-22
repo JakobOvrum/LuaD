@@ -23,6 +23,7 @@ and usage information.
 
 <br><br>
 <b>Examples:</b><br>
+"Hello, world"
 <pre class="d_code"><font color=blue>import</font> luad.all;
 
 <font color=blue>void</font> main()
@@ -33,13 +34,51 @@ and usage information.
 	lua.doString(<font color=red>`print("Hello, world!")`</font>);
 }
 </pre>
+Another "Hello, world"
+<pre class="d_code"><font color=blue>import</font> luad.all;
+
+<font color=blue>void</font> main()
+{
+	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
+	lua.openLibs();
+
+	<font color=green>//LuaState also works as an alias for the global table
+</font>	<font color=blue>auto</font> print = lua.get!LuaFunction(<font color=red>"print"</font>);
+	print(<font color=red>"Hello, world!"</font>);
+}
+</pre>
+Configuration file
+<pre class="d_code"><font color=blue>import</font> luad.all;
+
+<font color=blue>struct</font> Config
+{
+	string Name;
+	<font color=blue>double</font> Version;
+}
+
+string configFile = <font color=red>`
+Name = "foo"
+Version = 1.23
+`</font>;
+
+<font color=blue>void</font> main()
+{
+	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
+
+	lua.doString(configFile);
+	<font color=blue>auto</font> config = lua.toStruct!Config();
+
+	<font color=blue>assert</font>(config.Name == <font color=red>"foo"</font>);
+	<font color=blue>assert</font>(config.Version == 1.23);
+}
+</pre>
 <br><br>
 
 </td></tr>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sun Aug 22 17:43:41 2010
+			on Sun Aug 22 17:52:53 2010
 
 		</td></tr>
 	</table>
