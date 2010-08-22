@@ -15,7 +15,7 @@ DDOC =
 		<tr><td id="docbody"><h1>$(TITLE)</h1>$(BODY)</td></tr>
 		<tr><td id="docfooter">
 			Page was generated with
-			<img src="candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
+			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
 			on $(DATETIME)
 		</td></tr>
 	</table>
