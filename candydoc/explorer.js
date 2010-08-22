@@ -229,8 +229,9 @@ function PackageExplorer()
             if (path.length == i + 1)
 			{
 				alert(mod);
-				//var fullPath = mod.replace(".", "/");
-                node.setRef(fullPath + ".html");
+				var fullPath = mod.replace(/\./g, "/");
+				alert(fullPath);
+                node.setRef(path[i] + ".html");
 			}
         }
     }
