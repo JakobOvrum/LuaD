@@ -212,7 +212,7 @@ function PackageExplorer()
     {
         var moduleIco = "/LuaD/candydoc/img/outline/module.gif";
         var packageIco = "/LuaD/candydoc/img/outline/package.gif";
-
+		
         var path = mod.split("\.");
         var node = this.tree.branch(path[0]);
         if ( !node )
@@ -225,8 +225,12 @@ function PackageExplorer()
             if (!node)
                 node = prev.createChild(path[i], (path.length == i + 1) ? moduleIco : packageIco);
                 
+			
             if (path.length == i + 1)
-                node.setRef(path[i] + ".html");
+			{
+				var fullPath = mod.replace(".", "/");
+                node.setRef(fullPath + ".html");
+			}
         }
     }
 }
