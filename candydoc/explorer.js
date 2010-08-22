@@ -228,9 +228,12 @@ function PackageExplorer()
 			
             if (path.length == i + 1)
 			{
-				//alert(mod);
 				var fullPath = mod.replace(/\./g, "/");
-				//alert(fullPath);
+				
+				//hack!
+				if(fullPath.match("^luad/luad"))
+					fullPath = fullPath.substring(5);
+				
                 node.setRef(fullPath + ".html");
 			}
         }
