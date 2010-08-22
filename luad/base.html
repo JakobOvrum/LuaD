@@ -142,18 +142,18 @@
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Special value representing the Lua type and value '
+<dd>Special value representing the Lua type and value 
 <span class="currsymbol">nil</span>
 <script>explorer.outline.addDecl('nil');</script>
 
-'.
+.
 <br><br>
 <b>Examples:</b><br>
 Useful for clearing keys in a table:
 <pre class="d_code">	lua[<font color=red>"n"</font>] = 1.23;
 	<font color=blue>assert</font>(lua.get!<font color=blue>double</font>(<font color=red>"n"</font>) == 1.23);
 
-	lua[<font color=red>"n"</font>] = 1.23;
+	lua[<font color=red>"n"</font>] = <u>nil</u>;
 	<font color=blue>assert</font>(lua[<font color=red>"n"</font>].type == LuaType.Nil);
 </pre>
 <br><br>
@@ -176,6 +176,23 @@ Useful for clearing keys in a table:
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">LuaType 
+<span class="currsymbol">type</span>
+<script>explorer.outline.addDecl('type');</script>
+
+();
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Type of referenced object
+<br><br>
+<b>See Also:</b><br>
+LuaType<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">bool 
 <span class="currsymbol">isNil</span>
 <script>explorer.outline.addDecl('isNil');</script>
@@ -186,6 +203,26 @@ Useful for clearing keys in a table:
 
 
 <dd>Boolean whether or not the referenced object is nil<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">string 
+<span class="currsymbol">toString</span>
+<script>explorer.outline.addDecl('toString');</script>
+
+();
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Convert the referenced object into a textual representation.
+<br><br>
+The returned string is formatted exactly like the Lua 'tostring' function.
+
+<br><br>
+<b>Returns:</b><br>
+string representation of referenced object<br><br>
 
 </dd>
 
@@ -223,7 +260,7 @@ Useful for clearing keys in a table:
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Mon Aug 23 00:56:09 2010
+			on Mon Aug 23 01:24:22 2010
 
 		</td></tr>
 	</table>

@@ -57,16 +57,14 @@
 <td>list of keys, where all keys but the last one should result in a table</td></tr>
 </table><br>
 <b>Returns:</b><br>
-t[k] where t is table for the second-to-last parameter, and k is the last parameter
+t[k] where t is the table for the second-to-last parameter, and k is the last parameter
 
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code">		<font color=blue>auto</font> execute = lua.<u>get</u>!LuaFunction(<font color=red>"os"</font>, <font color=red>"execute"</font>);
-		execute(<font color=red>`echo hello, world!`</font>);
+<pre class="d_code">	<font color=blue>auto</font> execute = lua.<u>get</u>!LuaFunction(<font color=red>"os"</font>, <font color=red>"execute"</font>);
+	execute(<font color=red>`echo hello, world!`</font>);
 </pre>
 <br><br>
-<b>Throws:</b><br>
-LuaError<br><br>
 
 </dd>
 
@@ -83,8 +81,8 @@ LuaError<br><br>
 <dd>Same as calling get!LuaObject with the same arguments.
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code">	   <font color=blue>auto</font> luapath = lua[<font color=red>"package"</font>, <font color=red>"path"</font>];
-	   writefln(<font color=red>"LUA_PATH:\n%s"</font>, luapath);
+<pre class="d_code">	<font color=blue>auto</font> luapath = lua[<font color=red>"package"</font>, <font color=red>"path"</font>];
+	writefln(<font color=red>"LUA_PATH:\n%s"</font>, luapath);
 </pre>
 <br><br>
 <b>See Also:</b><br>
@@ -167,7 +165,7 @@ Newly created struct<br><br>
 <td nowrap valign="top" style="padding-right: 8px">s</td>
 
                
-<td>any struct value</td></tr>
+<td>struct to fill</td></tr>
 </table><br>
 
 </dd>
@@ -184,7 +182,7 @@ Newly created struct<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Mon Aug 23 00:56:09 2010
+			on Mon Aug 23 01:24:22 2010
 
 		</td></tr>
 	</table>
