@@ -3,5 +3,13 @@ MODULES =
 	$(MODULE luad.state)
 	$(MODULE luad.base)
 	$(MODULE luad.table)
+	$(MODULE luad.error)
+	$(MODULE luad.stack)
+	$(MODULE luad.reference)
+	
+	$(MODULE luad.conversions.arrays)
+	$(MODULE luad.conversions.assocarrays)
+	$(MODULE luad.conversions.functions)
+	$(MODULE luad.conversions.structs)
 	
 	$(MODULE luad.c.all)
