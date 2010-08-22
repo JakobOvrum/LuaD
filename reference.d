@@ -2,6 +2,7 @@ module luad.reference;
 
 import luad.c.all;
 
+/// Internal type for handling Lua references.
 package struct LuaReference
 {
 	public:

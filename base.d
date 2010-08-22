@@ -4,22 +4,48 @@ import luad.c.all;
 import luad.reference;
 import luad.stack;
 
+/**
+ * Enumerates all Lua types.
+ */
 enum LuaType
 {
+	///string
 	String = LUA_TSTRING,
+	///number
 	Number = LUA_TNUMBER,
+	//table
 	Table = LUA_TTABLE,
+	///nil
 	Nil = LUA_TNIL,
+	///boolean
 	Boolean = LUA_TBOOLEAN,
+	///function
 	Function = LUA_TFUNCTION,
+	///userdata
 	Userdata = LUA_TUSERDATA,
+	///ditto
 	LightUserdata = LUA_TLIGHTUSERDATA,
+	///thread
 	Thread = LUA_TTHREAD
 }
 
 package struct Nil{}
+
+/**
+ * Special value representing the Lua type and value nil.
+ * Examples:
+ * Useful for clearing keys in a table:
+ * --------------------------
+	lua["n"] = 1.23;
+	assert(lua.get!double("n") == 1.23);
+
+	lua["n"] = nil;
+	assert(lua["n"].type == LuaType.Nil);
+ * --------------------------
+ */
 public Nil nil;
 
+/// Represents a reference to a Lua value of any type
 class LuaObject
 {
 	private:
@@ -43,6 +69,11 @@ class LuaObject
 	}
 	
 	public:
+	/**
+	 * Type of referenced object
+	 * See_Also:
+	 *     LuaType
+	 */
 	@property LuaType type()
 	{
 		push();
@@ -50,11 +81,19 @@ class LuaObject
 		return cast(LuaType)lua_type(state, -1);
 	}
 	
+	/// Boolean whether or not the referenced object is nil
 	@property bool isNil()
 	{
 		return lref.r == LUA_REFNIL;
 	}
-		
+	
+	/**
+	 * Convert the referenced object into a textual representation.
+	 *
+	 * The returned string is formatted exactly like the Lua 'tostring' function.
+	 *
+	 * Returns: string representation of referenced object
+	 */
 	override string toString()
 	{
 		push();
@@ -65,6 +104,9 @@ class LuaObject
 		return str[0 .. len].idup;
 	}
 	
+	/**
+	 * Attempt to convert the referenced object to any D type.
+	 */
 	T to(T)()
 	{
 		static void typeMismatch(lua_State* L, int t, int e)

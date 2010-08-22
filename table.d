@@ -4,8 +4,11 @@ import luad.c.all;
 
 import luad.base;
 import luad.reference;
-import luad.stack;
 
+import luad.stack;
+import luad.conversions.structs;
+
+/// Represents a Lua table.
 class LuaTable : LuaObject
 {	
 	package:
@@ -15,6 +18,20 @@ class LuaTable : LuaObject
 	}
 	
 	public:
+	/**
+	 * Lookup a value in this table or in a sub-table of this table.
+	 * Params:
+	 *     T = type of value
+	 *     args = list of keys, where all keys but the last one should result in a table
+	 * Returns:
+	 *     t[k] where t is the table for the second-to-last parameter, and k is the last parameter
+	 *
+	 * Examples:
+	 * ----------------------
+	auto execute = lua.get!LuaFunction("os", "execute");
+	execute(`echo hello, world!`);
+	 * ----------------------
+	 */
 	T get(T, U...)(U args)
 	{
 		push();
@@ -29,11 +46,27 @@ class LuaTable : LuaObject
 		return popValue!T(state);
 	}
 	
+	/**
+	 * Same as calling get!LuaObject with the same arguments.
+	 * Examples:
+	 * ---------------------
+	auto luapath = lua["package", "path"];
+	writefln("LUA_PATH:\n%s", luapath);
+	 * ---------------------
+	 * See_Also:
+	 *     get
+	 */
 	LuaObject opIndex(T...)(T args)
 	{
 		return get!LuaObject(args);
 	}
 	
+	/**
+	 * Sets a key-value pair in this table.
+	 * Params:
+	 *     key = key to set
+	 *     value = value of key
+	 */
 	void set(T, U)(T key, U value)
 	{
 		push();

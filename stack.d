@@ -1,3 +1,30 @@
+/++
+This module takes care of converting between D and Lua types.
+
+The conversion rules are as follows, where conversion goes both ways:
+$(DL
+	$(DT boolean
+		$(DD bool)
+	)
+	$(DT number
+		$(DD implicitly convertible to lua_Integer (default int) or lua_Number (default double))
+	)
+	$(DT string
+		$(DD string or implicitly convertible to const(char)*)
+	)
+	$(DT table
+		$(DD associative arrays, arrays, structs)
+	)
+	$(DT function
+		$(DD function pointers, delegates)
+	)
+	$(DT userdata
+		$(DD classes)
+	) 
+)
+The conversions are checked in the specified order. For example, even though bool is implicitly convertible
+to lua_Integer, it will be converted to a boolean because boolean has precedence.
++/
 module luad.stack;
 
 import std.traits;
@@ -14,10 +41,10 @@ import luad.conversions.structs;
 import luad.conversions.assocarrays;
 
 /**
- * Push a value of any type
- * Type precedence: 
- *    bool => lua_Integer => lua_Number => string => const(char)* =>
- *    associative array => array => struct => function/delegate
+ * Push a value of any type to the stack.
+ * Params:
+ *     L = stack to push to
+ *     value = value to push
  */
 void pushValue(T)(lua_State* L, T value)
 {
@@ -58,6 +85,10 @@ void pushValue(T)(lua_State* L, T value)
 		static assert(false, "Unsupported type `" ~ T.stringof ~ "` in stack push operation");
 }
 
+/**
+ * Get the associated Lua type for T.
+ * Returns: Lua type for T
+ */
 int luaTypeOf(T)()
 {
 	static if(is(T == bool))
@@ -82,20 +113,22 @@ int luaTypeOf(T)()
 		static assert(false, "No Lua type defined for `" ~ T.stringof ~ "`");
 }
 
-/**
- * Get a value of any type from the stack
- * Type precedence is identical to pushValue
- * If T is incompatible with the type of the object on the stack,
- * typeMismatchHandler is called and is expected to error.
- */
 private void defaultTypeMismatch(lua_State* L, int type, int expectedType)
 {
 	luaL_error(L, "expected %s, got %s", lua_typename(L, expectedType), lua_typename(L, type));
 }
 
+/**
+ * Get a value of any type from the stack.
+ * Params:
+ *     T = type of value
+ *     typeMismatchHandler = function called to produce an error in case of an invalid conversion.
+ *     L = stack to get from
+ *     idx = value stack index
+ */
 T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int idx)
 {
-	debug //ensure intact stack
+	debug //ensure unchanged stack
 	{
 		int _top = lua_gettop(L);
 		scope(success) assert(lua_gettop(L) == _top);
@@ -152,7 +185,8 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 }
 
 /**
- * Pops a value of any type from the top of the stack
+ * Same as calling getValue!(T, typeMismatchHandler)(L, -1), then popping one value from the stack.
+ * See_Also: getValue
  */
 T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
 {

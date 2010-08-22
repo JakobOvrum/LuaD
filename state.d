@@ -7,7 +7,7 @@ import luad.c.all;
 import luad.table, luad.error;
 
 /**
- * Class representing a Lua state instance.
+ * Represents a Lua state instance.
  */
 class LuaState
 {
@@ -17,17 +17,25 @@ class LuaState
 	bool owner = false;
 	
 	public:
+	/**
+	 * You can use this state as a table to operate on its global table.
+	 */
 	alias globals this;
 	
 	/**
-	 * Create a new empty Lua state.
+	 * Create a new, empty Lua state. The standard library is not loaded.
+	 *
+	 * If an uncaught error for any operation on this state
+	 * causes a Lua panic for the underlying state, 
+	 * an exception of type LuaError is thrown.
+	 *
 	 * See_Also: openLibs
 	 */
 	this()
 	{
 		lua_State* L = luaL_newstate();
 		owner = true;
-			
+		
 		extern(C) static int panic(lua_State* L)
 		{
 			size_t len;
@@ -36,21 +44,25 @@ class LuaState
 		}
 		
 		lua_atpanic(L, &panic);
+		
 		this(L);
 	}
 	
 	/**
 	 * Create a D wrapper for an existing Lua state.
-	 * The panic function is not changed - a Lua panic will not throw a D exception.
+	 *
+	 * The new LuaState does not assume ownership of the state.
+	 *
+	 * Note: 
+	 *     The panic function is not changed - a Lua panic will not throw a D exception!
+	 * Params:
+	 *     L = state to wrap.
 	 */
 	this(lua_State* L)
 	{
 		this.L = L;
 		_G = new LuaTable(L, LUA_GLOBALSINDEX);
 		_R = new LuaTable(L, LUA_REGISTRYINDEX);
-		
-		lua_pushlightuserdata(L, cast(void*)this);
-		lua_setfield(L, LUA_REGISTRYINDEX, "__luadstate");
 	}
 	
 	~this()
@@ -89,7 +101,7 @@ class LuaState
 	}
 	
 	/**
-	 * Execute a file with Lua code.
+	 * Execute a file of Lua code.
 	 * Params:
 	 *     path = path to file
 	 */
@@ -100,8 +112,6 @@ class LuaState
 	}
 }
 
-import std.stdio;
-import luad.base;
 unittest
 {
 	auto lua = new LuaState;
