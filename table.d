@@ -44,10 +44,33 @@ class LuaTable : LuaObject
 		lua_settable(state, -3);
 	}
 	
+	/**
+	 * Create struct of type T and fill its members with fields from this table.
+	 *
+	 * Struct fields that are not present in this table are left at their default value.
+	 *
+	 * Params:
+	 *     T = any struct type
+	 * 
+	 * Returns:
+	 *     Newly created struct
+	 */
 	T toStruct(T)() if (is(T == struct))
 	{
 		push();
 		return popValue!T(state);
+	}
+	
+	/**
+	 * Fills a struct's members with fields from this table.
+	 * Params:
+	 *     s = struct to fill
+	 */
+	void copyTo(T)(ref T s) if (is(T == struct))
+	{
+		push();
+		fillStruct(state, -1, s);
+		lua_pop(L, 1);
 	}
 }
 
