@@ -26,7 +26,7 @@ Current progress noted in parentheses:
  * Run Lua code from D, and D code from Lua (_Yes_)
  * Support automatic conversions between any D type and its Lua equivalent (_Yes_ - except classes, but including structs)
  * Support automatic conversions between D classes and Lua userdata (Not yet)
- * Support D1 and Tango (No. Also, the D1 version will not allow conversions between D classes and Lua userdata)
+ * Support D1 and Tango (Not yet. Also, the D1 version will not allow conversions between D classes and Lua userdata)
  * Provide access to the entire underlying Lua C API (_Yes_)
 
 Usage
