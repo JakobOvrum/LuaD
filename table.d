@@ -78,6 +78,28 @@ class LuaTable : LuaObject
 	}
 	
 	/**
+	 * Sets a key-value pair in this table or in a sub-table of this table.
+	 */
+	void opIndexAssign(T, U...)(T value, U args)
+	{
+		push();
+		scope(success) lua_pop(state, 1);
+		
+		foreach(i, arg; args)
+		{
+			static if(i != args.length - 1)
+			{
+				pushValue(state, arg);
+				lua_gettable(state, -2);
+			}
+		}
+		
+		pushValue(state, args[$-1]);
+		pushValue(state, value);
+		lua_settable(state, -3);
+	}
+	
+	/**
 	 * Create struct of type T and fill its members with fields from this table.
 	 *
 	 * Struct fields that are not present in this table are left at their default value.
@@ -130,4 +152,8 @@ unittest
 
 	auto o = t["foo", "outer"];
 	assert(o.type == LuaType.Table);
+	
+	t["foo", "outer", "inner"] = "hello!";
+	auto s2 = t.get!(string)("foo", "outer", "inner");
+	assert(s2 == "hello!");
 }
