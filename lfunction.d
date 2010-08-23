@@ -5,6 +5,7 @@ import luad.stack;
 
 import luad.c.all;
 
+/// Represents a Lua function.
 class LuaFunction : LuaObject
 {
 	package this(lua_State* L, int idx)
