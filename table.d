@@ -88,8 +88,8 @@ class LuaTable : LuaObject
 	 *
 	 * Examples:
 	 * ----------------------
-	lua["string", "empty"] = (){ return ""; };
-	lua.doString(`assert(string.empty() == "")`);
+	lua["string", "empty"] = (string s){ return s.length == 0; };
+	lua.doString(`assert(string.empty(""))`);
 	 * ----------------------
 	 */
 	void opIndexAssign(T, U...)(T value, U args)
