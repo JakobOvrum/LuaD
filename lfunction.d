@@ -14,7 +14,7 @@ class LuaFunction : LuaObject
 	
 	LuaObject[] opCall(U...)(U args)
 	{
-		return call!(LuaObject[])(args);	
+		return call!(LuaObject[])(args);
 	}
 	
 	T call(T, U...)(U args)
@@ -23,9 +23,14 @@ class LuaFunction : LuaObject
 		foreach(arg; args)
 			pushValue(state, arg);
 		
-		lua_call(state, args.length, 1);
+		enum multiRet = is(T == LuaObject[]);
 		
-		return popValue!T(state);
+		lua_call(state, args.length, multiRet? LUA_MULTRET : 1);
+		
+		static if(multiRet)
+			return getStack(state);
+		else
+			return popValue!T(state);
 	}
 }
 
@@ -38,6 +43,7 @@ unittest
 	lua_getglobal(L, "tostring");
 	auto tostring = popValue!LuaFunction(L);
 	
-	//LuaObject[] ret = tostring(123);
-	//assert(ret[0].to!string() == "123");
+	LuaObject[] ret = tostring(123);
+	assert(ret[0].to!string() == "123");
+	assert(tostring.call!string(123) == "123");
 }
