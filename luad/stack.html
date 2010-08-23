@@ -126,6 +126,30 @@ Lua type for T<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">LuaObject[] 
+<span class="currsymbol">getStack</span>
+<script>explorer.outline.addDecl('getStack');</script>
+
+(lua_State* <span class="funcparam">L</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Get all objects on a stack, then clear the stack.
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">lua_State* <span class="funcparam">L</span></td>
+
+               
+<td>stack to dump</td></tr>
+</table><br>
+<b>Returns:</b><br>
+array of objects<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">T 
 <span class="currsymbol">popValue</span>
 <script>explorer.outline.addDecl('popValue');</script>
@@ -149,7 +173,7 @@ getValue<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Mon Aug 23 01:28:33 2010
+			on Mon Aug 23 16:58:46 2010
 
 		</td></tr>
 	</table>
