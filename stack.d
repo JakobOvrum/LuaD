@@ -37,6 +37,7 @@ import luad.c.all;
 
 import luad.base;
 import luad.table;
+import luad.lfunction;
 
 import luad.conversions.functions;
 import luad.conversions.arrays;
@@ -109,7 +110,7 @@ int luaTypeOf(T)()
 	else static if(isArray!T || isAssociativeArray!T || is(T == struct) || is(T == LuaTable))
 		return LUA_TTABLE;
 	
-	else static if(isSomeFunction!T)
+	else static if(isSomeFunction!T || is(T == LuaFunction))
 		return LUA_TFUNCTION;
 	
 	else
@@ -188,6 +189,25 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 }
 
 /**
+ * Get all objects on a stack, then clear the stack.
+ * Params:
+ *     L = stack to dump
+ * Returns:
+ *     array of objects
+ */
+LuaObject[] getStack(lua_State* L)
+{
+	int top = lua_gettop(L);
+	auto stack = new LuaObject[top];
+	foreach(i; 0..top)
+	{
+		stack[i] = getValue!LuaObject(L, i + 1);
+	}
+	lua_settop(L, 0);
+	return stack;
+}
+
+/**
  * Same as calling getValue!(T, typeMismatchHandler)(L, -1), then popping one value from the stack.
  * See_Also: getValue
  */
@@ -215,7 +235,7 @@ unittest
 	lua_State* L = luaL_newstate();
 	scope(success) lua_close(L);
 	
-	//primitives	
+	//pushValue and popValue
 	pushValue(L, 123);
 	assert(lua_isnumber(L, -1) && (popValue!int(L) == 123));
 	
@@ -233,4 +253,15 @@ unittest
 	assert(lua_isstring(L, -1) && (strcmp(cstr, popValue!(const(char)*)(L)) == 0));
 	
 	assert(lua_gettop(L) == 0, "bad popValue semantics for primitives");
+	
+	//getStack
+	pushValue(L, "test");
+	pushValue(L, 123);
+	pushValue(L, true);
+	
+	auto stack = getStack(L);
+	assert(lua_gettop(L) == 0);
+	assert(stack[0].type == LuaType.String);
+	assert(stack[1].type == LuaType.Number);
+	assert(stack[2].type == LuaType.Boolean);
 }
