@@ -40,7 +40,7 @@ class LuaState
 		{
 			size_t len;
 			const(char)* message = lua_tolstring(L, -1, &len);
-			throw new LuaError(cast(string)message[0 .. len]);
+			throw new LuaError(message[0 .. len].idup);
 		}
 		
 		lua_atpanic(L, &panic);
