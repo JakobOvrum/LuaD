@@ -78,7 +78,19 @@ class LuaTable : LuaObject
 	}
 	
 	/**
-	 * Sets a key-value pair in this table or in a sub-table of this table.
+	 * Sets a key-value pair this table or in a sub-table of this table.
+	 * Params:
+	 *     value = value to set
+	 *     args = list of keys, where all keys but the last one should result in a table
+	 * Returns:
+	 *     t[k] = value, where t is the table for the second-to-last parameter in args, 
+	 *     and k is the last parameter in args
+	 *
+	 * Examples:
+	 * ----------------------
+	lua["string", "empty"] = (){ return ""; };
+	lua.doString(`assert(string.empty() == "")`);
+	 * ----------------------
 	 */
 	void opIndexAssign(T, U...)(T value, U args)
 	{
