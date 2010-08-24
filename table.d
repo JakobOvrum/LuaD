@@ -139,6 +139,22 @@ class LuaTable : LuaObject
 		fillStruct(state, -1, s);
 		lua_pop(L, 1);
 	}
+	
+	/** */
+	void setMetaTable(LuaTable meta)
+	{
+		push();
+		meta.push();
+		lua_setmetatable(state, -2);
+	}
+	
+	LuaTable getMetaTable()
+	{
+		push();
+		scope(success) lua_pop(state, 1);
+		
+		return lua_getmetatable(state, -1) == 0? null : popValue!LuaTable(state);
+	}
 }
 
 unittest
