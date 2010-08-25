@@ -104,11 +104,15 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 			lref = luaL_ref(L, LUA_REGISTRYINDEX);
 		}
 		
-		~this()
+		//Alright... how to fix this?
+		//The problem is that this object tends to be finalized after L is freed.
+		//If you have a good solution to the problem of dangling references to a lua_State,
+		//please contact me :)
+		
+		/+~this()
 		{
-			//Alright... how to fix this!?
-			//luaL_unref(L, LUA_REGISTRYINDEX, lref);
-		}
+			luaL_unref(L, LUA_REGISTRYINDEX, lref);
+		}+/
 		
 		void push()
 		{
