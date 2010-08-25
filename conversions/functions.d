@@ -9,20 +9,35 @@ import luad.stack;
 
 private extern(C) int functionWrapper(T)(lua_State* L)
 {
+	//Check for correct amount of arguments
+	ParameterTypeTuple!T args;
+	int top = lua_gettop(L);
+	if(top < args.length)
+	{
+		lua_Debug debugInfo;
+		lua_getstack(L, 0, &debugInfo);
+		lua_getinfo(L, "n", &debugInfo);
+		luaL_error(L, "call to %s '%s': got %d arguments, expected %d",
+			debugInfo.namewhat, debugInfo.name, top, args.length);
+	}
+	
+	//Get our function
 	T func = *cast(T*)lua_touserdata(L, lua_upvalueindex(1));
 	
 	//Assemble arguments
-	ParameterTypeTuple!T args;
-	foreach(i, arg; args)
+	static void typeMismatch(lua_State* L, int idx, int expectedType)
 	{
-		args[i] = getValue!(typeof(arg), (L, t, e)
-		{
-			luaL_error(L, "bad argument #%d (got %s, expected %s)", i + 1, lua_typename(L, t), lua_typename(L, e));
-		}
-		)(L, i + 1);
+		luaL_typerror(L, idx, lua_typename(L, expectedType));
 	}
 	
-	//Call with or without return value
+	foreach(i, arg; args)
+	{
+		args[i] = getValue!(typeof(arg), typeMismatch)(L, i + 1);
+	}
+	
+	//Call with or without return value, propagating Exceptions as Lua errors.
+	//This should rather be throwing a userdata with __tostring and a reference to
+	//the thrown exception, as it is now, everything but the error type and message is lost.
 	alias ReturnType!T RetType;
 	enum hasReturnValue = !is(RetType == void);
 	
