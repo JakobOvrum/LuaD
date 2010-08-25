@@ -117,9 +117,9 @@ int luaTypeOf(T)()
 		static assert(false, "No Lua type defined for `" ~ T.stringof ~ "`");
 }
 
-private void defaultTypeMismatch(lua_State* L, int type, int expectedType)
+private void defaultTypeMismatch(lua_State* L, int idx, int expectedType)
 {
-	luaL_error(L, "expected %s, got %s", lua_typename(L, expectedType), lua_typename(L, type));
+	luaL_error(L, "expected %s, got %s", lua_typename(L, expectedType), luaL_typename(L, idx));
 }
 
 /**
@@ -143,7 +143,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		int type = lua_type(L, idx);
 		int expectedType = luaTypeOf!T();
 		if(type != expectedType)
-			typeMismatchHandler(L, type, expectedType);
+			typeMismatchHandler(L, idx, expectedType);
 	}
 	
 	static if(is(T : LuaObject))
