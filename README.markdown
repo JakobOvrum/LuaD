@@ -33,15 +33,15 @@ Usage
 ============================================
 LuaD is currently only being tested with DMD 2.048. Once D1 support comes around, testing will be done on other compilers as well as with the Tango library.
 
-To use, import the `luad.all` module in your project and compile all the files in the `luad` package. You must also link Lua 5.1; on Unix-like systems, the library is typically called `liblua5.1.a` or similar. On Windows, you need a `lua51.lib` in OMF format to be linkable with DMD.
+To use, import the `luad.all` module in your project and compile all the files in the `luad` package. You can also compile the `luad` package to a static libary, but you still need the full LuaD sources available because of heavy use of templates. You must also link Lua 5.1; on Unix-like systems, the library is typically called `liblua5.1.a` or similar. On Windows, you need a `lua51.lib` in OMF format to be linkable with DMD.
 
-An example/ subdirectory with extensive examples is coming soon.
+Check out the [binaries branch](http://github.com/JakobOvrum/LuaD/tree/binaries) for a `lua51.lib` import library and download instructions for a DMD-compatible library for Unix-like systems.
 
-(I'm planning on putting up a binaries branch with lua51.lib in the correct format for convenience, as well as links to pre-compiled GCC libraries for use on Unix systems)
+An example/ subdirectory with more extensive examples is in progress, but for now, look at the examples in the documentation.
 
 Documentation
 ============================================
-You can find automatically generated documentation in the `gh-pages` branch, or you can [browse it online](http://jakobovrum.github.com/LuaD/).
+You can find automatically generated documentation on the `gh-pages` branch, or you can [browse it online](http://jakobovrum.github.com/LuaD/).
 
 License
 ============================================
