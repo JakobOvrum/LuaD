@@ -196,11 +196,11 @@ int  lua_type(lua_State *L, int idx);
 char * lua_typename(lua_State *L, int tp);
 
 //C     LUA_API int            (lua_equal) (lua_State *L, int idx1, int idx2);
-int  lua_equal(lua_State *L, int idx1, int idx2);
+bool  lua_equal(lua_State *L, int idx1, int idx2);
 //C     LUA_API int            (lua_rawequal) (lua_State *L, int idx1, int idx2);
-int  lua_rawequal(lua_State *L, int idx1, int idx2);
+bool  lua_rawequal(lua_State *L, int idx1, int idx2);
 //C     LUA_API int            (lua_lessthan) (lua_State *L, int idx1, int idx2);
-int  lua_lessthan(lua_State *L, int idx1, int idx2);
+bool  lua_lessthan(lua_State *L, int idx1, int idx2);
 
 //C     LUA_API lua_Number      (lua_tonumber) (lua_State *L, int idx);
 lua_Number  lua_tonumber(lua_State *L, int idx);
