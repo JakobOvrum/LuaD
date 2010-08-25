@@ -118,6 +118,11 @@ class LuaObject
 		return popValue!(T, typeMismatch)(state);
 	}
 	
+	/**
+	 * Compares this object to another with Lua's equality semantics.
+	 * Also, if the other object is not a LuaObject or a derived class of LuaObject,
+	 * or the two refer to objects in different Lua states, this function returns false.
+	 */
 	override bool opEquals(Object o)
 	{
 		LuaObject other = cast(LuaObject)o;
