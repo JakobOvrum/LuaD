@@ -3,6 +3,7 @@ module luad.state;
 import std.string;
 
 import luad.c.all;
+import luad.stack;
 
 import luad.table, luad.error;
 
@@ -109,6 +110,17 @@ class LuaState
 	{
 		if(luaL_dofile(L, toStringz(path)) == 1)
 			lua_error(L);
+	}
+	
+	LuaTable newTable()
+	{
+		return newTable(0, 0);
+	}
+	
+	LuaTable newTable(uint narr, uint nrec)
+	{
+		lua_createtable(L, narr, nrec);
+		return popValue!LuaTable(L);
 	}
 }
 
