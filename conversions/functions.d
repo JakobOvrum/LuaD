@@ -15,12 +15,11 @@ private extern(C) int functionWrapper(T)(lua_State* L)
 	ParameterTypeTuple!T args;
 	foreach(i, arg; args)
 	{
-		void typeMismatch(lua_State* L, int t, int e)
+		args[i] = getValue!(typeof(arg), (L, t, e)
 		{
 			luaL_error(L, "bad argument #%d (got %s, expected %s)", i + 1, lua_typename(L, t), lua_typename(L, e));
 		}
-		
-		args[i] = getValue!(typeof(arg), typeMismatch)(L, i + 1);
+		)(L, i + 1);
 	}
 	
 	//Call with or without return value
