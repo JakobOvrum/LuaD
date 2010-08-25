@@ -142,6 +142,8 @@ class LuaTable : LuaObject
 	
 	/** */
 	void setMetaTable(LuaTable meta)
+	in{ assert(state == meta.state); }
+	body
 	{
 		push();
 		meta.push();
@@ -187,15 +189,19 @@ unittest
 	assert(s2 == "hello!");
 	
 	//metatable
-	bool success = false;
 	pushValue(L, ["__index": (LuaObject self, string key){
-		success = key == "foo";
+		return key;
 	}]);
 	auto meta = popValue!LuaTable(L);
+	
+	lua_newtable(L);
+	auto t2 = new LuaTable(L, -1);
+	lua_pop(L, 1);
+	
 	t2.setMetaTable(meta);
+	
+	auto test = t2.get!string("foobar");
+	assert(test == "foobar");
 		
-	auto _ = t2["foo"];
-	assert(success);
-		
-	assert(t2.getMetaTable() == t2);
+	assert(t2.getMetaTable() == meta);
 }
