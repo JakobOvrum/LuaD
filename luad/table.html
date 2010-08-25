@@ -151,8 +151,8 @@ t[k] = value, where t is the table for the second-to-last parameter in args,
 
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code">	lua[<font color=red>"string"</font>, <font color=red>"empty"</font>] = (){ <font color=blue>return</font> <font color=red>""</font>; };
-	lua.doString(<font color=red>`assert(string.empty() == "")`</font>);
+<pre class="d_code">	lua[<font color=red>"string"</font>, <font color=red>"empty"</font>] = (string s){ <font color=blue>return</font> s.length == 0; };
+	lua.doString(<font color=red>`assert(string.empty(""))`</font>);
 </pre>
 <br><br>
 
@@ -219,7 +219,7 @@ Newly created struct<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Mon Aug 23 19:16:22 2010
+			on Tue Aug 24 02:55:36 2010
 
 		</td></tr>
 	</table>
