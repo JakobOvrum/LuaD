@@ -247,6 +247,22 @@ string representation of referenced object<br><br>
  any D type.<br><br>
 
 </dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">bool 
+<span class="currsymbol">opEquals</span>
+<script>explorer.outline.addDecl('opEquals');</script>
+
+(Object <span class="funcparam">o</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Compares this object to another with Lua's equality semantics.
+ Also, if the other object is not a LuaObject or a derived class of LuaObject,
+ or the two refer to objects in different Lua states, this function returns <b>false</b>.<br><br>
+
+</dd>
 </dl>
 <script>explorer.outline.decSymbolLevel();</script>
 
@@ -260,7 +276,7 @@ string representation of referenced object<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Tue Aug 24 02:55:36 2010
+			on Thu Aug 26 01:40:54 2010
 
 		</td></tr>
 	</table>
