@@ -140,7 +140,11 @@ class LuaTable : LuaObject
 		lua_pop(L, 1);
 	}
 	
-	/** */
+	/**
+	 * Sets the metatable for this table.
+	 * Params:
+	 *     meta = new metatable
+ 	 */
 	void setMetaTable(LuaTable meta)
 	in{ assert(state == meta.state); }
 	body
@@ -151,6 +155,11 @@ class LuaTable : LuaObject
 		lua_pop(state, 1);
 	}
 	
+	/**
+	 * Gets the metatable for this table.
+	 * Returns:
+	 *     A reference to the metatable for this table, or null if this table has no metatable.
+	 */
 	LuaTable getMetaTable()
 	{
 		push();
