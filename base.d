@@ -117,6 +117,18 @@ class LuaObject
 		push();
 		return popValue!(T, typeMismatch)(state);
 	}
+	
+	override bool opEquals(Object o)
+	{
+		LuaObject other = cast(LuaObject)o;
+		if(other is null || other.state != state)
+			return false;
+		
+		push();
+		other.push();
+		scope(success) lua_pop(state, 2);
+		return lua_equal(state, -1, -2);
+	}
 }
 
 unittest
