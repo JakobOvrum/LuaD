@@ -78,6 +78,7 @@ span.funcparam  { font-style: italic; font-weight: normal; color: #331200 }
 #logo
 {
 	float: right;
+	padding-bottom: 1cm;
 }
 
 /* Style for table that is inside div considered above. Contains documentaton
