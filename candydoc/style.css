@@ -71,13 +71,13 @@ span.funcparam  { font-style: italic; font-weight: normal; color: #331200 }
 	position: absolute;
 	left: 245px;
 	top: 8px;
-	text-align: justify;
+	float: left;
 }
 
 /* Style for logo div */
 #logo
 {
-	text-align: left;
+	float: middle;
 }
 
 /* Style for table that is inside div considered above. Contains documentaton
