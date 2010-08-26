@@ -4,7 +4,7 @@ DDOC =
 <meta content="text/javascript" http-equiv="content-script-type">
 <title>$(TITLE)</title>
 <link rel="stylesheet" type="text/css" href="/LuaD/candydoc/style.css">
-<link rel="icon" type="image/png" href="/LuaD/favicon.ico">
+<link rel="icon" type="image/png" href="/LuaD/LuaD.png">
 <!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="LuaD/candydoc/ie56hack.css"><![endif]-->
 <script language="JavaScript" src="/LuaD/candydoc/util.js" type="text/javascript"></script>
 <script language="JavaScript" src="/LuaD/candydoc/tree.js" type="text/javascript"></script>
