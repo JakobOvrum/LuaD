@@ -74,6 +74,12 @@ span.funcparam  { font-style: italic; font-weight: normal; color: #331200 }
 	text-align: justify;
 }
 
+/* Style for logo div */
+#logo
+{
+	text-align: left;
+}
+
 /* Style for table that is inside div considered above. Contains documentaton
    itself and footer with CanDyDOC logo. */
 table.content
