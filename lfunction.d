@@ -10,6 +10,7 @@ class LuaFunction : LuaObject
 {
 	package this(lua_State* L, int idx)
 	{
+		checkType(L, idx, LUA_TFUNCTION, "LuaFunction");
 		super(L, idx);
 	}
 	

@@ -68,6 +68,15 @@ class LuaObject
 		return lref.L;
 	}
 	
+	static void checkType(lua_State* L, int idx, int expectedType, const(char)* expectedName)
+	{
+		int t = lua_type(L, idx);
+		if(t != expectedType)
+		{
+			luaL_error(L, "attempt to create %s with %s", expectedName, lua_typename(L, expectedType));
+		}
+	}
+	
 	public:
 	/**
 	 * Type of referenced object

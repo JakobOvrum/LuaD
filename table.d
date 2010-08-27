@@ -14,6 +14,7 @@ class LuaTable : LuaObject
 	package:
 	this(lua_State* L, int idx)
 	{
+		checkType(L, idx, LUA_TTABLE, "LuaTable");
 		super(L, idx);
 	}
 	
