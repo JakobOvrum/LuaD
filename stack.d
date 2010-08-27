@@ -43,6 +43,7 @@ import luad.conversions.functions;
 import luad.conversions.arrays;
 import luad.conversions.structs;
 import luad.conversions.assocarrays;
+import luad.conversions.classes;
 
 /**
  * Push a value of any type to the stack.
@@ -59,7 +60,7 @@ void pushValue(T)(lua_State* L, T value)
 		lua_pushnil(L);
 	
 	else static if(is(T == bool))
-		lua_pushboolean(L, value);
+		lua_pushboolean(L, cast(bool)value);
 	
 	else static if(is(T : lua_Integer))
 		lua_pushinteger(L, value);
@@ -112,6 +113,9 @@ int luaTypeOf(T)()
 	
 	else static if(isSomeFunction!T || is(T == LuaFunction))
 		return LUA_TFUNCTION;
+	
+	else static if(is(T : Object))
+		return LUA_TUSERDATA;
 	
 	else
 		static assert(false, "No Lua type defined for `" ~ T.stringof ~ "`");
@@ -182,6 +186,9 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	else static if(isSomeFunction!T)
 		return getFunction!T(L, idx);
 	
+	else static if(is(T : Object))
+		return getClass!T(L, idx);
+			
 	else
 	{
 		static assert(false, "Unsupported type `" ~ T.stringof ~ "` in stack read operation");
