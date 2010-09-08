@@ -36,6 +36,27 @@ void main()
 	print("Hello, world!");
 }
 ----------------------
+Simple function example
+----------------------
+import luad.all;
+import std.stdio;
+
+int printTimes(int times, string message)
+{
+    for(int i = 0; i <= times; i++)
+        writeln(message);
+    return times;
+}
+
+void main()
+{
+    auto lua = new LuaState;
+    lua.set("printTimes", &printTimes);
+    lua.doString(`
+        printTimes(3, "hello, world!")
+    `);
+}
+----------------------
 Configuration file
 ----------------------
 import luad.all;
