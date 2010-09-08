@@ -56,6 +56,26 @@ Another "Hello, world"
 	print(<font color=red>"Hello, world!"</font>);
 }
 </pre>
+Simple function example
+<pre class="d_code"><font color=blue>import</font> luad.all;
+<font color=blue>import</font> std.stdio;
+
+<font color=blue>int</font> printTimes(<font color=blue>int</font> times, string message)
+{
+    <font color=blue>for</font>(<font color=blue>int</font> i = 0; i &lt;= times; i++)
+        writeln(message);
+    <font color=blue>return</font> times;
+}
+
+<font color=blue>void</font> main()
+{
+    <font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
+    lua.set(<font color=red>"printTimes"</font>, &amp;printTimes);
+    lua.doString(<font color=red>`
+        printTimes(3, "hello, world!")
+    `</font>);
+}
+</pre>
 Configuration file
 <pre class="d_code"><font color=blue>import</font> luad.all;
 
@@ -89,7 +109,7 @@ Version = 1.23
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Thu Aug 26 10:39:19 2010
+			on Thu Sep  9 00:21:42 2010
 
 		</td></tr>
 	</table>
