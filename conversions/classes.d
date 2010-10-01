@@ -1,19 +1,22 @@
 module luad.conversions.classes;
 
+import luad.conversions.functions;
+
 import luad.c.all;
 import luad.stack;
 
 import std.string : toStringz;
 
-private void pushMeta(T)(lua_State* L, T o)
+private void pushMeta(T)(lua_State* L, T obj)
 {
-	lua_newtable(L); //get object metatable
+	if(luaL_newmetatable(L, toStringz(T.mangleof)) == 0)
+		return;
+	
+	pushValue(L, T.stringof);
+	lua_setfield(L, -2, "__dclass");
 	
 	pushValue(L, T.mangleof);
 	lua_setfield(L, -2, "__dmangle");
-	
-	pushValue(L, T.stringof);
-	lua_setfield(L, -2, "__dname");
 	
 	lua_newtable(L); //__index fallback table
 	
@@ -22,22 +25,22 @@ private void pushMeta(T)(lua_State* L, T o)
 		static if(member != "__ctor" && member != "Monitor" && member != "toHash" && //do not handle
 			member != "toString" && member != "opEquals" && //give special care
 			member != "opCmp" && //TODO: give special care
-			__traits(compiles, mixin("o." ~ member)) && //is a public member?
+			__traits(compiles, mixin("obj." ~ member)) && //is a public member?
 			__traits(compiles, mixin("T." ~ member)) && //can check for isStaticFunction?
 			!__traits(isStaticFunction, mixin("T." ~ member))) //is not a static function?
 		{
 			pragma(msg, member);
-			pushValue(L, mixin("&o." ~ member));
+			pushMethod!T(L, mixin("&obj." ~ member));
 			lua_setfield(L, -2, member);
 		}
 	}
 	
 	lua_setfield(L, -2, "__index");
 	
-	pushValue(L, &o.toString);
+	pushValue(L, &obj.toString);
 	lua_setfield(L, -2, "__tostring");
 	
-	pushValue(L, &o.opEquals);
+	pushValue(L, &obj.opEquals);
 	lua_setfield(L, -2, "__eq");
 	
 	lua_pushvalue(L, -1);
@@ -58,7 +61,7 @@ T getClass(T)(lua_State* L, int idx) if (is(T == class))
 {
 	if(lua_getmetatable(L, idx) == 0)
 	{
-		luaL_error(L, "attempt to get 'userdata: %p' as an Object", lua_topointer(L, idx));
+		luaL_error(L, "attempt to get 'userdata: %p' as a D object", lua_topointer(L, idx));
 	}
 	
 	lua_getfield(L, -1, "__dmangle"); //must be a D object
@@ -69,9 +72,9 @@ T getClass(T)(lua_State* L, int idx) if (is(T == class))
 		auto cmangle = lua_tolstring(L, -1, &manglelen);
 		if(cmangle[0 .. manglelen] != T.mangleof)
 		{
-			lua_getfield(L, -2, "__dname");
+			lua_getfield(L, -2, "__dclass");
 			auto cname = lua_tostring(L, -1);
-			luaL_error(L, "attempt to get class %s as a %s", cname, toStringz(T.stringof));
+			luaL_error(L, `attempt to get instance %s as type "%s"`, cname, toStringz(T.stringof));
 		}
 	}
 	lua_pop(L, 2); //metatable and metatable.__dmangle
@@ -120,8 +123,8 @@ unittest
 	
 	luaL_openlibs(L);
 	unittest_lua(L, `
-		assert(a.bar(2) == 4)
+		assert(a:bar(2) == 4)
 		func(a)
-		assert(a.bar(2) == 8)
+		assert(a:bar(2) == 8)
 	`, __FILE__);
 }
