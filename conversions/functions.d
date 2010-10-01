@@ -7,34 +7,19 @@ import luad.c.all;
 
 import luad.stack;
 
-private extern(C) int functionWrapper(T)(lua_State* L)
+private:
+
+void argsError(lua_State* L, int nargs, int expected)
 {
-	//Check for correct amount of arguments
-	ParameterTypeTuple!T args;
-	int top = lua_gettop(L);
-	if(top < args.length)
-	{
-		lua_Debug debugInfo;
-		lua_getstack(L, 0, &debugInfo);
-		lua_getinfo(L, "n", &debugInfo);
-		luaL_error(L, "call to %s '%s': got %d arguments, expected %d",
-			debugInfo.namewhat, debugInfo.name, top, args.length);
-	}
-	
-	//Get our function
-	T func = *cast(T*)lua_touserdata(L, lua_upvalueindex(1));
-	
-	//Assemble arguments
-	static void typeMismatch(lua_State* L, int idx, int expectedType)
-	{
-		luaL_typerror(L, idx, lua_typename(L, expectedType));
-	}
-	
-	foreach(i, arg; args)
-	{
-		args[i] = getValue!(typeof(arg), typeMismatch)(L, i + 1);
-	}
-	
+	lua_Debug debugInfo;
+	lua_getstack(L, 0, &debugInfo);
+	lua_getinfo(L, "n", &debugInfo);
+	luaL_error(L, "call to %s '%s': got %d arguments, expected %d",
+		debugInfo.namewhat, debugInfo.name, nargs, expected);
+}
+
+int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
+{
 	//Call with or without return value, propagating Exceptions as Lua errors.
 	//This should rather be throwing a userdata with __tostring and a reference to
 	//the thrown exception, as it is now, everything but the error type and message is lost.
@@ -61,11 +46,64 @@ private extern(C) int functionWrapper(T)(lua_State* L)
 	return hasReturnValue? 1 : 0;
 }
 
-private extern(C) int functionCleaner(lua_State* L)
+public void typeMismatch(lua_State* L, int idx, int expectedType)
+{
+	luaL_typerror(L, idx, lua_typename(L, expectedType));
+}
+
+extern(C) int methodWrapper(T, Class)(lua_State* L)
+{
+	ParameterTypeTuple!T args;
+	
+	//Check arguments
+	int top = lua_gettop(L);
+	if(top < args.length + 1)
+		argsError(L, top, args.length + 1);
+	
+	//Assemble method
+	T func;
+	func.ptr = *cast(void**)luaL_checkudata(L, 1, toStringz(Class.mangleof));
+	func.funcptr = cast(typeof(func.funcptr))lua_touserdata(L, lua_upvalueindex(1));
+	
+	//Assemble arguments
+	foreach(i, arg; args)
+	{
+		//stack indexes start at 1, index 1 is the 'this' reference
+		args[i] = getValue!(typeof(arg), typeMismatch)(L, i + 2);
+	}
+	
+	return callFunction!T(L, func, args);
+}
+
+extern(C) int functionWrapper(T)(lua_State* L)
+{
+	ParameterTypeTuple!T args;
+	
+	//Check arguments
+	int top = lua_gettop(L);
+	if(top < args.length)
+		argsError(L, top, args.length);
+	
+	//Get function
+	T func = *cast(T*)lua_touserdata(L, lua_upvalueindex(1));
+	
+	//Assemble arguments
+	foreach(i, arg; args)
+	{
+		//stack indexes start at 1
+		args[i] = getValue!(typeof(arg), typeMismatch)(L, i + 1);
+	}
+	
+	return callFunction!T(L, func, args);
+}
+
+extern(C) int functionCleaner(lua_State* L)
 {
 	GC.removeRoot(lua_touserdata(L, 1));
 	return 0;
 }
+
+public:
 
 void pushFunction(T)(lua_State* L, T func) if (isSomeFunction!T)
 {	
@@ -84,9 +122,15 @@ void pushFunction(T)(lua_State* L, T func) if (isSomeFunction!T)
 	lua_pushcclosure(L, &functionWrapper!T, 1);
 }
 
+void pushMethod(Class, T)(lua_State* L, T func) if (isSomeFunction!T)
+{
+	lua_pushlightuserdata(L, func.funcptr);
+	lua_pushcclosure(L, &methodWrapper!(T, Class), 1);
+}
+
 /**
  * Currently this function allocates a reference in the registry that is never deleted,
-   one for each call...
+   one for each call... see below
  */
 T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 {
