@@ -44,12 +44,12 @@ private void pushMeta(T)(lua_State* L, T o)
 	lua_setfield(L, -2, "__metatable");
 }
 
-void pushClass(T)(lua_State* L, T o) if (is(T == class))
+void pushClass(T)(lua_State* L, T obj) if (is(T == class))
 {	
-	void** ud = cast(void**)lua_newuserdata(L, o.sizeof);
-	*ud = cast(void*)o;
+	Object* ud = cast(Object*)lua_newuserdata(L, obj.sizeof);
+	*ud = obj;
 	
-	pushMeta(L, o);
+	pushMeta(L, obj);
 
 	lua_setmetatable(L, -2);
 }
@@ -76,8 +76,8 @@ T getClass(T)(lua_State* L, int idx) if (is(T == class))
 	}
 	lua_pop(L, 2); //metatable and metatable.__dmangle
 	
-	auto o = cast(Object)lua_touserdata(L, idx);
-	return cast(T)o;
+	Object obj = *cast(Object*)lua_touserdata(L, idx);
+	return cast(T)obj;
 }
 
 unittest
@@ -113,15 +113,15 @@ unittest
 	
 	pushValue(L, (A a)
 	{
-		//assert(a);
-		//a.bar(2);
+		assert(a);
+		a.bar(2);
 	});
 	lua_setglobal(L, "func");
 	
 	luaL_openlibs(L);
 	unittest_lua(L, `
-		print("before:", a.bar(2))
+		assert(a.bar(2) == 4)
 		func(a)
-		print("after:", a.bar(2))
+		assert(a.bar(2) == 8)
 	`, __FILE__);
 }
