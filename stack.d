@@ -85,6 +85,11 @@ void pushValue(T)(lua_State* L, T value)
 	
 	else static if(isSomeFunction!T)
 		pushFunction(L, value);
+		
+	else static if(is(T == class))
+	{
+		pushClass(L, value);
+	}
 	
 	else
 		static assert(false, "Unsupported type `" ~ T.stringof ~ "` in stack push operation");
