@@ -19,11 +19,6 @@ class LuaState
 	
 	public:
 	/**
-	 * You can use this state as a table to operate on its global table.
-	 */
-	alias globals this;
-	
-	/**
 	 * Create a new, empty Lua state. The standard library is not loaded.
 	 *
 	 * If an uncaught error for any operation on this state
@@ -121,6 +116,49 @@ class LuaState
 	{
 		lua_createtable(L, narr, nrec);
 		return popValue!LuaTable(L);
+	}
+	
+	/**
+	 * You can use this state as a table to operate on its global table.
+	 */
+	/**
+	 * Same as calling globals.get with the same arguments.
+	 * See Also:
+	 *     LuaTable.get
+	 */
+	T get(T, U...)(U args)
+	{
+		return globals.get!T(args);
+	}
+	
+	/**
+	 * Same as calling globals.get!LuaObject with the same arguments.
+	 * See Also:
+	 *     LuaTable.opIndex
+	 */
+	LuaObject opIndex(T...)(T args)
+	{
+		return globals.get!LuaObject(args);
+	}
+	
+	/**
+	 * Same as calling globals.set with the same arguments.
+	 * See Also:
+	 *     LuaTable.set
+	 */
+	void set(T, U)(T key, U value)
+	{
+		globals.set(key, value);
+	}
+	
+	/**
+	 * Same as calling globals.opIndexAssign with the same arguments.
+	 * See Also:
+	 *     LuaTable.opIndexAssign
+	 */
+	void opIndexAssign(T, U...)(T value, U args)
+	{
+		globals()[args] = value;
 	}
 }
 
