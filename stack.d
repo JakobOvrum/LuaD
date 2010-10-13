@@ -88,7 +88,10 @@ void pushValue(T)(lua_State* L, T value)
 		
 	else static if(is(T == class))
 	{
-		pushClass(L, value);
+	    if(value is null)
+	        lua_pushnil(L);
+	    else
+		    pushClass(L, value);
 	}
 	
 	else
