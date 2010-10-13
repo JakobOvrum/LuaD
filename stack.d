@@ -54,8 +54,12 @@ import luad.conversions.classes;
 void pushValue(T)(lua_State* L, T value)
 {
 	static if(is(T : LuaObject))
-		value.push();
-	
+	{
+	    if(value is null)
+	        lua_pushnil(L);
+	    else
+		    value.push();
+	}
 	else static if(is(T == Nil))
 		lua_pushnil(L);
 	
