@@ -5,7 +5,15 @@ import luad.conversions.functions;
 import luad.c.all;
 import luad.stack;
 
+import core.memory;
+
 import std.string : toStringz;
+
+extern(C) private int classCleaner(lua_State* L)
+{
+    GC.removeRoot(lua_touserdata(L, 1));
+    return 0;
+}
 
 private void pushMeta(T)(lua_State* L, T obj)
 {
@@ -43,6 +51,9 @@ private void pushMeta(T)(lua_State* L, T obj)
 	pushValue(L, &obj.opEquals);
 	lua_setfield(L, -2, "__eq");
 	
+	lua_pushcfunction(L, &classCleaner);
+	lua_setfield(L, -2, "__gc");
+	
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -2, "__metatable");
 }
@@ -53,8 +64,9 @@ void pushClass(T)(lua_State* L, T obj) if (is(T == class))
 	*ud = obj;
 	
 	pushMeta(L, obj);
-
 	lua_setmetatable(L, -2);
+	
+	GC.addRoot(ud);
 }
 
 T getClass(T)(lua_State* L, int idx) if (is(T == class))
