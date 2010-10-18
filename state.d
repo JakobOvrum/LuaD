@@ -119,6 +119,19 @@ class LuaState
 	}
 	
 	/**
+	 * Wrap a D value in a LuaObject.
+	 * Params:
+	 *     value = D value to wrap
+	 * Returns:
+	 *     reference to value as a LuaObject
+	 */
+    LuaObject wrap(T)(T value)
+    {
+        pushValue(L, value);
+        return popValue!T(L);
+    }
+	
+	/**
 	 * You can use this state as a table to operate on its global table.
 	 */
 	/**
