@@ -103,6 +103,33 @@ class LuaState
 	}
 	
 	/**
+	 * Set a new panic handler.
+	 * Params:
+	 *     onPanic = new panic handler
+	 */
+	void setPanicHandler(void function(LuaState, string) onPanic)
+	{
+	    extern(C) static int panic(lua_State* L)
+	    {
+            size_t len;
+			const(char)* message = lua_tolstring(L, -1, &len);
+			auto error = message[0 .. len].idup;
+	        
+	        lua_getfield(L, LUA_REGISTRYINDEX, "__dpanic");
+	        auto callback = cast(void function(LuaState, string))lua_touserdata(L, -1);
+	        assert(callback);
+	        
+	        callback(LuaState.fromPointer(L), error);
+	        return 0;
+	    }
+	    
+	    lua_pushlightuserdata(L, onPanic);
+	    lua_setfield(L, LUA_REGISTRYINDEX, "__dpanic");
+	    
+	    lua_atpanic(L, &panic);
+	}
+	
+	/**
 	 * Execute a string of Lua code.
 	 * Params:
 	 *     code = code to run
@@ -199,6 +226,7 @@ unittest
 	
 	lua.openLibs();
 	
+	//default panic handler
 	string msg;
 	try
 	{
@@ -206,13 +234,30 @@ unittest
 	}
 	catch(LuaError e)
 	{
-		msg = e.msg;
+		assert(e.msg == `[string "error("Hello, D!")"]:1: Hello, D!`);
 	}
-	assert(msg == `[string "error("Hello, D!")"]:1: Hello, D!`);
+	
 	
 	lua.set("success", false);
 	assert(!lua.get!bool("success"));
 	
 	lua.doString(`success = true`);
 	assert(lua.get!bool("success"));
+	
+	// setPanicHandler
+	static void panic(LuaState lua, string error)
+	{
+	    throw new Exception("hijacked error!");
+	}
+	
+	lua.setPanicHandler(&panic);
+	
+	try
+	{
+	    lua.doString(`error("test")`);
+	}
+	catch(Exception e)
+	{
+	    assert(e.msg == "hijacked error!");
+	}
 }
