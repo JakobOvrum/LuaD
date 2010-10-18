@@ -59,12 +59,29 @@ class LuaState
 		this.L = L;
 		_G = new LuaTable(L, LUA_GLOBALSINDEX);
 		_R = new LuaTable(L, LUA_REGISTRYINDEX);
+		
+		lua_pushlightuserdata(L, cast(void*)this);
+		lua_setfield(L, LUA_REGISTRYINDEX, "__dstate");
 	}
 	
 	~this()
 	{
 		if(owner)
 			lua_close(L);
+	}
+	
+	/**
+	 * Get the LuaState instance for a Lua state.
+	 * Params:
+	 *     L = Lua state
+	 * Returns:
+	 *     LuaState for the given lua_State*.
+	 */
+	static LuaState fromPointer(lua_State* L)
+	{
+	    lua_getfield(L, LUA_REGISTRYINDEX, "__dstate");
+	    scope(exit) lua_pop(L, 1);
+	    return cast(LuaState)lua_touserdata(L, -1);
 	}
 	
 	/// Opens the standard library.
