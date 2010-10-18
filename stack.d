@@ -28,13 +28,13 @@ $(DL
 	$(DT userdata
 		$(DD classes)
 	)
-	$(DT any of the above
-		$(DD LuaObject)
-	)
 	$(DT nil
 	    $(DD the special identifier nil)
 		$(DD null LuaObject references)
 		$(DD null class references)
+	)
+	$(DT any of the above
+		$(DD LuaObject)
 	)
 )
 The conversions are checked in the specified order. For example, even though bool is implicitly convertible

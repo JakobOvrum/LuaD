@@ -84,7 +84,7 @@ class LuaState
 	    return cast(LuaState)lua_touserdata(L, -1);
 	}
 	
-	/// Opens the standard library.
+	/// Open the standard library.
 	void openLibs()
 	{
 		luaL_openlibs(L);
