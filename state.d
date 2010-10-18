@@ -151,11 +151,24 @@ class LuaState
 			lua_error(L);
 	}
 	
+	/**
+	 * Create a new, empty table.
+	 * Returns:
+	 *     new table
+	 */
 	LuaTable newTable()
 	{
 		return newTable(0, 0);
 	}
 	
+	/**
+	 * Create a new, empty table with pre-allocated space for members.
+	 * Params:
+	 *     narr = number of pre-allocated array slots
+	 *     nrec = number of pre-allocated non-array slots
+	 * Returns:
+	 *     new table
+	 */
 	LuaTable newTable(uint narr, uint nrec)
 	{
 		lua_createtable(L, narr, nrec);
