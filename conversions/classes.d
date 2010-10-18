@@ -11,8 +11,8 @@ import std.string : toStringz;
 
 extern(C) private int classCleaner(lua_State* L)
 {
-    GC.removeRoot(lua_touserdata(L, 1));
-    return 0;
+	GC.removeRoot(lua_touserdata(L, 1));
+	return 0;
 }
 
 private void pushMeta(T)(lua_State* L, T obj)

@@ -50,9 +50,9 @@ class LuaState
 	 * The new LuaState does not assume ownership of the state.
 	 *
 	 * Note: 
-	 *     The panic function is not changed - a Lua panic will not throw a D exception!
+	 *	 The panic function is not changed - a Lua panic will not throw a D exception!
 	 * Params:
-	 *     L = state to wrap.
+	 *	 L = state to wrap.
 	 */
 	this(lua_State* L)
 	{
@@ -73,15 +73,15 @@ class LuaState
 	/**
 	 * Get the LuaState instance for a Lua state.
 	 * Params:
-	 *     L = Lua state
+	 *	 L = Lua state
 	 * Returns:
-	 *     LuaState for the given lua_State*.
+	 *	 LuaState for the given lua_State*.
 	 */
 	static LuaState fromPointer(lua_State* L)
 	{
-	    lua_getfield(L, LUA_REGISTRYINDEX, "__dstate");
-	    scope(exit) lua_pop(L, 1);
-	    return cast(LuaState)lua_touserdata(L, -1);
+		lua_getfield(L, LUA_REGISTRYINDEX, "__dstate");
+		scope(exit) lua_pop(L, 1);
+		return cast(LuaState)lua_touserdata(L, -1);
 	}
 	
 	/// Open the standard library.
@@ -105,7 +105,7 @@ class LuaState
 	/**
 	 * Set a new panic handler.
 	 * Params:
-	 *     onPanic = new panic handler
+	 *	 onPanic = new panic handler
 	 * Examples:
 	 * ----------------------
 	auto L = luaL_newstate(); // found in luad.c.all
@@ -113,7 +113,7 @@ class LuaState
 	
 	static void panic(LuaState lua, string error)
 	{
-	    throw new LuaError(error);
+		throw new LuaError(error);
 	}
 	
 	lua.setPanicHandler(&panic);
@@ -121,30 +121,30 @@ class LuaState
 	 */
 	void setPanicHandler(void function(LuaState, string) onPanic)
 	{
-	    extern(C) static int panic(lua_State* L)
-	    {
-            size_t len;
+		extern(C) static int panic(lua_State* L)
+		{
+			size_t len;
 			const(char)* message = lua_tolstring(L, -1, &len);
 			auto error = message[0 .. len].idup;
-	        
-	        lua_getfield(L, LUA_REGISTRYINDEX, "__dpanic");
-	        auto callback = cast(void function(LuaState, string))lua_touserdata(L, -1);
-	        assert(callback);
-	        
-	        callback(LuaState.fromPointer(L), error);
-	        return 0;
-	    }
-	    
-	    lua_pushlightuserdata(L, onPanic);
-	    lua_setfield(L, LUA_REGISTRYINDEX, "__dpanic");
-	    
-	    lua_atpanic(L, &panic);
+			
+			lua_getfield(L, LUA_REGISTRYINDEX, "__dpanic");
+			auto callback = cast(void function(LuaState, string))lua_touserdata(L, -1);
+			assert(callback);
+			
+			callback(LuaState.fromPointer(L), error);
+			return 0;
+		}
+		
+		lua_pushlightuserdata(L, onPanic);
+		lua_setfield(L, LUA_REGISTRYINDEX, "__dpanic");
+		
+		lua_atpanic(L, &panic);
 	}
 	
 	/**
 	 * Execute a string of Lua code.
 	 * Params:
-	 *     code = code to run
+	 *	 code = code to run
 	 */
 	void doString(string code)
 	{
@@ -155,7 +155,7 @@ class LuaState
 	/**
 	 * Execute a file of Lua code.
 	 * Params:
-	 *     path = path to file
+	 *	 path = path to file
 	 */
 	void doFile(string path)
 	{
@@ -166,7 +166,7 @@ class LuaState
 	/**
 	 * Create a new, empty table.
 	 * Returns:
-	 *     new table
+	 *	 new table
 	 */
 	LuaTable newTable()
 	{
@@ -176,10 +176,10 @@ class LuaState
 	/**
 	 * Create a new, empty table with pre-allocated space for members.
 	 * Params:
-	 *     narr = number of pre-allocated array slots
-	 *     nrec = number of pre-allocated non-array slots
+	 *	 narr = number of pre-allocated array slots
+	 *	 nrec = number of pre-allocated non-array slots
 	 * Returns:
-	 *     new table
+	 *	 new table
 	 */
 	LuaTable newTable(uint narr, uint nrec)
 	{
@@ -190,21 +190,21 @@ class LuaState
 	/**
 	 * Wrap a D value in a LuaObject.
 	 * Params:
-	 *     value = D value to wrap
+	 *	 value = D value to wrap
 	 * Returns:
-	 *     reference to value as a LuaObject
+	 *	 reference to value as a LuaObject
 	 */
-    LuaObject wrap(T)(T value)
-    {
-        pushValue(L, value);
-        return popValue!T(L);
-    }
+	LuaObject wrap(T)(T value)
+	{
+		pushValue(L, value);
+		return popValue!T(L);
+	}
 	
 	/// This state can be used as a table to operate on its global table.
 	/**
 	 * Same as calling globals.get with the same arguments.
 	 * See Also:
-	 *     LuaTable.get
+	 *	 LuaTable.get
 	 */
 	T get(T, U...)(U args)
 	{
@@ -214,7 +214,7 @@ class LuaState
 	/**
 	 * Same as calling globals.get!LuaObject with the same arguments.
 	 * See Also:
-	 *     LuaTable.opIndex
+	 *	 LuaTable.opIndex
 	 */
 	LuaObject opIndex(T...)(T args)
 	{
@@ -224,7 +224,7 @@ class LuaState
 	/**
 	 * Same as calling globals.set with the same arguments.
 	 * See Also:
-	 *     LuaTable.set
+	 *	 LuaTable.set
 	 */
 	void set(T, U)(T key, U value)
 	{
@@ -234,7 +234,7 @@ class LuaState
 	/**
 	 * Same as calling globals.opIndexAssign with the same arguments.
 	 * See Also:
-	 *     LuaTable.opIndexAssign
+	 *	 LuaTable.opIndexAssign
 	 */
 	void opIndexAssign(T, U...)(T value, U args)
 	{
@@ -270,17 +270,17 @@ unittest
 	// setPanicHandler
 	static void panic(LuaState lua, string error)
 	{
-	    throw new Exception("hijacked error!");
+		throw new Exception("hijacked error!");
 	}
 	
 	lua.setPanicHandler(&panic);
 	
 	try
 	{
-	    lua.doString(`error("test")`);
+		lua.doString(`error("test")`);
 	}
 	catch(Exception e)
 	{
-	    assert(e.msg == "hijacked error!");
+		assert(e.msg == "hijacked error!");
 	}
 }

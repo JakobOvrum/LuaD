@@ -81,7 +81,7 @@ class LuaObject
 	/**
 	 * Type of referenced object
 	 * See_Also:
-	 *     LuaType
+	 *	 LuaType
 	 */
 	@property LuaType type()
 	{

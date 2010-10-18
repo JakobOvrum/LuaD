@@ -21,15 +21,15 @@ $(DL
 		$(DD LuaTable)
 	)
 	$(DT function
-	    $(DD function pointers)
-	    $(DD delegates)
+		$(DD function pointers)
+		$(DD delegates)
 		$(DD LuaFunction)
 	)
 	$(DT userdata
 		$(DD classes)
 	)
 	$(DT nil
-	    $(DD the special identifier nil)
+		$(DD the special identifier nil)
 		$(DD null LuaObject references)
 		$(DD null class references)
 	)
@@ -60,17 +60,17 @@ import luad.conversions.classes;
 /**
  * Push a value of any type to the stack.
  * Params:
- *     L = stack to push to
- *     value = value to push
+ *	 L = stack to push to
+ *	 value = value to push
  */
 void pushValue(T)(lua_State* L, T value)
 {
 	static if(is(T : LuaObject))
 	{
-	    if(value is null)
-	        lua_pushnil(L);
-	    else
-		    value.push();
+		if(value is null)
+			lua_pushnil(L);
+		else
+			value.push();
 	}
 	else static if(is(T == Nil))
 		lua_pushnil(L);
@@ -104,10 +104,10 @@ void pushValue(T)(lua_State* L, T value)
 		
 	else static if(is(T == class))
 	{
-	    if(value is null)
-	        lua_pushnil(L);
-	    else
-		    pushClass(L, value);
+		if(value is null)
+			lua_pushnil(L);
+		else
+			pushClass(L, value);
 	}
 	
 	else
@@ -153,10 +153,10 @@ private void defaultTypeMismatch(lua_State* L, int idx, int expectedType)
 /**
  * Get a value of any type from the stack.
  * Params:
- *     T = type of value
- *     typeMismatchHandler = function called to produce an error in case of an invalid conversion.
- *     L = stack to get from
- *     idx = value stack index
+ *	 T = type of value
+ *	 typeMismatchHandler = function called to produce an error in case of an invalid conversion.
+ *	 L = stack to get from
+ *	 idx = value stack index
  */
 T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int idx)
 {
@@ -222,9 +222,9 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 /**
  * Get all objects on a stack, then clear the stack.
  * Params:
- *     L = stack to dump
+ *	 L = stack to dump
  * Returns:
- *     array of objects
+ *	 array of objects
  */
 LuaObject[] getStack(lua_State* L)
 {

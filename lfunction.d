@@ -36,12 +36,12 @@ class LuaFunction : LuaObject
 	/**
 	 * Call this function.
 	 * Params:
-	 *     T = expected return type.
-	 *     args = list of arguments.
+	 *	 T = expected return type.
+	 *	 args = list of arguments.
 	 * Returns:
-	 *     Return value of type T, or nothing if T was unspecified.
-	 *     As a special case, a value of LuaObject[] for T will result
-	 *     all return values being collected and returned in a LuaObject[].
+	 *	 Return value of type T, or nothing if T was unspecified.
+	 *	 As a special case, a value of LuaObject[] for T will result
+	 *	 all return values being collected and returned in a LuaObject[].
 	 * Examples:
 	 * ------------------
 	lua.doString(`function ask(question) return 42 end`);

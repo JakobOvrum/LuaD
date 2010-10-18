@@ -22,10 +22,10 @@ class LuaTable : LuaObject
 	/**
 	 * Lookup a value in this table or in a sub-table of this table.
 	 * Params:
-	 *     T = type of value
-	 *     args = list of keys, where all keys but the last one should result in a table
+	 *	 T = type of value
+	 *	 args = list of keys, where all keys but the last one should result in a table
 	 * Returns:
-	 *     t[k] where t is the table for the second-to-last parameter, and k is the last parameter
+	 *	 t[k] where t is the table for the second-to-last parameter, and k is the last parameter
 	 *
 	 * Examples:
 	 * ----------------------
@@ -55,7 +55,7 @@ class LuaTable : LuaObject
 	writefln("LUA_PATH:\n%s", luapath);
 	 * ---------------------
 	 * See_Also:
-	 *     get
+	 *	 get
 	 */
 	LuaObject opIndex(T...)(T args)
 	{
@@ -65,8 +65,8 @@ class LuaTable : LuaObject
 	/**
 	 * Sets a key-value pair in this table.
 	 * Params:
-	 *     key = key to set
-	 *     value = value of key
+	 *	 key = key to set
+	 *	 value = value of key
 	 */
 	void set(T, U)(T key, U value)
 	{
@@ -81,11 +81,11 @@ class LuaTable : LuaObject
 	/**
 	 * Sets a key-value pair this table or in a sub-table of this table.
 	 * Params:
-	 *     value = value to set
-	 *     args = list of keys, where all keys but the last one should result in a table
+	 *	 value = value to set
+	 *	 args = list of keys, where all keys but the last one should result in a table
 	 * Returns:
-	 *     t[k] = value, where t is the table for the second-to-last parameter in args, 
-	 *     and k is the last parameter in args
+	 *	 t[k] = value, where t is the table for the second-to-last parameter in args, 
+	 *	 and k is the last parameter in args
 	 *
 	 * Examples:
 	 * ----------------------
@@ -118,10 +118,10 @@ class LuaTable : LuaObject
 	 * Struct fields that are not present in this table are left at their default value.
 	 *
 	 * Params:
-	 *     T = any struct type
+	 *	 T = any struct type
 	 * 
 	 * Returns:
-	 *     Newly created struct
+	 *	 Newly created struct
 	 */
 	T toStruct(T)() if (is(T == struct))
 	{
@@ -132,7 +132,7 @@ class LuaTable : LuaObject
 	/**
 	 * Fills a struct's members with fields from this table.
 	 * Params:
-	 *     s = struct to fill
+	 *	 s = struct to fill
 	 */
 	void copyTo(T)(ref T s) if (is(T == struct))
 	{
@@ -144,7 +144,7 @@ class LuaTable : LuaObject
 	/**
 	 * Sets the metatable for this table.
 	 * Params:
-	 *     meta = new metatable
+	 *	 meta = new metatable
  	 */
 	void setMetaTable(LuaTable meta)
 	in{ assert(state == meta.state); }
@@ -159,7 +159,7 @@ class LuaTable : LuaObject
 	/**
 	 * Gets the metatable for this table.
 	 * Returns:
-	 *     A reference to the metatable for this table, or null if this table has no metatable.
+	 *	 A reference to the metatable for this table, or null if this table has no metatable.
 	 */
 	LuaTable getMetaTable()
 	{
