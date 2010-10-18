@@ -188,7 +188,7 @@ class LuaState
         return popValue!T(L);
     }
 	
-	///This state can be used as a table to operate on its global table.
+	/// This state can be used as a table to operate on its global table.
 	/**
 	 * Same as calling globals.get with the same arguments.
 	 * See Also:
