@@ -169,6 +169,18 @@ LuaState for the given lua_State*.<br><br>
                
 <td>new panic handler</td></tr>
 </table><br>
+<b>Examples:</b><br>
+<pre class="d_code">	<font color=blue>auto</font> L = luaL_newstate(); <font color=green>// found in luad.c.all
+</font>	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState(L);
+
+	<font color=blue>static</font> <font color=blue>void</font> panic(LuaState lua, string error)
+	{
+	    <font color=blue>throw</font> <font color=blue>new</font> LuaError(error);
+	}
+
+	lua.<u>setPanicHandler</u>(&amp;panic);
+</pre>
+<br><br>
 
 </dd>
 
@@ -398,7 +410,7 @@ Same as calling globals.
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Mon Oct 18 19:57:46 2010
+			on Mon Oct 18 20:04:44 2010
 
 		</td></tr>
 	</table>
