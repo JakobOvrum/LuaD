@@ -195,6 +195,8 @@ class LuaState
 unittest
 {
 	auto lua = new LuaState;
+	assert(LuaState.fromPointer(lua.L) == lua);
+	
 	lua.openLibs();
 	
 	string msg;
