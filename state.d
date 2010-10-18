@@ -106,6 +106,18 @@ class LuaState
 	 * Set a new panic handler.
 	 * Params:
 	 *     onPanic = new panic handler
+	 * Examples:
+	 * ----------------------
+	auto L = luaL_newstate(); // found in luad.c.all
+	auto lua = new LuaState(L);
+	
+	static void panic(LuaState lua, string error)
+	{
+	    throw new LuaError(error);
+	}
+	
+	lua.setPanicHandler(&panic);
+	 * ----------------------
 	 */
 	void setPanicHandler(void function(LuaState, string) onPanic)
 	{
