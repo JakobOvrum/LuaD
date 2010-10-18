@@ -7,22 +7,34 @@ $(DL
 		$(DD bool)
 	)
 	$(DT number
-		$(DD implicitly convertible to lua_Integer (default int) or lua_Number (default double))
+		$(DD lua_Integer (default int))
+		$(DD lua_Number (default double))
 	)
 	$(DT string
-		$(DD string or implicitly convertible to const(char)*)
+		$(DD string)
+		$(DD const(char)*)
 	)
 	$(DT table
-		$(DD associative arrays, arrays, structs, LuaTable)
+		$(DD associative arrays)
+		$(DD arrays)
+		$(DD structs)
+		$(DD LuaTable)
 	)
 	$(DT function
-		$(DD function pointers, delegates, LuaFunction)
+	    $(DD function pointers)
+	    $(DD delegates)
+		$(DD LuaFunction)
 	)
 	$(DT userdata
 		$(DD classes)
 	)
 	$(DT any of the above
 		$(DD LuaObject)
+	)
+	$(DT nil
+	    $(DD the special identifier nil)
+		$(DD null LuaObject references)
+		$(DD null class references)
 	)
 )
 The conversions are checked in the specified order. For example, even though bool is implicitly convertible
