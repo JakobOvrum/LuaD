@@ -197,7 +197,7 @@ class LuaState
 	LuaObject wrap(T)(T value)
 	{
 		pushValue(L, value);
-		return popValue!T(L);
+		return popValue!LuaObject(L);
 	}
 	
 	/// This state can be used as a table to operate on its global table.
