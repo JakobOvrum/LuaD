@@ -2,6 +2,7 @@ module luad.conversions.assocarrays;
 
 import luad.c.all;
 import std.traits;
+import luad.stack;
 
 void pushAssocArray(T, U)(lua_State* L, T[U] aa)
 {
@@ -28,11 +29,6 @@ T getAssocArray(T)(lua_State* L, int idx) if (isAssociativeArray!T)
 	}
 	
 	return aa;
-}
-
-version(unittest)
-{
-	import luad.stack;
 }
 
 unittest
