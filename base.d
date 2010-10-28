@@ -57,13 +57,13 @@ class LuaObject
 		lref = LuaReference(L, idx);
 	}
 	
-	protected:
 	void push()
 	{
 		lref.push();
 	}
 	
-	@property lua_State* state()
+	protected:
+	lua_State* state() @property
 	{
 		return lref.L;
 	}
