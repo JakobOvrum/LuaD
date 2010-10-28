@@ -283,4 +283,18 @@ unittest
 	{
 		assert(e.msg == "hijacked error!");
 	}
+	
+	LuaObject getObject(int a)
+	{
+		if(a == 0)
+			return lua.wrap("bar");
+		else
+			return lua.wrap(12.34);
+	}
+	
+	lua["foo"] = getObject(0);
+	lua.doString(`assert(foo == "bar")`);
+	
+	lua["foo"] = getObject(1);
+	lua.doString(`assert(foo == 12.34)`);
 }
