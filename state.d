@@ -5,7 +5,7 @@ import std.string;
 import luad.c.all;
 import luad.stack;
 
-import luad.table, luad.error;
+import luad.base, luad.table, luad.error;
 
 /**
  * Represents a Lua state instance.
