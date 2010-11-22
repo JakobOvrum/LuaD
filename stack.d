@@ -100,7 +100,13 @@ void pushValue(T)(lua_State* L, T value)
 		pushStruct(L, value);
 	
 	else static if(isSomeFunction!T)
-		pushFunction(L, value);
+	{
+		// extern(C) int function(lua_State* L)
+		static if (functionLinkage!T == "C" && is(ParameterTypeTuple!T == TypeTuple!(lua_State*)) && is(ReturnType!T == int))
+		    lua_pushcfunction(L, value);
+		else
+			pushFunction(L, value);
+	}
 		
 	else static if(is(T == class))
 	{
