@@ -99,14 +99,13 @@ void pushValue(T)(lua_State* L, T value)
 	else static if(is(T == struct))
 		pushStruct(L, value);
 	
+	// luaCFunction's are directly pushed
+	else static if(is(T == lua_CFunction) && functionLinkage!T == "C")
+		lua_pushcfunction(L, value);
+
+	// other functions are wrapped
 	else static if(isSomeFunction!T)
-	{
-		// extern(C) int function(lua_State* L)
-		static if (functionLinkage!T == "C" && is(ParameterTypeTuple!T == TypeTuple!(lua_State*)) && is(ReturnType!T == int))
-		    lua_pushcfunction(L, value);
-		else
-			pushFunction(L, value);
-	}
+		pushFunction(L, value);
 		
 	else static if(is(T == class))
 	{
@@ -265,6 +264,11 @@ version(unittest)
 		
 		lua_call(L, 0, 0);
 	}
+	
+	int luacfunc(lua_State* L)
+	{
+		return 0;
+	}
 }
 
 unittest
@@ -291,6 +295,8 @@ unittest
 	
 	assert(lua_gettop(L) == 0, "bad popValue semantics for primitives");
 	
+	pushValue(L, &luacfunc);
+	
 	//getStack
 	pushValue(L, "test");
 	pushValue(L, 123);
@@ -298,7 +304,8 @@ unittest
 	
 	auto stack = getStack(L);
 	assert(lua_gettop(L) == 0);
-	assert(stack[0].type == LuaType.String);
-	assert(stack[1].type == LuaType.Number);
-	assert(stack[2].type == LuaType.Boolean);
+	assert(stack[0].type == LuaType.Function);
+	assert(stack[1].type == LuaType.String);
+	assert(stack[2].type == LuaType.Number);
+	assert(stack[3].type == LuaType.Boolean);
 }
