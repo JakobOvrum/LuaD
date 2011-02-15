@@ -153,7 +153,7 @@ class LuaState
 		if(luaL_loadstring(L, toStringz(code)) == 1)
 			lua_error(L);
 
-		return new LuaFunction(L, -1);
+		return popValue!LuaFunction(L);
 	}
 
 	/**
@@ -168,7 +168,7 @@ class LuaState
 		if(luaL_loadfile(L, toStringz(path)) == 1)
 			lua_error(L);
 
-		return new LuaFunction(L, -1);
+		return popValue!LuaFunction(L);
 	}
 
 	/**
