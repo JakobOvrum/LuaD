@@ -5,7 +5,7 @@ import std.string;
 import luad.c.all;
 import luad.stack;
 
-import luad.base, luad.table, luad.error;
+import luad.base, luad.table, luad.lfunction, luad.error;
 
 /**
  * Represents a Lua state instance.
@@ -141,6 +141,36 @@ class LuaState
 		lua_atpanic(L, &panic);
 	}
 	
+	/**
+	 * Compile a string of Lua code.
+	 * Params:
+	 *	 code = code to compile
+	 * Returns:
+	 *   Loaded code as a function.
+	 */
+	LuaFunction loadString(string code)
+	{
+		if(luaL_loadstring(L, toStringz(code)) == 1)
+			lua_error(L);
+
+		return popValue!LuaFunction(L);
+	}
+
+	/**
+	 * Compile a file of Lua code.
+	 * Params:
+	 *	 path = path to file
+	 * Returns:
+	 *   Loaded code as a function.
+	 */
+	LuaFunction loadFile(string path)
+	{
+		if(luaL_loadfile(L, toStringz(path)) == 1)
+			lua_error(L);
+
+		return popValue!LuaFunction(L);
+	}
+
 	/**
 	 * Execute a string of Lua code.
 	 * Params:
@@ -297,4 +327,10 @@ unittest
 	
 	lua["foo"] = getObject(1);
 	lua.doString(`assert(foo == 12.34)`);
+
+	LuaFunction f = lua.loadString(`return 1, "two", 3`);
+	LuaObject[] results = f();
+	assert(results[0].type == LuaType.Number);
+	assert(results[1].type == LuaType.String);
+	assert(results[2].type == LuaType.Number);
 }
