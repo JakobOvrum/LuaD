@@ -1,4 +1,3 @@
-/* Converted to D from lauxlib.h by htod */
 module luad.c.lauxlib;
 import luad.c.luaconf;
 /*

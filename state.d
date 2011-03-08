@@ -12,12 +12,12 @@ import luad.base, luad.table, luad.lfunction, luad.error;
  */
 class LuaState
 {
-	private:
+private:
 	lua_State* L;
 	LuaTable _G, _R;
 	bool owner = false;
 	
-	public:
+public:
 	/**
 	 * Create a new, empty Lua state. The standard library is not loaded.
 	 *
@@ -140,7 +140,30 @@ class LuaState
 		
 		lua_atpanic(L, &panic);
 	}
-	
+
+	/**
+	 * push debug.traceback error handler to the stack
+	 */
+	void pushErrorHandler()
+	{
+		lua_getfield(L, LUA_GLOBALSINDEX, "debug");
+		lua_getfield(L, -1, "traceback");
+		lua_remove(L, -2); // remove debug table from stack
+	}
+
+	/**
+	 * a variant of luaL_do(string|file) with advanced error handling
+	 */
+	private void doChunk(alias loader)(string s)
+	{
+	    pushErrorHandler();
+
+	    if(loader(L, toStringz(s)) || lua_pcall(L, 0, LUA_MULTRET, -2))
+            lua_error(L);
+
+        lua_remove(L, 1);
+	}
+
 	/**
 	 * Compile a string of Lua code.
 	 * Params:
@@ -176,21 +199,22 @@ class LuaState
 	 * Params:
 	 *	 code = code to run
 	 */
-	void doString(string code)
+	auto doString(string code)
 	{
-		if(luaL_dostring(L, toStringz(code)) == 1)
-			lua_error(L);
+		doChunk!(luaL_loadstring)(code);
+		return getStack(L);
 	}
 	
+
 	/**
 	 * Execute a file of Lua code.
 	 * Params:
 	 *	 path = path to file
 	 */
-	void doFile(string path)
+	auto doFile(string path)
 	{
-		if(luaL_dofile(L, toStringz(path)) == 1)
-			lua_error(L);
+		doChunk!(luaL_loadfile)(path);
+		return getStack(L);
 	}
 	
 	/**
