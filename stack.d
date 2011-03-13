@@ -56,6 +56,7 @@ import luad.conversions.arrays;
 import luad.conversions.structs;
 import luad.conversions.assocarrays;
 import luad.conversions.classes;
+import luad.conversions.variant;
 
 /**
  * Push a value of any type to the stack.
@@ -95,6 +96,9 @@ void pushValue(T)(lua_State* L, T value)
 	
 	else static if(isArray!T)
 		pushArray(L, value);
+	
+	else static if(isVariant!T)
+		pushVariant(L, value);
 	
 	else static if(is(T == struct))
 		pushStruct(L, value);
@@ -203,6 +207,9 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	
 	else static if(isArray!T)
 		return getArray!T(L, idx);
+	
+	else static if(isVariant!T)
+		return getVariant!T(L, idx);
 	
 	else static if(is(T == struct))
 		return getStruct!T(L, idx);
