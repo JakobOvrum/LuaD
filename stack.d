@@ -162,6 +162,7 @@ private void defaultTypeMismatch(lua_State* L, int idx, int expectedType)
  *	 L = stack to get from
  *	 idx = value stack index
  */
+ import std.conv;
 T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int idx)
 {
 	debug //ensure unchanged stack
@@ -172,11 +173,19 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	
 	static if(!is(T == LuaObject))
 	{
-		int type = lua_type(L, idx);
-		int expectedType = luaTypeOf!T();
-		if(type != expectedType)
-			typeMismatchHandler(L, idx, expectedType);
-	}
+        static if(isVariant!T)
+        {
+            if(!isAllowedType!T(L, idx))
+                luaL_error(L, "Type not allowed in Variant: %s", luaL_typename(L, idx));
+        }
+        else
+        {
+            int type = lua_type(L, idx);
+            int expectedType = luaTypeOf!T();
+            if(type != expectedType)
+                typeMismatchHandler(L, idx, expectedType);
+        }
+    }
 	
 	static if(is(T : LuaObject))
 		return new T(L, idx);

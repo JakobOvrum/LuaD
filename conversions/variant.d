@@ -3,64 +3,74 @@ module luad.conversions.variant;
 import luad.c.all;
 
 import luad.stack;
-
+import luad.base;
 import std.traits;
 import std.variant;
 
 void pushVariant(T)(lua_State* L, ref T value) if (isVariant!T)
 {
 	foreach(Type; value.AllowedTypes)
-    {
 		if(value.peek!Type)
 			pushValue(L, value.get!Type);
-    }
 }
 
 T getVariant(T)(lua_State* L, int idx) if(isVariant!T)
 {
-	Variant v;
-	foreach(Type; value.AllowedTypes)
-    {
-		static if(isSomeFunction!Type)
-			if(lua_iscfunction(L, idx))
-				v = getValue!Type(L, idx);
+	T v;
+	foreach(Type; T.AllowedTypes)
+		if(isStackNativeType!Type(L, idx))
+            v = getValue!Type(L, idx);
 
-		else static if(is(Type == struct))
-			if(lua_istable(L, idx))
-				v = getValue!Type(L, idx);
+    return v;
+}
 
-		else static if(is(Type == class))
-			if(lua_istable(L, idx))
-				v = getValue!Type(L, idx);
+bool isAllowedType(T)(lua_State* L, int idx) {
+	foreach(Type; T.AllowedTypes)
+        if(isStackNativeType!Type(L, idx))
+            return true;
 
-		else static if(is(Type == bool))
-			if(lua_isboolean(L, idx))
-				v = getValue!Type(L, idx);
-
-		else static if(isAssociativeArray!Type)
-			if(lua_istable(L, idx))
-				v = getValue!Type(L, idx);
-
-		else static if(isArray!Type)
-			if(lua_istable(L, idx))
-				v = getValue!Type(L, idx);
-
-		else static if(isNumeric!Type)
-			if(lua_isnumber(L, idx))
-				v = getValue!Type(L, idx);
-
-		else static if(isSomeString!Type)
-			if(lua_isstring(L, idx))
-				v = getValue!Type(L, idx);
-
-		return v;
-    }
+    return false;
 }
 
 
+bool isStackNativeType(T)(lua_State* L, int idx) {
+    auto luaT = lua_type(L, idx);
+    
+    if(lua_iscfunction(L, idx))
+        return isSomeFunction!T;
+
+    if(luaT == LuaType.Function)
+        return isSomeFunction!T;
+
+    if(luaT == LuaType.Table)
+        static if(is(T == class) || is(T == struct))
+            return true;
+
+        else static if(isVariant!T)
+            return true;
+
+        else static if(isAssociativeArray!T)
+            return true;
+
+        else static if(isArray!T)
+            return true;
+
+    if(luaT == LuaType.Boolean)
+        return is(T == bool);
+
+    if(luaT == LuaType.Number)
+        return isNumeric!T;
+
+    if(luaT == LuaType.String)
+        return isSomeString!T;
+
+    return false;
+
+}
+
 template isVariant(T)
 {
-    enum isAlgebraic = hasMember!(T,"AllowedTypes");
+    enum isVariant = hasMember!(T,"AllowedTypes");
 }
 
 
