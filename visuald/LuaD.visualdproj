@@ -254,7 +254,7 @@
   <pathCv2pdb>$(VisualDInstallDir)cv2pdb\cv2pdb.exe</pathCv2pdb>
   <objfiles />
   <linkswitches />
-  <libfiles>$(LUA_OMFLIB)\lua51.lib X:\Programming\D\dmd2\windows\lib\phobos.lib</libfiles>
+  <libfiles>$(LUA_OMFLIB)\lua51.lib</libfiles>
   <libpaths />
   <deffile />
   <resfile />
