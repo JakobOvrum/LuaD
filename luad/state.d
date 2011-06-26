@@ -131,6 +131,8 @@ class LuaState
 			auto callback = cast(void function(LuaState, string))lua_touserdata(L, -1);
 			assert(callback);
 			
+			lua_settop(L, 0);
+			
 			callback(LuaState.fromPointer(L), error);
 			return 0;
 		}
@@ -150,7 +152,7 @@ class LuaState
 	 */
 	LuaFunction loadString(string code)
 	{
-		if(luaL_loadstring(L, toStringz(code)) == 1)
+		if(luaL_loadstring(L, toStringz(code)) != 0)
 			lua_error(L);
 
 		return popValue!LuaFunction(L);
@@ -165,7 +167,7 @@ class LuaState
 	 */
 	LuaFunction loadFile(string path)
 	{
-		if(luaL_loadfile(L, toStringz(path)) == 1)
+		if(luaL_loadfile(L, toStringz(path)) != 1)
 			lua_error(L);
 
 		return popValue!LuaFunction(L);
