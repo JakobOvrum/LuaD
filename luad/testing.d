@@ -7,13 +7,6 @@ import std.c.string : strcmp;
 import std.string : format;
 import std.string : toStringz;
 
-version(unittest){}
-else
-{
-	pragma(msg, "std.testing was imported, but -unittest was not passed.");
-	pragma(msg, "Did you mean to wrap it in version(unittest)?");
-}
-
 /** Test a piece of Lua code.
  * Params:
  *    L = Lua state to run in.
