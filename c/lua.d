@@ -386,7 +386,7 @@ void lua_register(lua_State* L, const(char)* n, lua_CFunction f) { lua_pushcfunc
 void lua_pushcfunction(lua_State* L, lua_CFunction f) { lua_pushcclosure(L, f, 0); }
 
 //C	 #define lua_strlen(L,i)		lua_objlen(L, (i))
-int lua_strlen(lua_State* L, int i) { return lua_objlen(L, i); }
+size_t lua_strlen(lua_State* L, int i) { return lua_objlen(L, i); }
 
 //C	 #define lua_isfunction(L,n)	(lua_type(L, (n)) == LUA_TFUNCTION)
 bool lua_isfunction(lua_State* L, int n) { return lua_type(L, n) == LUA_TFUNCTION; }
