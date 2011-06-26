@@ -44,7 +44,7 @@
   <program>$(DMDInstallDir)windows\bin\dmd.exe</program>
   <imppath>../</imppath>
   <fileImppath />
-  <outdir>..\bin\$(ConfigurationName)</outdir>
+  <outdir>..\lib</outdir>
   <objdir>$(OutDir)</objdir>
   <objname />
   <libname />
@@ -78,7 +78,7 @@
   <libpaths />
   <deffile />
   <resfile />
-  <exefile>$(OutDir)\$(ProjectName).lib</exefile>
+  <exefile>$(OutDir)\luad-d.lib</exefile>
   <additionalOptions />
   <preBuildCommand />
   <postBuildCommand />
@@ -134,7 +134,7 @@
   <program>$(DMDInstallDir)windows\bin\dmd.exe</program>
   <imppath>../</imppath>
   <fileImppath />
-  <outdir>..\bin\$(ConfigurationName)</outdir>
+  <outdir>..\lib</outdir>
   <objdir>$(OutDir)</objdir>
   <objname />
   <libname />
@@ -168,7 +168,7 @@
   <libpaths />
   <deffile />
   <resfile />
-  <exefile>$(OutDir)\$(ProjectName).lib</exefile>
+  <exefile>$(OutDir)\luad.lib</exefile>
   <additionalOptions />
   <preBuildCommand />
   <postBuildCommand />
@@ -224,7 +224,7 @@
   <program>$(DMDInstallDir)windows\bin\dmd.exe</program>
   <imppath>../</imppath>
   <fileImppath />
-  <outdir>..\bin\$(ConfigurationName)</outdir>
+  <outdir>..\test</outdir>
   <objdir>$(OutDir)</objdir>
   <objname />
   <libname />
