@@ -4,6 +4,8 @@ import luad.c.all;
 import luad.reference;
 import luad.stack;
 
+import std.c.string : strlen;
+
 /**
  * Enumerates all Lua types.
  */
@@ -88,6 +90,19 @@ class LuaObject
 		push();
 		scope(success) lua_pop(state, 1);
 		return cast(LuaType)lua_type(state, -1);
+	}
+	
+	/**
+	 * Type of referenced object
+	 * See_Also:
+	 *	 LuaType
+	 */
+	@property string typeName()
+	{
+		push();
+		scope(success) lua_pop(state, 1);
+		const(char)* name = luaL_typename(state, -1);
+		return name[0.. strlen(name)].idup;
 	}
 	
 	/// Boolean whether or not the referenced object is nil
