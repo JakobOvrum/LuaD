@@ -28,18 +28,18 @@ private void pushMeta(T)(lua_State* L, T obj)
 	
 	lua_newtable(L); //__index fallback table
 	
-	foreach(member; __traits(allMembers, T))
+	foreach(member; __traits(derivedMembers, T))
 	{
-		static if(member != "__ctor" && member != "Monitor" && member != "toHash" && //do not handle
-			member != "toString" && member != "opEquals" && //give special care
-			member != "opCmp" && //TODO: give special care
-			__traits(compiles, mixin("obj." ~ member)) && //is a public member?
-			__traits(compiles, mixin("T." ~ member)) && //can check for isStaticFunction?
-			!__traits(isStaticFunction, mixin("T." ~ member))) //is not a static function?
+		static if(member != "this" && member != "__ctor" && //do not handle yet
+			member != "Monitor" && member != "toHash" && //do not handle
+			member != "toString" && member != "opEquals" && //do not handle yet
+			member != "opCmp") //do not handle yet (TODO: handle later)
 		{
-			pragma(msg, member);
-			pushMethod!T(L, mixin("&obj." ~ member));
-			lua_setfield(L, -2, member);
+			static if(__traits(getOverloads, T.init, member).length > 0)
+			{
+				pushMethod!T(L, mixin("&obj." ~ member));
+				lua_setfield(L, -2, toStringz(member));
+			}
 		}
 	}
 	
