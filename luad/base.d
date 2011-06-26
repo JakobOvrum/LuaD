@@ -93,9 +93,7 @@ class LuaObject
 	}
 	
 	/**
-	 * Type of referenced object
-	 * See_Also:
-	 *	 LuaType
+	 * Type name of referenced object
 	 */
 	@property string typeName()
 	{

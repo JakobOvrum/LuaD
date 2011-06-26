@@ -292,7 +292,6 @@ unittest
 		assert(e.msg == `[string "error("Hello, D!")"]:1: Hello, D!`);
 	}
 	
-	
 	lua.set("success", false);
 	assert(!lua.get!bool("success"));
 	
