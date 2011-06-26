@@ -47,6 +47,7 @@ void fillStruct(T)(lua_State* L, int idx, ref T s) if(is(T == struct))
 	}
 }
 
+version(unittest) import luad.testing;
 
 unittest
 {
@@ -74,5 +75,5 @@ unittest
 				("bad table pair: '%s' = '%s' (expected '%s')"):format(key, value, expected)
 			)
 		end
-	`, __FILE__);
+	`);
 }

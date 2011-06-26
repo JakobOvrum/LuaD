@@ -314,22 +314,15 @@ unittest
 		assert(e.msg == "hijacked error!");
 	}
 	
-	LuaObject getObject(int a)
-	{
-		if(a == 0)
-			return lua.wrap("bar");
-		else
-			return lua.wrap(12.34);
-	}
-	
-	lua["foo"] = getObject(0);
+	lua["foo"] = lua.wrap("bar");
 	lua.doString(`assert(foo == "bar")`);
 	
-	lua["foo"] = getObject(1);
+	lua["foo"] = lua.wrap(12.34);
 	lua.doString(`assert(foo == 12.34)`);
 
-	LuaFunction f = lua.loadString(`return 1, "two", 3`);
-	LuaObject[] results = f();
+	LuaFunction multipleReturns = lua.loadString(`return 1, "two", 3`);
+	LuaObject[] results = multipleReturns();
+	
 	assert(results[0].type == LuaType.Number);
 	assert(results[1].type == LuaType.String);
 	assert(results[2].type == LuaType.Number);

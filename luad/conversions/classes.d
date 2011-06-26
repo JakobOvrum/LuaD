@@ -95,6 +95,8 @@ T getClass(T)(lua_State* L, int idx) if (is(T == class))
 	return cast(T)obj;
 }
 
+version(unittest) import luad.testing;
+
 unittest
 {
 	lua_State* L = luaL_newstate();
@@ -138,5 +140,5 @@ unittest
 		assert(a:bar(2) == 4)
 		func(a)
 		assert(a:bar(2) == 8)
-	`, __FILE__);
+	`);
 }

@@ -31,6 +31,8 @@ T getAssocArray(T)(lua_State* L, int idx) if (isAssociativeArray!T)
 	return aa;
 }
 
+version(unittest) import luad.testing;
+
 unittest
 {
 	lua_State* L = luaL_newstate();
@@ -45,7 +47,7 @@ unittest
 		assert(aa.hello == "world")
 			
 		aa = {one = 1, two = 2}
-	`, __FILE__);
+	`);
 	
 	lua_getglobal(L, "aa");
 	auto aa = popValue!(uint[string])(L);
