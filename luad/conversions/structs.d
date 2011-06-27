@@ -41,7 +41,7 @@ void fillStruct(T)(lua_State* L, int idx, ref T s) if(is(T == struct))
 		//if not the constructor (_ctor? Where are you?) and not a member function
 		static if(field != "this" && !mixin("is(typeof(&s." ~ field ~ ") == delegate)"))
 		{
-			lua_getfield(L, idx, field);
+			lua_getfield(L, idx, field.ptr);
 			mixin("s." ~ field ~ " = popValue!(typeof(s." ~ field ~ "))(L);");
 		}
 	}
