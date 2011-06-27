@@ -50,13 +50,11 @@ The example/ directory is a work-in-progress collection of examples, it's a bit 
 
 Usage with VisualD/Windows
 ============================================
-Project files for [VisualD](http://www.dsource.org/projects/visuald) are included in the `visuald` subdirectory.
+[VisualD](http://www.dsource.org/projects/visuald) project files are included in the `visuald` subdirectory. The Release and Debug configurations produce `lib/luad.lib` and `lib/luad-d.lib` respectively. The Unittest configuration produces `test/luad_unittest.exe`.
 
-The Release and Debug configurations produce `lib/luad.lib` and `lib/luad-d.lib` respectively.
+Project files for the examples can be found in `visuald/examples` and produce binaries in the `example/bin` directory.
 
-The Unittest configuration produces `test/luad_unittest.exe`.
-
-The location of `lua51.lib` needs to be configured. The project is pre-configured to `%LUA_OMFLIB%/lua51.lib`; either add the `LUA_OMFLIB` environment variable, or edit the linker settings manually. `lua51.lib` in OMF format can be found on the [binaries branch](https://github.com/JakobOvrum/LuaD/tree/binaries).
+The location of `lua51.lib` needs to be configured for the LuaD Unittest configuration as well as for the examples. The projects are pre-configured to `%LUA_OMFLIB%/lua51.lib`; either add the `LUA_OMFLIB` environment variable, or edit the linker settings manually. `lua51.lib` in OMF format can be found on the [binaries branch](https://github.com/JakobOvrum/LuaD/tree/binaries).
 
 Documentation
 ============================================
