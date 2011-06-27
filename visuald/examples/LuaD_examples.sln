@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{002A2DE9-8BB6-484D-9802-7E4AD4084715}") = "hello", "hello.visualdproj", "{E094FB21-6C60-418A-9D9F-329A6680AA62}"
+EndProject
+Project("{002A2DE9-8BB6-484D-9802-7E4AD4084715}") = "phonebook", "phonebook.visualdproj", "{398E951F-4212-4D4B-9545-F76AC1D8EEC9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E094FB21-6C60-418A-9D9F-329A6680AA62}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E094FB21-6C60-418A-9D9F-329A6680AA62}.Debug|Win32.Build.0 = Debug|Win32
+		{E094FB21-6C60-418A-9D9F-329A6680AA62}.Release|Win32.ActiveCfg = Release|Win32
+		{E094FB21-6C60-418A-9D9F-329A6680AA62}.Release|Win32.Build.0 = Release|Win32
+		{398E951F-4212-4D4B-9545-F76AC1D8EEC9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{398E951F-4212-4D4B-9545-F76AC1D8EEC9}.Debug|Win32.Build.0 = Debug|Win32
+		{398E951F-4212-4D4B-9545-F76AC1D8EEC9}.Release|Win32.ActiveCfg = Release|Win32
+		{398E951F-4212-4D4B-9545-F76AC1D8EEC9}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
