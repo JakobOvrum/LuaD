@@ -43,7 +43,6 @@ to lua_Integer, it will be converted to a boolean because boolean has precedence
 module luad.stack;
 
 import std.traits;
-import std.string : toStringz;
 
 import luad.c.all;
 
@@ -264,18 +263,7 @@ T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
 	return getValue!(T, typeMismatchHandler)(L, -1);
 }
 
-version(unittest)
-{
-	import std.c.string : strcmp;
-	
-	void unittest_lua(lua_State* L, string code, string chunkName)
-	{
-		if(luaL_loadbuffer(L, code.ptr, code.length, toStringz("@" ~ chunkName)) != 0)
-			lua_error(L);
-		
-		lua_call(L, 0, 0);
-	}
-}
+version(unittest) import luad.testing;
 
 unittest
 {

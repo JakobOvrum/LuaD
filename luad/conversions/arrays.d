@@ -32,6 +32,8 @@ T getArray(T)(lua_State* L, int idx) if (isArray!T)
 	return arr;
 }
 
+version(unittest) import luad.testing;
+
 unittest
 {
 	lua_State* L = luaL_newstate();
@@ -51,11 +53,11 @@ unittest
 					("bad array index: '%s' = '%s' (expected '%s')"):format(i, value, expected)
 				)
 			end
-		`, __FILE__);
+		`);
 	}
 	
 	{
-		unittest_lua(L, `array = {"hello", "from", "lua"}`, __FILE__);
+		unittest_lua(L, `array = {"hello", "from", "lua"}`);
 		
 		lua_getglobal(L, "array");
 		string[] arr = popValue!(string[])(L);

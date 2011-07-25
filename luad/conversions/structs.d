@@ -10,7 +10,7 @@ void pushStruct(T)(lua_State* L, ref T value) if (is(T == struct))
 	
 	foreach(field; __traits(allMembers, T))
 	{	
-		static if(field != "this") //God damn __traits documentation
+		static if(field != "this")
 		{
 			pushValue(L, field);
 		
@@ -36,17 +36,19 @@ T getStruct(T)(lua_State* L, int idx) if(is(T == struct))
 void fillStruct(T)(lua_State* L, int idx, ref T s) if(is(T == struct))
 {
 	foreach(field; __traits(allMembers, T))
-	{	
-		//Damn __traits documentation...
-		//if not the constructor (_ctor? Where are you?) and not a member function
-		static if(field != "this" && !mixin("is(typeof(&s." ~ field ~ ") == delegate)"))
+	{
+		static if(field != "this")
 		{
-			lua_getfield(L, idx, field);
-			mixin("s." ~ field ~ " = popValue!(typeof(s." ~ field ~ "))(L);");
+			static if(__traits(getOverloads, T, field).length == 0)
+			{
+				lua_getfield(L, idx, field.ptr);
+				mixin("s." ~ field ~ " = popValue!(typeof(s." ~ field ~ "))(L);");
+			}
 		}
 	}
 }
 
+version(unittest) import luad.testing;
 
 unittest
 {
@@ -60,7 +62,7 @@ unittest
 		double n;
 		string s;
 		
-		void f(){}
+		string f(){ return "foobar"; }
 	}
 	
 	pushValue(L, S(1, 2.3, "hello"));
@@ -74,5 +76,16 @@ unittest
 				("bad table pair: '%s' = '%s' (expected '%s')"):format(key, value, expected)
 			)
 		end
-	`, __FILE__);
+		
+		assert(struct.f() == "foobar")
+	`);
+	
+	lua_getglobal(L, "struct");
+	S s = getStruct!S(L, -1);
+	
+	assert(s.i == 1);
+	assert(s.n == 2.3);
+	assert(s.s == "hello");
+	
+	lua_pop(L, 1);
 }

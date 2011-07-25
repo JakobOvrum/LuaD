@@ -177,6 +177,8 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 	};
 }
 
+version(unittest) import luad.testing;
+
 unittest
 {
 	lua_State* L = luaL_newstate();
@@ -199,7 +201,7 @@ unittest
 		assert(ret == expect, 
 			("sayHello return type - got '%s', expected '%s'"):format(ret, expect)
 		)
-	`, __FILE__);
+	`);
 	
 	//delegates
 	double curry = 3.14 * 2;
@@ -214,7 +216,7 @@ unittest
 	
 	unittest_lua(L, `
 		assert(circle(2) == 3.14 * 4, "closure return type mismatch!")
-	`, __FILE__);
+	`);
 	
 	{
 		lua_getglobal(L, "string");

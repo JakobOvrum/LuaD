@@ -131,6 +131,8 @@ class LuaState
 			auto callback = cast(void function(LuaState, string))lua_touserdata(L, -1);
 			assert(callback);
 			
+			lua_settop(L, 0);
+			
 			callback(LuaState.fromPointer(L), error);
 			return 0;
 		}
@@ -150,7 +152,7 @@ class LuaState
 	 */
 	LuaFunction loadString(string code)
 	{
-		if(luaL_loadstring(L, toStringz(code)) == 1)
+		if(luaL_loadstring(L, toStringz(code)) != 0)
 			lua_error(L);
 
 		return popValue!LuaFunction(L);
@@ -165,7 +167,7 @@ class LuaState
 	 */
 	LuaFunction loadFile(string path)
 	{
-		if(luaL_loadfile(L, toStringz(path)) == 1)
+		if(luaL_loadfile(L, toStringz(path)) != 1)
 			lua_error(L);
 
 		return popValue!LuaFunction(L);
@@ -290,7 +292,6 @@ unittest
 		assert(e.msg == `[string "error("Hello, D!")"]:1: Hello, D!`);
 	}
 	
-	
 	lua.set("success", false);
 	assert(!lua.get!bool("success"));
 	
@@ -314,22 +315,15 @@ unittest
 		assert(e.msg == "hijacked error!");
 	}
 	
-	LuaObject getObject(int a)
-	{
-		if(a == 0)
-			return lua.wrap("bar");
-		else
-			return lua.wrap(12.34);
-	}
-	
-	lua["foo"] = getObject(0);
+	lua["foo"] = lua.wrap("bar");
 	lua.doString(`assert(foo == "bar")`);
 	
-	lua["foo"] = getObject(1);
+	lua["foo"] = lua.wrap(12.34);
 	lua.doString(`assert(foo == 12.34)`);
 
-	LuaFunction f = lua.loadString(`return 1, "two", 3`);
-	LuaObject[] results = f();
+	LuaFunction multipleReturns = lua.loadString(`return 1, "two", 3`);
+	LuaObject[] results = multipleReturns();
+	
 	assert(results[0].type == LuaType.Number);
 	assert(results[1].type == LuaType.String);
 	assert(results[2].type == LuaType.Number);
