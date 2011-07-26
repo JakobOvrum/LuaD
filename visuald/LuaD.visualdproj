@@ -33,8 +33,8 @@
   <useInline>0</useInline>
   <release>0</release>
   <preservePaths>1</preservePaths>
-  <warnings>0</warnings>
-  <infowarnings>0</infowarnings>
+  <warnings>1</warnings>
+  <infowarnings>1</infowarnings>
   <pic>0</pic>
   <cov>0</cov>
   <nofloat>0</nofloat>
@@ -123,8 +123,8 @@
   <useInline>0</useInline>
   <release>1</release>
   <preservePaths>1</preservePaths>
-  <warnings>0</warnings>
-  <infowarnings>0</infowarnings>
+  <warnings>1</warnings>
+  <infowarnings>1</infowarnings>
   <pic>0</pic>
   <cov>0</cov>
   <nofloat>0</nofloat>
@@ -213,8 +213,8 @@
   <useInline>0</useInline>
   <release>0</release>
   <preservePaths>1</preservePaths>
-  <warnings>0</warnings>
-  <infowarnings>0</infowarnings>
+  <warnings>1</warnings>
+  <infowarnings>1</infowarnings>
   <pic>0</pic>
   <cov>0</cov>
   <nofloat>0</nofloat>
@@ -267,7 +267,7 @@
   <debugworkingdir />
   <debugattach>0</debugattach>
   <debugremote />
-  <debugEngine>0</debugEngine>
+  <debugEngine>1</debugEngine>
   <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep</filesToClean>
  </Config>
  <Folder name="LuaD">
