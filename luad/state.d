@@ -35,8 +35,12 @@ class LuaState
 		extern(C) static int panic(lua_State* L)
 		{
 			size_t len;
-			const(char)* message = lua_tolstring(L, -1, &len);
-			throw new LuaError(message[0 .. len].idup);
+			const(char)* cMessage = lua_tolstring(L, -1, &len);
+			string message = cMessage[0 .. len].idup;
+			
+			lua_pop(L, 1);
+			
+			throw new LuaError(message);
 		}
 		
 		lua_atpanic(L, &panic);
@@ -324,6 +328,7 @@ unittest
 	LuaFunction multipleReturns = lua.loadString(`return 1, "two", 3`);
 	LuaObject[] results = multipleReturns();
 	
+	assert(results.length == 3);
 	assert(results[0].type == LuaType.Number);
 	assert(results[1].type == LuaType.String);
 	assert(results[2].type == LuaType.Number);
