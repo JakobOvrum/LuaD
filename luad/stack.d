@@ -183,10 +183,10 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		return lua_toboolean(L, idx);
 	
 	else static if(is(T : lua_Integer))
-		return lua_tointeger(L, idx);
+		return cast(T)lua_tointeger(L, idx);
 	
 	else static if(is(T : lua_Number))
-		return lua_tonumber(L, idx);
+		return cast(T)lua_tonumber(L, idx);
 	
 	else static if(is(T : string))
 	{
