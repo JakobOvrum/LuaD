@@ -83,7 +83,7 @@ void pushValue(T)(lua_State* L, T value)
 	else static if(is(T : lua_Number))
 		lua_pushnumber(L, value);
 		
-	else static if(is(T : string))
+	else static if(is(T : const(char)[]))
 		lua_pushlstring(L, value.ptr, value.length);
 	
 	else static if(is(T : const(char)*))
@@ -133,7 +133,7 @@ int luaTypeOf(T)()
 	else static if(is(T : lua_Integer) || is(T : lua_Number))
 		return LUA_TNUMBER;
 	
-	else static if(is(T : string) || is(T : const(char)*))
+	else static if(is(T : const(char)[]) || is(T : const(char)*))
 		return LUA_TSTRING;
 	
 	else static if(isArray!T || isAssociativeArray!T || is(T == struct) || is(T == LuaTable))
@@ -193,11 +193,14 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	else static if(is(T : lua_Number))
 		return cast(T)lua_tonumber(L, idx);
 	
-	else static if(is(T : string))
+	else static if(is(T : const(char)[]))
 	{
 		size_t len;
-		const(char*) str = lua_tolstring(L, idx, &len);
-		return str[0 .. len].idup;
+		const(char)* str = lua_tolstring(L, idx, &len);
+		static if(is(T == char[]))
+			return str[0 .. len].dup;
+		else
+			return str[0 .. len].idup;
 	}
 	else static if(is(T : const(char)*))
 		return lua_tostring(L, idx);
@@ -259,22 +262,39 @@ unittest
 	lua_State* L = luaL_newstate();
 	scope(success) lua_close(L);
 	
-	//pushValue and popValue
+	//	pushValue and popValue
+	//number
+	pushValue(L, cast(short)123);
+	assert(lua_isnumber(L, -1) && (popValue!short(L) == 123));
+	
 	pushValue(L, 123);
 	assert(lua_isnumber(L, -1) && (popValue!int(L) == 123));
 	
+	pushValue(L, 123UL);
+	assert(lua_isnumber(L, -1) && (popValue!ulong(L) == 123));
+	
+	pushValue(L, 1.2f);
+	assert(lua_isnumber(L, -1) && (popValue!float(L) == 1.2f));
+
 	pushValue(L, 1.23);
 	assert(lua_isnumber(L, -1) && (popValue!double(L) == 1.23));
 	
-	pushValue(L, "foobar");
+	//string
+	string istr = "foobar";
+	pushValue(L, istr);
 	assert(lua_isstring(L, -1) && (popValue!string(L) == "foobar"));
 	
-	pushValue(L, true);
-	assert(lua_isboolean(L, -1) && (popValue!bool(L) == true));
+	char[] str = "baz".dup;
+	pushValue(L, str);
+	assert(lua_isstring(L, -1) && (popValue!(char[])(L) == "baz"));
 	
 	const(char)* cstr = "hi";
 	pushValue(L, cstr);
 	assert(lua_isstring(L, -1) && (strcmp(cstr, popValue!(const(char)*)(L)) == 0));
+	
+	//boolean
+	pushValue(L, true);
+	assert(lua_isboolean(L, -1) && (popValue!bool(L) == true));
 	
 	assert(lua_gettop(L) == 0, "bad popValue semantics for primitives");
 	
