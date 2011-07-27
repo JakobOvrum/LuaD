@@ -11,8 +11,9 @@ $(DL
 		$(DD lua_Number (default double))
 	)
 	$(DT string
-		$(DD string)
+		$(DD const(char)[] (string), char[])
 		$(DD const(char)*)
+		$(DD char)
 	)
 	$(DT table
 		$(DD associative arrays)
@@ -39,6 +40,13 @@ $(DL
 )
 The conversions are checked in the specified order. For example, even though bool is implicitly convertible
 to lua_Integer, it will be converted to a boolean because boolean has precedence.
+
+Additionally, the following types are pushable to Lua, but can't be retrieved back:
+$(DL
+	$(DT function
+		$(DD lua_CFunction)
+	)
+)
 +/
 module luad.stack;
 
@@ -77,6 +85,9 @@ void pushValue(T)(lua_State* L, T value)
 	else static if(is(T == bool))
 		lua_pushboolean(L, cast(bool)value);
 	
+	else static if(is(T == char))
+		lua_pushlstring(L, &value, 1);
+		
 	else static if(is(T : lua_Integer))
 		lua_pushinteger(L, value);
 	
@@ -130,11 +141,11 @@ int luaTypeOf(T)()
 	else static if(is(T == Nil))
 		return LUA_TNIL;
 	
+	else static if(is(T : const(char)[]) || is(T : const(char)*) || is(T == char))
+		return LUA_TSTRING;
+		
 	else static if(is(T : lua_Integer) || is(T : lua_Number))
 		return LUA_TNUMBER;
-	
-	else static if(is(T : const(char)[]) || is(T : const(char)*))
-		return LUA_TSTRING;
 	
 	else static if(isArray!T || isAssociativeArray!T || is(T == struct) || is(T == LuaTable))
 		return LUA_TTABLE;
@@ -170,6 +181,13 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		scope(success) assert(lua_gettop(L) == _top);
 	}
 	
+	//ambiguous types
+	static if(is(T == wchar) || is(T : const(wchar)[]) ||
+			  is(T == dchar) || is(T : const(dchar)[]))
+	{
+		static assert("Ambiguous type " ~ T.stringof ~ " in stack push operation. Consider converting before pushing.");
+	}
+	
 	static if(!is(T == LuaObject))
 	{
 		int type = lua_type(L, idx);
@@ -186,7 +204,10 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	
 	else static if(is(T == bool))
 		return lua_toboolean(L, idx);
-	
+
+	else static if(is(T == char))
+		return *lua_tostring(L, idx); // TODO: better define this
+			
 	else static if(is(T : lua_Integer))
 		return cast(T)lua_tointeger(L, idx);
 	
@@ -264,6 +285,9 @@ unittest
 	
 	//	pushValue and popValue
 	//number
+	pushValue(L, cast(ubyte)123);
+	assert(lua_isnumber(L, -1) && (popValue!ubyte(L) == 123));
+	
 	pushValue(L, cast(short)123);
 	assert(lua_isnumber(L, -1) && (popValue!short(L) == 123));
 	
@@ -291,6 +315,11 @@ unittest
 	const(char)* cstr = "hi";
 	pushValue(L, cstr);
 	assert(lua_isstring(L, -1) && (strcmp(cstr, popValue!(const(char)*)(L)) == 0));
+	
+	//char
+	pushValue(L, '\t');
+	assert(lua_isstring(L, -1) && getValue!string(L, -1) == "\t");
+	assert(popValue!char(L) == '\t');
 	
 	//boolean
 	pushValue(L, true);
