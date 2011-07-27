@@ -6,8 +6,9 @@ import luad.c.all;
 import luad.stack;
 
 void pushArray(T)(lua_State* L, T arr) if (isArray!T)
-{	
-	lua_createtable(L, arr.length, 0);
+{
+	assert(arr.length <= int.max, "lua_createtable only supports int.max many elements");
+	lua_createtable(L, cast(int) arr.length, 0);
 	foreach(i, v; arr)
 	{
 		pushValue(L, i + 1); //Lua tables start at 1, not 0

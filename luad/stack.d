@@ -98,6 +98,11 @@ void pushValue(T)(lua_State* L, T value)
 	else static if(is(T == struct))
 		pushStruct(L, value);
 	
+	// luaCFunction's are directly pushed
+	else static if(is(T == lua_CFunction) && functionLinkage!T == "C")
+		lua_pushcfunction(L, value);
+
+	// other functions are wrapped
 	else static if(isSomeFunction!T)
 		pushFunction(L, value);
 		
@@ -247,7 +252,27 @@ T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
 	return getValue!(T, typeMismatchHandler)(L, -1);
 }
 
+<<<<<<< HEAD:luad/stack.d
 version(unittest) import luad.testing;
+=======
+version(unittest)
+{
+	import std.c.string : strcmp;
+	
+	void unittest_lua(lua_State* L, string code, string chunkName)
+	{
+		if(luaL_loadbuffer(L, code.ptr, code.length, toStringz("@" ~ chunkName)) != 0)
+			lua_error(L);
+		
+		lua_call(L, 0, 0);
+	}
+	
+	int luacfunc(lua_State* L)
+	{
+		return 0;
+	}
+}
+>>>>>>> 8eecffa00ed67f729c937aa9c3e31a8108a724ad:stack.d
 
 unittest
 {
@@ -273,6 +298,8 @@ unittest
 	
 	assert(lua_gettop(L) == 0, "bad popValue semantics for primitives");
 	
+	pushValue(L, &luacfunc);
+	
 	//getStack
 	pushValue(L, "test");
 	pushValue(L, 123);
@@ -280,7 +307,8 @@ unittest
 	
 	auto stack = getStack(L);
 	assert(lua_gettop(L) == 0);
-	assert(stack[0].type == LuaType.String);
-	assert(stack[1].type == LuaType.Number);
-	assert(stack[2].type == LuaType.Boolean);
+	assert(stack[0].type == LuaType.Function);
+	assert(stack[1].type == LuaType.String);
+	assert(stack[2].type == LuaType.Number);
+	assert(stack[3].type == LuaType.Boolean);
 }

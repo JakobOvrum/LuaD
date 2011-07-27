@@ -1,4 +1,3 @@
-/* Converted to D from lauxlib.h by htod */
 module luad.c.lauxlib;
 import luad.c.luaconf;
 /*
@@ -29,6 +28,7 @@ extern (C):
 //C	 #define luaL_setn(L,i,j)		((void)0)  /* no op! */
 //C	 #endif
 int luaL_getn(lua_State* L, int i) { return cast(int) lua_objlen(L, i); }
+
 void luaL_setn(lua_State* L, int i, int j) { }
 
 //C	 #if defined(LUA_COMPAT_OPENLIB)
@@ -146,6 +146,7 @@ const(char)* luaL_checkstring(lua_State* L, int n) { return luaL_checklstring(L,
 //C	 #define luaL_optstring(L,n,d)	(luaL_optlstring(L, (n), (d), NULL))
 const(char)* luaL_optstring(lua_State* L, int n, const(char)* d) { return luaL_optlstring(L, n, d, null); }
 //C	 #define luaL_checkint(L,n)	((int)luaL_checkinteger(L, (n)))
+<<<<<<< HEAD:luad/c/lauxlib.d
 int luaL_checkint(lua_State* L, int n) { return cast(int) luaL_checkinteger(L, n); }
 //C	 #define luaL_optint(L,n,d)	((int)luaL_optinteger(L, (n), (d)))
 int luaL_optint (lua_State* L, int n, int d) { return cast(int) luaL_optinteger(L, n, d); }
@@ -153,6 +154,15 @@ int luaL_optint (lua_State* L, int n, int d) { return cast(int) luaL_optinteger(
 long luaL_checklong(lua_State* L, int n) { return cast(long)luaL_checkinteger(L, n); }
 //C	 #define luaL_optlong(L,n,d)	((long)luaL_optinteger(L, (n), (d)))
 long luaL_optlong(lua_State* L, int n, int d) { return cast(long)luaL_optinteger(L, n, d); }
+=======
+int luaL_checkint(lua_State* L, int numArg) { return cast(int) luaL_checkinteger(L, numArg); }
+//C	 #define luaL_optint(L,n,d)	((int)luaL_optinteger(L, (n), (d)))
+int luaL_optint (lua_State* L, int n, int d) { return cast(int)luaL_optinteger(L, n, d); }
+//C	 #define luaL_checklong(L,n)	((long)luaL_checkinteger(L, (n)))
+long luaL_checklong(lua_State* L, int numArg) { return cast(long) luaL_checkinteger(L, numArg); }
+//C	 #define luaL_optlong(L,n,d)	((long)luaL_optinteger(L, (n), (d)))
+long luaL_optlong(lua_State* L, int n, int d) { return cast(long) luaL_optinteger(L, n, d); }
+>>>>>>> 8eecffa00ed67f729c937aa9c3e31a8108a724ad:c/lauxlib.d
 
 //C	 #define luaL_typename(L,i)	lua_typename(L, lua_type(L,(i)))
 const(char)* luaL_typename(lua_State* L, int i) { return lua_typename(L, lua_type(L, i)); }
