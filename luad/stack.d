@@ -252,27 +252,7 @@ T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
 	return getValue!(T, typeMismatchHandler)(L, -1);
 }
 
-<<<<<<< HEAD:luad/stack.d
 version(unittest) import luad.testing;
-=======
-version(unittest)
-{
-	import std.c.string : strcmp;
-	
-	void unittest_lua(lua_State* L, string code, string chunkName)
-	{
-		if(luaL_loadbuffer(L, code.ptr, code.length, toStringz("@" ~ chunkName)) != 0)
-			lua_error(L);
-		
-		lua_call(L, 0, 0);
-	}
-	
-	int luacfunc(lua_State* L)
-	{
-		return 0;
-	}
-}
->>>>>>> 8eecffa00ed67f729c937aa9c3e31a8108a724ad:stack.d
 
 unittest
 {
@@ -298,9 +278,13 @@ unittest
 	
 	assert(lua_gettop(L) == 0, "bad popValue semantics for primitives");
 	
-	pushValue(L, &luacfunc);
-	
 	//getStack
+	extern(C) static int luacfunc(lua_State* L)
+	{
+		return 0;
+	}
+	
+	pushValue(L, &luacfunc);
 	pushValue(L, "test");
 	pushValue(L, 123);
 	pushValue(L, true);

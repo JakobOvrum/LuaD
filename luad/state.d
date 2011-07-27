@@ -302,6 +302,8 @@ public:
 	}
 }
 
+version(unittest) import std.string : splitLines;
+
 unittest
 {
 	auto lua = new LuaState;
@@ -317,7 +319,8 @@ unittest
 	}
 	catch(LuaError e)
 	{
-		assert(e.msg == `[string "error("Hello, D!")"]:1: Hello, D!`);
+		auto lines = splitLines(e.msg);
+		assert(lines[0] == `[string "error("Hello, D!")"]:1: Hello, D!`);
 	}
 	
 	lua.set("success", false);
