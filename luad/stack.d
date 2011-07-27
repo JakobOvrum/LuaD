@@ -90,14 +90,14 @@ void pushValue(T)(lua_State* L, T value)
 	else static if(is(T : const(char)*))
 		lua_pushstring(L, value);
 	
+	else static if(isVariant!T)
+		pushVariant(L, value);
+		
 	else static if(isAssociativeArray!T)
 		pushAssocArray(L, value);
 	
 	else static if(isArray!T)
 		pushArray(L, value);
-	
-	else static if(isVariant!T)
-		pushVariant(L, value);
 	
 	else static if(is(T == struct))
 		pushStruct(L, value);
@@ -166,7 +166,6 @@ private void defaultTypeMismatch(lua_State* L, int idx, int expectedType)
  *	 L = stack to get from
  *	 idx = value stack index
  */
- import std.conv;
 T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int idx)
 {
 	debug //ensure unchanged stack
@@ -177,18 +176,10 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	
 	static if(!is(T == LuaObject))
 	{
-		static if(isVariant!T)
-		{
-			if(!isAllowedType!T(L, idx))
-				luaL_error(L, "Type not allowed in Variant: %s", luaL_typename(L, idx));
-		}
-		else
-		{
-			int type = lua_type(L, idx);
-			int expectedType = luaTypeOf!T();
-			if(type != expectedType)
-				typeMismatchHandler(L, idx, expectedType);
-		}
+		int type = lua_type(L, idx);
+		int expectedType = luaTypeOf!T();
+		if(type != expectedType)
+			typeMismatchHandler(L, idx, expectedType);
 	}
 	
 	static if(is(T : LuaObject))
@@ -222,8 +213,12 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		return getArray!T(L, idx);
 	
 	else static if(isVariant!T)
+	{
+		if(!isAllowedType!T(L, idx))
+			luaL_error(L, "Type not allowed in Variant: %s", luaL_typename(L, idx));
+
 		return getVariant!T(L, idx);
-	
+	}
 	else static if(is(T == struct))
 		return getStruct!T(L, idx);
 	
