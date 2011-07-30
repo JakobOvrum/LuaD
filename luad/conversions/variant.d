@@ -10,6 +10,12 @@ import std.typetuple;
 
 void pushVariant(T)(lua_State* L, ref T value) if(isVariant!T)
 {
+	if(!value.hasValue())
+	{
+		lua_pushnil(L);
+		return;
+	}
+
 	foreach(Type; value.AllowedTypes)
 	{
 		if(auto v = value.peek!Type)
@@ -18,6 +24,8 @@ void pushVariant(T)(lua_State* L, ref T value) if(isVariant!T)
 			return;
 		}
 	}
+	
+	assert(false);
 }
 
 T getVariant(T)(lua_State* L, int idx) if (isVariant!T)
@@ -26,7 +34,7 @@ T getVariant(T)(lua_State* L, int idx) if (isVariant!T)
 	
 	foreach(Type; T.AllowedTypes)
 		if(t == luaTypeOf!Type)
-			return getValue!Type(L, idx);
+			return T(getValue!Type(L, idx));
 
 	assert(false);
 }
@@ -41,16 +49,13 @@ bool isAllowedType(T)(lua_State* L, int idx) {
 	return false;
 }
 
-template isVariant(T : T!(size_t, Types), Types...)
-{
-	enum isVariant = is(T == VariantN);
-}
-
+// TODO: Make this not suck
 template isVariant(T)
 {
-	enum isVariant = false;
+	enum isVariant = __traits(hasMember, T, "AllowedTypes");
 }
 
+version(unittest) import luad.testing;
 
 unittest
 {
@@ -58,10 +63,35 @@ unittest
 	scope(success) lua_close(L);
 	luaL_openlibs(L);
 	
-	Variant v = 123;
+	version(none)
+	{
+		Variant v = 123;
+		pushValue(L, v);
+		assert(popValue!int(L) == 123);
+	}
+	
+	alias Algebraic!(real, string, bool) BasicLuaType;
+	
+	BasicLuaType v = "test";
 	pushValue(L, v);
-	assert(popValue!int == 123);
-
+	assert(lua_isstring(L, -1));
+	assert(getValue!string(L, -1) == "test");
+	assert(popValue!BasicLuaType(L) == "test");
+	
+	v = 2.3L;
+	pushValue(L, v);
+	assert(lua_isnumber(L, -1));
+	lua_setglobal(L, "num");
+	
+	unittest_lua(L, `
+		assert(num == 2.3)
+	`);
+	
+	v = true;
+	pushValue(L, v);
+	assert(lua_isboolean(L, -1));
+	assert(popValue!bool(L));
+	
 	struct S
 	{
 		int i;
@@ -70,7 +100,7 @@ unittest
 		
 		void f(){}
 	}
-	pushValue(L, Algebraic!(S,int)(S(1, 2.3, "hello")));
+	pushValue(L, Algebraic!(S, int)(S(1, 2.3, "hello")));
 	assert(lua_istable(L, -1));
 	lua_setglobal(L, "struct");
 	
