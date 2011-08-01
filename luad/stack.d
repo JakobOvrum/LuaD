@@ -63,6 +63,7 @@ import luad.conversions.arrays;
 import luad.conversions.structs;
 import luad.conversions.assocarrays;
 import luad.conversions.classes;
+import luad.conversions.variant;
 
 /**
  * Push a value of any type to the stack.
@@ -100,6 +101,9 @@ void pushValue(T)(lua_State* L, T value)
 	else static if(is(T : const(char)*))
 		lua_pushstring(L, value);
 	
+	else static if(isVariant!T)
+		pushVariant(L, value);
+		
 	else static if(isAssociativeArray!T)
 		pushAssocArray(L, value);
 	
@@ -187,8 +191,8 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	{
 		static assert("Ambiguous type " ~ T.stringof ~ " in stack push operation. Consider converting before pushing.");
 	}
-	
-	static if(!is(T == LuaObject))
+
+	static if(!is(T == LuaObject) && !isVariant!T)
 	{
 		int type = lua_type(L, idx);
 		int expectedType = luaTypeOf!T();
@@ -232,6 +236,13 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	else static if(isArray!T)
 		return getArray!T(L, idx);
 	
+	else static if(isVariant!T)
+	{
+		if(!isAllowedType!T(L, idx))
+			luaL_error(L, "Type not allowed in Variant: %s", luaL_typename(L, idx));
+
+		return getVariant!T(L, idx);
+	}
 	else static if(is(T == struct))
 		return getStruct!T(L, idx);
 	
