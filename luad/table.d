@@ -9,16 +9,17 @@ import luad.stack;
 import luad.conversions.structs;
 
 /// Represents a Lua table.
-class LuaTable : LuaObject
-{	
-	package:
-	this(lua_State* L, int idx)
+struct LuaTable
+{
+	LuaObject object;
+	alias object this;
+	
+	package this(lua_State* L, int idx)
 	{
-		checkType(L, idx, LUA_TTABLE, "LuaTable");
-		super(L, idx);
+		LuaObject.checkType(L, idx, LUA_TTABLE, "LuaTable");
+		object = LuaObject(L, idx);
 	}
 	
-	public:
 	/**
 	 * Lookup a value in this table or in a sub-table of this table.
 	 * Params:
@@ -35,16 +36,16 @@ class LuaTable : LuaObject
 	 */
 	T get(T, U...)(U args)
 	{
-		push();
-		scope(success) lua_pop(state, 1);
+		this.push();
+		scope(success) lua_pop(this.state, 1);
 		
 		foreach(key; args)
 		{
-			pushValue(state, key);
-			lua_gettable(state, -2);
+			pushValue(this.state, key);
+			lua_gettable(this.state, -2);
 		}
 		
-		return popValue!T(state);
+		return popValue!T(this.state);
 	}
 	
 	/**
@@ -70,12 +71,12 @@ class LuaTable : LuaObject
 	 */
 	void set(T, U)(T key, U value)
 	{
-		push();
-		scope(success) lua_pop(state, 1);
+		this.push();
+		scope(success) lua_pop(this.state, 1);
 		
-		pushValue(state, key);
-		pushValue(state, value);
-		lua_settable(state, -3);
+		pushValue(this.state, key);
+		pushValue(this.state, value);
+		lua_settable(this.state, -3);
 	}
 	
 	/**
@@ -95,21 +96,21 @@ class LuaTable : LuaObject
 	 */
 	void opIndexAssign(T, U...)(T value, U args)
 	{
-		push();
-		scope(success) lua_pop(state, 1);
+		this.push();
+		scope(success) lua_pop(this.state, 1);
 		
 		foreach(i, arg; args)
 		{
 			static if(i != args.length - 1)
 			{
-				pushValue(state, arg);
-				lua_gettable(state, -2);
+				pushValue(this.state, arg);
+				lua_gettable(this.state, -2);
 			}
 		}
 		
-		pushValue(state, args[$-1]);
-		pushValue(state, value);
-		lua_settable(state, -3);
+		pushValue(this.state, args[$-1]);
+		pushValue(this.state, value);
+		lua_settable(this.state, -3);
 	}
 	
 	/**
@@ -126,7 +127,7 @@ class LuaTable : LuaObject
 	T toStruct(T)() if (is(T == struct))
 	{
 		push();
-		return popValue!T(state);
+		return popValue!T(this.state);
 	}
 	
 	/**
@@ -137,7 +138,7 @@ class LuaTable : LuaObject
 	void copyTo(T)(ref T s) if (is(T == struct))
 	{
 		push();
-		fillStruct(state, -1, s);
+		fillStruct(this.state, -1, s);
 		lua_pop(L, 1);
 	}
 	
@@ -147,13 +148,13 @@ class LuaTable : LuaObject
 	 *	 meta = new metatable
  	 */
 	void setMetaTable(LuaTable meta)
-	in{ assert(state == meta.state); }
+	in{ assert(this.state == meta.state); }
 	body
 	{
-		push();
+		this.push();
 		meta.push();
-		lua_setmetatable(state, -2);
-		lua_pop(state, 1);
+		lua_setmetatable(this.state, -2);
+		lua_pop(this.state, 1);
 	}
 	
 	/**
@@ -163,10 +164,10 @@ class LuaTable : LuaObject
 	 */
 	LuaTable getMetaTable()
 	{
-		push();
-		scope(success) lua_pop(state, 1);
+		this.push();
+		scope(success) lua_pop(this.state, 1);
 		
-		return lua_getmetatable(state, -1) == 0? null : popValue!LuaTable(state);
+		return lua_getmetatable(this.state, -1) == 0? LuaTable() : popValue!LuaTable(this.state);
 	}
 }
 
@@ -176,8 +177,7 @@ unittest
 	scope(success) lua_close(L);
 	
 	lua_newtable(L);
-	auto t = new LuaTable(L, -1);
-	lua_pop(L, 1);
+	auto t = popValue!LuaTable(L);
 	
 	assert(t.type == LuaType.Table);
 	
@@ -213,5 +213,5 @@ unittest
 	auto test = t2.get!string("foobar");
 	assert(test == "foobar");
 		
-	assert(t2.getMetaTable() == meta);
+	assert(t2.getMetaTable().equals(meta));
 }

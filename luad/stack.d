@@ -66,10 +66,7 @@ void pushValue(T)(lua_State* L, T value)
 {
 	static if(is(T : LuaObject))
 	{
-		if(value is null)
-			lua_pushnil(L);
-		else
-			value.push();
+		value.push();
 	}
 	else static if(is(T == Nil))
 		lua_pushnil(L);
@@ -165,7 +162,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		scope(success) assert(lua_gettop(L) == _top);
 	}
 	
-	static if(!is(T == LuaObject))
+	static if(!is(T == LuaObject) && !is(T == LuaTable) && !is(T == LuaFunction))
 	{
 		int type = lua_type(L, idx);
 		int expectedType = luaTypeOf!T();
@@ -173,8 +170,8 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 			typeMismatchHandler(L, idx, expectedType);
 	}
 	
-	static if(is(T : LuaObject))
-		return new T(L, idx);
+	static if(is(T == LuaObject) || is(T == LuaTable) || is(T == LuaFunction))
+		return T(L, idx);
 	
 	else static if(is(T == Nil))
 		return nil;

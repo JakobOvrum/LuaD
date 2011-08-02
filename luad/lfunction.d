@@ -6,12 +6,15 @@ import luad.stack;
 import luad.c.all;
 
 /// Represents a Lua function.
-class LuaFunction : LuaObject
+struct LuaFunction
 {
+	LuaObject object;
+	alias object this;
+	
 	package this(lua_State* L, int idx)
 	{
-		checkType(L, idx, LUA_TFUNCTION, "LuaFunction");
-		super(L, idx);
+		LuaObject.checkType(L, idx, LUA_TFUNCTION, "LuaFunction");
+		object = LuaObject(L, idx);
 	}
 	
 	/**
@@ -53,21 +56,21 @@ class LuaFunction : LuaObject
 	 */
 	T call(T = void, U...)(U args)
 	{
-		push();
+		this.push();
 		foreach(arg; args)
-			pushValue(state, arg);
+			pushValue(this.state, arg);
 		
 		enum hasReturnValue = !is(T == void);
 		enum multiRet = is(T == LuaObject[]);
 		
-		lua_call(state, args.length, hasReturnValue? (multiRet? LUA_MULTRET : 1) : 0);
+		lua_call(this.state, args.length, hasReturnValue? (multiRet? LUA_MULTRET : 1) : 0);
 		
 		static if(hasReturnValue)
 		{
 			static if(multiRet)
-				return getStack(state);
+				return getStack(this.state);
 			else
-				return popValue!T(state);
+				return popValue!T(this.state);
 		}
 	}
 }
@@ -79,11 +82,11 @@ unittest
 	luaL_openlibs(L);
 	
 	lua_getglobal(L, "tostring");
-	auto tostring = popValue!LuaFunction(L);
+	LuaFunction tostring = popValue!LuaFunction(L);
 	
-	LuaObject[] ret = tostring(123);
+	/+LuaObject[] ret = tostring(123);
 	assert(ret[0].to!string() == "123");
 	assert(tostring.call!string(123) == "123");
 	
-	tostring.call(321);
+	tostring.call(321);+/
 }
