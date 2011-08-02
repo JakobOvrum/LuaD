@@ -181,7 +181,6 @@
   <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep;*.lua</filesToClean>
  </Config>
  <Folder name="phonebook">
-  <File tool="None" path="..\..\example\phonebook\contacts.lua" />
   <File path="..\..\example\phonebook\phonebook.d" />
  </Folder>
 </DProject>
