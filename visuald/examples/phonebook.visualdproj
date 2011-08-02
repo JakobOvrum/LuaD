@@ -181,7 +181,7 @@
   <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep;*.lua</filesToClean>
  </Config>
  <Folder name="phonebook">
-  <File tool="Custom" path="..\..\example\phonebook\contacts.lua" customcmd="copy ..\..\example\phonebook\contacts.lua  $(OutDir)\contacts.lua" />
+  <File tool="None" path="..\..\example\phonebook\contacts.lua" />
   <File path="..\..\example\phonebook\phonebook.d" />
  </Folder>
 </DProject>
