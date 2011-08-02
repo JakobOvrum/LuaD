@@ -31,6 +31,7 @@ struct LuaFunction
 	assert(ret[2].to!bool());
 	 -----------------------
 	 */
+	// TODO: why doesn't this work? see unittest
 	LuaObject[] opCall(U...)(U args)
 	{
 		return call!(LuaObject[])(args);
@@ -82,11 +83,12 @@ unittest
 	luaL_openlibs(L);
 	
 	lua_getglobal(L, "tostring");
-	LuaFunction tostring = popValue!LuaFunction(L);
+	auto tostring = popValue!LuaFunction(L);
 	
-	/+LuaObject[] ret = tostring(123);
-	assert(ret[0].to!string() == "123");
+	//LuaObject[] ret = tostring(123);
+	//assert(ret[0].to!string() == "123");
+
 	assert(tostring.call!string(123) == "123");
 	
-	tostring.call(321);+/
+	tostring.call(321);
 }

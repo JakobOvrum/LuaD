@@ -147,7 +147,7 @@ struct LuaTable
 	 * Params:
 	 *	 meta = new metatable
  	 */
-	void setMetaTable(LuaTable meta)
+	void setMetaTable(ref LuaTable meta)
 	in{ assert(this.state == meta.state); }
 	body
 	{
