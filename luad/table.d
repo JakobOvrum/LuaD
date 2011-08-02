@@ -36,7 +36,6 @@ class LuaTable : LuaObject
 	T get(T, U...)(U args)
 	{
 		push();
-		scope(success) lua_pop(state, 1);
 		
 		foreach(key; args)
 		{
@@ -44,7 +43,9 @@ class LuaTable : LuaObject
 			lua_gettable(state, -2);
 		}
 		
-		return popValue!T(state);
+		auto ret = getValue!T(state, -1);
+		lua_pop(state, args.length + 1);
+		return ret;
 	}
 	
 	/**
@@ -110,6 +111,8 @@ class LuaTable : LuaObject
 		pushValue(state, args[$-1]);
 		pushValue(state, value);
 		lua_settable(state, -3);
+		
+		lua_pop(state, args.length - 1);
 	}
 	
 	/**
@@ -168,16 +171,63 @@ class LuaTable : LuaObject
 		
 		return lua_getmetatable(state, -1) == 0? null : popValue!LuaTable(state);
 	}
+	
+	/**
+	 * Iterates over the values in this table.
+	 */
+	int opApply(T)(int delegate(ref T value) dg)
+	{
+		push();
+		lua_pushnil(state);
+		while(lua_next(state, -2) != 0)
+		{
+			auto value = popValue!T(state);
+			int result = dg(value);
+			if(result != 0)
+			{
+				lua_pop(state, 2);
+				return result;
+			}
+		}
+		lua_pop(state, 1);
+		return 0;
+	}
+	
+	/**
+	 * Iterates over the key-value pairs in this table.
+	 */
+	int opApply(T, U)(int delegate(ref U key, ref T value) dg)
+	{
+		push();
+		lua_pushnil(state);
+		while(lua_next(state, -2) != 0)
+		{
+			auto value = popValue!T(state);
+			auto key = getValue!U(state, -1);
+			 
+			int result = dg(key, value);
+			if(result != 0)
+			{
+				lua_pop(state, 2);
+				return result;
+			}
+		}
+		lua_pop(state, 1);
+		return 0;
+	}
 }
 
 unittest
 {
 	lua_State* L = luaL_newstate();
-	scope(success) lua_close(L);
+	scope(success)
+	{
+		assert(lua_gettop(L) == 0);
+		lua_close(L);
+	}
 	
 	lua_newtable(L);
-	auto t = new LuaTable(L, -1);
-	lua_pop(L, 1);
+	auto t = popValue!LuaTable(L);
 	
 	assert(t.type == LuaType.Table);
 	
@@ -190,7 +240,7 @@ unittest
 	t.set("foo", ["outer": ["inner": "hi!"]]);
 	auto s = t.get!(string)("foo", "outer", "inner");
 	assert(s == "hi!");
-
+	
 	auto o = t["foo", "outer"];
 	assert(o.type == LuaType.Table);
 	
@@ -214,4 +264,24 @@ unittest
 	assert(test == "foobar");
 		
 	assert(t2.getMetaTable() == meta);
+	
+	// opApply
+	auto input = [1, 2, 3];
+	pushValue(L, input);
+	auto applyTest = popValue!LuaTable(L);
+	
+	int i = 0;
+	foreach(int v; applyTest)
+	{
+		assert(input[i++] == v);
+	}
+	
+	auto inputWithKeys = ["one": 1, "two": 2, "three": 3];
+	pushValue(L, inputWithKeys);
+	auto applyTestKeys = popValue!LuaTable(L);
+	
+	foreach(string key, int value; applyTestKeys)
+	{
+		assert(inputWithKeys[key] == value);
+	}
 }
