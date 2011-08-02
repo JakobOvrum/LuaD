@@ -1,4 +1,3 @@
-/* Converted to D from lauxlib.h by htod */
 module luad.c.lauxlib;
 import luad.c.luaconf;
 /*
@@ -29,6 +28,7 @@ extern (C):
 //C	 #define luaL_setn(L,i,j)		((void)0)  /* no op! */
 //C	 #endif
 int luaL_getn(lua_State* L, int i) { return cast(int) lua_objlen(L, i); }
+
 void luaL_setn(lua_State* L, int i, int j) { }
 
 //C	 #if defined(LUA_COMPAT_OPENLIB)

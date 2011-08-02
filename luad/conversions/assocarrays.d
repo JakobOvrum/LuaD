@@ -6,7 +6,8 @@ import luad.stack;
 
 void pushAssocArray(T, U)(lua_State* L, T[U] aa)
 {
-	lua_createtable(L, 0, aa.length);
+	assert(aa.length <= int.max, "lua_createtable only supports int.max many elements");
+	lua_createtable(L, 0, cast(int) aa.length);
 	foreach(key, value; aa)
 	{
 		pushValue(L, key);
