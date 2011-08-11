@@ -88,7 +88,7 @@
   <debugattach>0</debugattach>
   <debugremote />
   <debugEngine>0</debugEngine>
-  <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep;*.lua</filesToClean>
+  <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep;</filesToClean>
  </Config>
  <Config name="Release">
   <obj>0</obj>
@@ -181,7 +181,6 @@
   <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep;*.lua</filesToClean>
  </Config>
  <Folder name="phonebook">
-  <File tool="Custom" path="..\..\example\phonebook\contacts.lua" customcmd="copy ..\..\example\phonebook\contacts.lua  $(OutDir)\contacts.lua" />
   <File path="..\..\example\phonebook\phonebook.d" />
  </Folder>
 </DProject>

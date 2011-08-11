@@ -48,26 +48,35 @@ package struct Nil{}
 public Nil nil;
 
 /// Represents a reference to a Lua value of any type
-class LuaObject
+struct LuaObject
 {
 	private:
-	LuaReference lref;
+	int r = LUA_REFNIL;
+	lua_State* L = null;
 		
 	package:
 	this(lua_State* L, int idx)
 	{
-		lref = LuaReference(L, idx);
+		this.L = L;
+		
+		lua_pushvalue(L, idx);
+		r = luaL_ref(L, LUA_REGISTRYINDEX);
+	}
+	
+	this(this)
+	{
+		push();
+		r = luaL_ref(L, LUA_REGISTRYINDEX);
 	}
 	
 	void push()
 	{
-		lref.push();
+		lua_rawgeti(L, LUA_REGISTRYINDEX, r);
 	}
 	
-	protected:
 	lua_State* state() @property
 	{
-		return lref.L;
+		return L;
 	}
 	
 	static void checkType(lua_State* L, int idx, int expectedType, const(char)* expectedName)
@@ -80,6 +89,11 @@ class LuaObject
 	}
 	
 	public:
+	~this()
+	{
+		luaL_unref(L, LUA_REGISTRYINDEX, r);
+	}
+	
 	/**
 	 * Type of referenced object
 	 * See_Also:
@@ -106,7 +120,7 @@ class LuaObject
 	/// Boolean whether or not the referenced object is nil
 	@property bool isNil()
 	{
-		return lref.r == LUA_REFNIL;
+		return r == LUA_REFNIL;
 	}
 	
 	/**
@@ -116,7 +130,7 @@ class LuaObject
 	 *
 	 * Returns: string representation of referenced object
 	 */
-	override string toString()
+	string toString()
 	{
 		push();
 		scope(success) lua_pop(state, 1);
@@ -145,17 +159,28 @@ class LuaObject
 	 * Also, if the other object is not a LuaObject or a derived class of LuaObject,
 	 * or the two refer to objects in different Lua states, this function returns false.
 	 */
-	override bool opEquals(Object o)
+	bool equals(ref LuaObject o)
 	{
-		LuaObject other = cast(LuaObject)o;
-		if(other is null || other.state != state)
+		if(o.state != this.state)
+			return false;
+		
+		push();
+		o.push();
+		scope(success) lua_pop(state, 2);
+		
+		return lua_equal(state, -1, -2);
+	}
+	/+
+	bool opEquals(ref const(LuaObject) o) const
+	{
+		if(o.state != state)
 			return false;
 		
 		push();
 		other.push();
 		scope(success) lua_pop(state, 2);
 		return lua_equal(state, -1, -2);
-	}
+	}+/
 }
 
 unittest

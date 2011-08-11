@@ -1,0 +1,10 @@
+*.pdb
+*.exe
+*.exe_cv
+*.map
+*.obj
+*.json
+*.html
+*.build
+*.cmd
+*.dep
