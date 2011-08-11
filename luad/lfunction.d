@@ -11,7 +11,16 @@ struct LuaFunction
 	LuaObject object;
 	alias object this;
 	
-	package this(lua_State* L, int idx)
+	// WORKAROUND: bug #6036
+	package static LuaFunction make(lua_State* L, int idx)
+	{
+		LuaObject.checkType(L, idx, LUA_TFUNCTION, "LuaFunction");
+		LuaFunction f;
+		f.object = LuaObject(L, idx);
+		return f;
+	}
+	
+	version(none) package this(lua_State* L, int idx)
 	{
 		LuaObject.checkType(L, idx, LUA_TFUNCTION, "LuaFunction");
 		object = LuaObject(L, idx);
@@ -85,8 +94,8 @@ unittest
 	lua_getglobal(L, "tostring");
 	auto tostring = popValue!LuaFunction(L);
 	
-	//LuaObject[] ret = tostring(123);
-	//assert(ret[0].to!string() == "123");
+	LuaObject[] ret = tostring(123);
+	assert(ret[0].to!string() == "123");
 
 	assert(tostring.call!string(123) == "123");
 	

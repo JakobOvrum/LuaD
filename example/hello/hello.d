@@ -6,5 +6,5 @@ void main()
 	lua.openLibs();
 	
 	auto print = lua.get!LuaFunction("print");
-	print.call("Hello, world!");
+	print("Hello, world!");
 }

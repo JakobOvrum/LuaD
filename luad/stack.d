@@ -197,7 +197,10 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 			typeMismatchHandler(L, idx, expectedType);
 	}
 	
-	static if(is(T == LuaObject) || is(T == LuaTable) || is(T == LuaFunction))
+	static if(is(T == LuaFunction)) // WORKAROUND: bug #6036
+		return LuaFunction.make(L, idx);
+		
+	else static if(is(T == LuaObject) || is(T == LuaTable))
 		return T(L, idx);
 	
 	else static if(is(T == Nil))
