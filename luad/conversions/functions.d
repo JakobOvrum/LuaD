@@ -77,7 +77,8 @@ extern(C) int methodWrapper(T, Class)(lua_State* L)
 
 extern(C) int functionWrapper(T)(lua_State* L)
 {
-	ParameterTypeTuple!T args;
+	alias ParameterTypeTuple!T Args;
+	Args args;
 	
 	//Check arguments
 	int top = lua_gettop(L);
@@ -88,10 +89,10 @@ extern(C) int functionWrapper(T)(lua_State* L)
 	T func = *cast(T*)lua_touserdata(L, lua_upvalueindex(1));
 	
 	//Assemble arguments
-	foreach(i, arg; args)
+	foreach(i, Arg; Args)
 	{
 		//stack indexes start at 1
-		args[i] = getValue!(typeof(arg), typeMismatch)(L, i + 1);
+		args[i] = getValue!(Arg, typeMismatch)(L, i + 1);
 	}
 	
 	return callFunction!T(L, func, args);

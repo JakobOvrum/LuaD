@@ -61,8 +61,8 @@ public:
 	this(lua_State* L)
 	{
 		this.L = L;
-		_G = new LuaTable(L, LUA_GLOBALSINDEX);
-		_R = new LuaTable(L, LUA_REGISTRYINDEX);
+		_G = LuaTable(L, LUA_GLOBALSINDEX);
+		_R = LuaTable(L, LUA_REGISTRYINDEX);
 		
 		lua_pushlightuserdata(L, cast(void*)this);
 		lua_setfield(L, LUA_REGISTRYINDEX, "__dstate");

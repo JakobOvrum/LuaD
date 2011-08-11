@@ -75,10 +75,7 @@ void pushValue(T)(lua_State* L, T value)
 {
 	static if(is(T : LuaObject))
 	{
-		if(value is null)
-			lua_pushnil(L);
-		else
-			value.push();
+		value.push();
 	}
 	else static if(is(T == Nil))
 		lua_pushnil(L);
@@ -192,7 +189,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		static assert("Ambiguous type " ~ T.stringof ~ " in stack push operation. Consider converting before pushing.");
 	}
 
-	static if(!is(T == LuaObject) && !isVariant!T)
+	static if(!is(T : LuaObject) && !isVariant!T)
 	{
 		int type = lua_type(L, idx);
 		int expectedType = luaTypeOf!T();
@@ -200,8 +197,11 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 			typeMismatchHandler(L, idx, expectedType);
 	}
 	
-	static if(is(T : LuaObject))
-		return new T(L, idx);
+	static if(is(T == LuaFunction)) // WORKAROUND: bug #6036
+		return LuaFunction.make(L, idx);
+		
+	else static if(is(T == LuaObject) || is(T == LuaTable))
+		return T(L, idx);
 	
 	else static if(is(T == Nil))
 		return nil;
