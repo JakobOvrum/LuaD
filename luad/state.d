@@ -40,7 +40,7 @@ public:
 			
 			lua_pop(L, 1);
 			
-			throw new LuaError(message);
+			throw new LuaErrorException(message);
 		}
 		
 		lua_atpanic(L, &panic);
@@ -117,7 +117,7 @@ public:
 	
 	static void panic(LuaState lua, string error)
 	{
-		throw new LuaError(error);
+		throw new LuaErrorException(error);
 	}
 	
 	lua.setPanicHandler(&panic);
@@ -135,7 +135,7 @@ public:
 			auto callback = cast(void function(LuaState, string))lua_touserdata(L, -1);
 			assert(callback);
 			
-			lua_settop(L, 0);
+			lua_pop(L, 2);
 			
 			callback(LuaState.fromPointer(L), error);
 			return 0;
@@ -317,7 +317,7 @@ unittest
 	{
 		lua.doString(`error("Hello, D!")`);
 	}
-	catch(LuaError e)
+	catch(LuaErrorException e)
 	{
 		auto lines = splitLines(e.msg);
 		assert(lines[0] == `[string "error("Hello, D!")"]:1: Hello, D!`);
