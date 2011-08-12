@@ -8,9 +8,10 @@ struct Contact
 	string email;
 	uint number;
 	
-	static Contact[] fromFile(string path)
+	static Contact[] fromFile(in char[] path)
 	{
 		auto lua = new LuaState;
+		lua.openLibs(); // issue #20
 		
 		Contact[] contacts;
 		
