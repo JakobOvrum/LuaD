@@ -147,20 +147,20 @@ public:
 		lua_atpanic(L, &panic);
 	}
 
-	/**
+	/*
 	 * push debug.traceback error handler to the stack
 	 */
-	void pushErrorHandler()
+	private void pushErrorHandler()
 	{
 		lua_getfield(L, LUA_GLOBALSINDEX, "debug");
 		lua_getfield(L, -1, "traceback");
 		lua_remove(L, -2); // remove debug table from stack
 	}
 
-	/**
+	/*
 	 * a variant of luaL_do(string|file) with advanced error handling
 	 */
-	private void doChunk(alias loader)(string s)
+	private void doChunk(alias loader)(in char[] s)
 	{
 	    pushErrorHandler();
 
@@ -177,7 +177,7 @@ public:
 	 * Returns:
 	 *   Loaded code as a function.
 	 */
-	LuaFunction loadString(string code)
+	LuaFunction loadString(in char[] code)
 	{
 		if(luaL_loadstring(L, toStringz(code)) != 0)
 			lua_error(L);
@@ -192,7 +192,7 @@ public:
 	 * Returns:
 	 *   Loaded code as a function.
 	 */
-	LuaFunction loadFile(string path)
+	LuaFunction loadFile(in char[] path)
 	{
 		if(luaL_loadfile(L, toStringz(path)) != 1)
 			lua_error(L);
@@ -205,7 +205,7 @@ public:
 	 * Params:
 	 *	 code = code to run
 	 */
-	auto doString(string code)
+	LuaObject[] doString(in char[] code)
 	{
 		doChunk!(luaL_loadstring)(code);
 		return getStack(L);
@@ -217,7 +217,7 @@ public:
 	 * Params:
 	 *	 path = path to file
 	 */
-	auto doFile(string path)
+	LuaObject[] doFile(in char[] path)
 	{
 		doChunk!(luaL_loadfile)(path);
 		return getStack(L);
