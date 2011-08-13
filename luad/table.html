@@ -24,11 +24,11 @@
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">class 
+<dt><span class="decl">struct 
 <span class="currsymbol">LuaTable</span>
 <script>explorer.outline.addDecl('LuaTable');</script>
 
-: luad.base.LuaObject;
+;
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -218,7 +218,7 @@ Newly created struct<br><br>
 <span class="currsymbol">setMetaTable</span>
 <script>explorer.outline.addDecl('setMetaTable');</script>
 
-(LuaTable <span class="funcparam">meta</span>);
+(ref LuaTable <span class="funcparam">meta</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -251,6 +251,34 @@ Newly created struct<br><br>
 A reference to the metatable for this table, or <b>null</b> if this table has no metatable.<br><br>
 
 </dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">int 
+<span class="currsymbol">opApply</span>
+<script>explorer.outline.addDecl('opApply');</script>
+
+(T)(int delegate(ref T value) <span class="funcparam">dg</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Iterates over the values in this table.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">int 
+<span class="currsymbol">opApply</span>
+<script>explorer.outline.addDecl('opApply');</script>
+
+(T, U)(int delegate(ref U key, ref T value) <span class="funcparam">dg</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Iterates over the key-value pairs in this table.<br><br>
+
+</dd>
 </dl>
 <script>explorer.outline.decSymbolLevel();</script>
 
@@ -266,7 +294,7 @@ A reference to the metatable for this table, or <b>null</b> if this table has no
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Mon Oct 18 20:08:02 2010
+			on Sat Aug 13 19:47:34 2011
 
 		</td></tr>
 	</table>
@@ -285,6 +313,7 @@ A reference to the metatable for this table, or <b>null</b> if this table has no
 	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
 	explorer.packageExplorer.addModule("luad.conversions.functions");
 	explorer.packageExplorer.addModule("luad.conversions.structs");
+	explorer.packageExplorer.addModule("luad.conversions.variant");
 	
 	explorer.packageExplorer.addModule("luad.c.all");</script>
 </body></html>

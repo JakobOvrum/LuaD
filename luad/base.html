@@ -167,7 +167,7 @@ Useful for clearing keys in a table:
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">class 
+<dt><span class="decl">struct 
 <span class="currsymbol">LuaObject</span>
 <script>explorer.outline.addDecl('LuaObject');</script>
 
@@ -182,7 +182,7 @@ Useful for clearing keys in a table:
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">LuaType 
+<dt><span class="decl">@property LuaType 
 <span class="currsymbol">type</span>
 <script>explorer.outline.addDecl('type');</script>
 
@@ -199,7 +199,21 @@ LuaType<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">bool 
+<dt><span class="decl">@property string 
+<span class="currsymbol">typeName</span>
+<script>explorer.outline.addDecl('typeName');</script>
+
+();
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Type name of referenced object<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">@property bool 
 <span class="currsymbol">isNil</span>
 <script>explorer.outline.addDecl('isNil');</script>
 
@@ -256,10 +270,10 @@ string representation of referenced object<br><br>
 
 <script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">bool 
-<span class="currsymbol">opEquals</span>
-<script>explorer.outline.addDecl('opEquals');</script>
+<span class="currsymbol">equals</span>
+<script>explorer.outline.addDecl('equals');</script>
 
-(Object <span class="funcparam">o</span>);
+(ref LuaObject <span class="funcparam">o</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -284,7 +298,7 @@ string representation of referenced object<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Mon Oct 18 20:08:02 2010
+			on Sat Aug 13 19:47:34 2011
 
 		</td></tr>
 	</table>
@@ -303,6 +317,7 @@ string representation of referenced object<br><br>
 	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
 	explorer.packageExplorer.addModule("luad.conversions.functions");
 	explorer.packageExplorer.addModule("luad.conversions.structs");
+	explorer.packageExplorer.addModule("luad.conversions.variant");
 	
 	explorer.packageExplorer.addModule("luad.c.all");</script>
 </body></html>

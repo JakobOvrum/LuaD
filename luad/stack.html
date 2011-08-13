@@ -30,8 +30,9 @@ The conversion rules are as follows, where conversion goes both ways:
 		<dd>lua_Number (default double)</dd>
 	</dt>
 	<dt>string
-		<dd>string</dd>
+		<dd>const(char)[] (string), char[]</dd>
 		<dd>const(char)*</dd>
+		<dd>char</dd>
 	</dt>
 	<dt>table
 		<dd>associative arrays</dd>
@@ -57,7 +58,14 @@ The conversion rules are as follows, where conversion goes both ways:
 	</dt>
 </dl>
 The conversions are checked in the specified order. For example, even though bool is implicitly convertible
-to lua_Integer, it will be converted to a boolean because boolean has precedence.<br><br>
+to lua_Integer, it will be converted to a boolean because boolean has precedence.
+<br><br>
+
+Additionally, the following types are pushable to Lua, but can't be retrieved back:
+<dl><dt>function
+		<dd>lua_CFunction</dd>
+	</dt>
+</dl><br><br>
 
 
 <script>explorer.outline.incSymbolLevel();</script>
@@ -193,7 +201,7 @@ getValue<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Mon Oct 18 20:08:02 2010
+			on Sat Aug 13 19:47:34 2011
 
 		</td></tr>
 	</table>
@@ -212,6 +220,7 @@ getValue<br><br>
 	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
 	explorer.packageExplorer.addModule("luad.conversions.functions");
 	explorer.packageExplorer.addModule("luad.conversions.structs");
+	explorer.packageExplorer.addModule("luad.conversions.variant");
 	
 	explorer.packageExplorer.addModule("luad.c.all");</script>
 </body></html>

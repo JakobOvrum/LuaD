@@ -119,7 +119,7 @@ LuaState for the given lua_State*.<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">LuaTable 
+<dt><span class="decl">@property LuaTable 
 <span class="currsymbol">globals</span>
 <script>explorer.outline.addDecl('globals');</script>
 
@@ -133,7 +133,7 @@ LuaState for the given lua_State*.<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">LuaTable 
+<dt><span class="decl">@property LuaTable 
 <span class="currsymbol">registry</span>
 <script>explorer.outline.addDecl('registry');</script>
 
@@ -175,7 +175,7 @@ LuaState for the given lua_State*.<br><br>
 
 	<font color=blue>static</font> <font color=blue>void</font> panic(LuaState lua, string error)
 	{
-		<font color=blue>throw</font> <font color=blue>new</font> LuaError(error);
+		<font color=blue>throw</font> <font color=blue>new</font> LuaErrorException(error);
 	}
 
 	lua.<u>setPanicHandler</u>(&amp;panic);
@@ -185,11 +185,59 @@ LuaState for the given lua_State*.<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">void 
+<dt><span class="decl">LuaFunction 
+<span class="currsymbol">loadString</span>
+<script>explorer.outline.addDecl('loadString');</script>
+
+(in char[] <span class="funcparam">code</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Compile a string of Lua <span class="funcparam">code</span>.
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">char[] <span class="funcparam">code</span></td>
+
+               
+<td><span class="funcparam">code</span> to compile</td></tr>
+</table><br>
+<b>Returns:</b><br>
+Loaded <span class="funcparam">code</span> as a function.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">LuaFunction 
+<span class="currsymbol">loadFile</span>
+<script>explorer.outline.addDecl('loadFile');</script>
+
+(in char[] <span class="funcparam">path</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Compile a file of Lua code.
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">char[] <span class="funcparam">path</span></td>
+
+               
+<td><span class="funcparam">path</span> to file</td></tr>
+</table><br>
+<b>Returns:</b><br>
+Loaded code as a function.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">LuaObject[] 
 <span class="currsymbol">doString</span>
 <script>explorer.outline.addDecl('doString');</script>
 
-(string <span class="funcparam">code</span>);
+(in char[] <span class="funcparam">code</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -198,7 +246,7 @@ LuaState for the given lua_State*.<br><br>
 <br><br>
 <b>Params:</b><br>
 <table><tr>
-<td nowrap valign="top" style="padding-right: 8px">string <span class="funcparam">code</span></td>
+<td nowrap valign="top" style="padding-right: 8px">char[] <span class="funcparam">code</span></td>
 
                
 <td><span class="funcparam">code</span> to run</td></tr>
@@ -207,11 +255,11 @@ LuaState for the given lua_State*.<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">void 
+<dt><span class="decl">LuaObject[] 
 <span class="currsymbol">doFile</span>
 <script>explorer.outline.addDecl('doFile');</script>
 
-(string <span class="funcparam">path</span>);
+(in char[] <span class="funcparam">path</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -220,7 +268,7 @@ LuaState for the given lua_State*.<br><br>
 <br><br>
 <b>Params:</b><br>
 <table><tr>
-<td nowrap valign="top" style="padding-right: 8px">string <span class="funcparam">path</span></td>
+<td nowrap valign="top" style="padding-right: 8px">char[] <span class="funcparam">path</span></td>
 
                
 <td><span class="funcparam">path</span> to file</td></tr>
@@ -410,7 +458,7 @@ Same as calling globals.
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Mon Oct 18 20:08:02 2010
+			on Sat Aug 13 19:47:34 2011
 
 		</td></tr>
 	</table>
@@ -429,6 +477,7 @@ Same as calling globals.
 	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
 	explorer.packageExplorer.addModule("luad.conversions.functions");
 	explorer.packageExplorer.addModule("luad.conversions.structs");
+	explorer.packageExplorer.addModule("luad.conversions.variant");
 	
 	explorer.packageExplorer.addModule("luad.c.all");</script>
 </body></html>
