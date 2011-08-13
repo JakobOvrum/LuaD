@@ -65,10 +65,6 @@ openLibs<br><br>
 <dd>Create a D wrapper for an existing Lua state.
 <br><br>
 The new LuaState does not assume ownership of the state.
-
-<br><br>
-<b>Note:</b><br>
-The panic function is not changed - a Lua panic will not throw a D exception!
 <br><br>
 <b>Params:</b><br>
 <table><tr>
@@ -77,6 +73,10 @@ The panic function is not changed - a Lua panic will not throw a D exception!
                
 <td>state to wrap.</td></tr>
 </table><br>
+<b>Note:</b><br>
+The panic function is not changed - a Lua panic will not throw a D exception!
+ See Also:
+		setPanicHandler<br><br>
 
 </dd>
 
@@ -165,7 +165,7 @@ LuaState for the given lua_State*.<br><br>
 <span class="currsymbol">setPanicHandler</span>
 <script>explorer.outline.addDecl('setPanicHandler');</script>
 
-(void function(LuaState, string) <span class="funcparam">onPanic</span>);
+(void function(LuaState, in const(char[])) <span class="funcparam">onPanic</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -174,7 +174,7 @@ LuaState for the given lua_State*.<br><br>
 <br><br>
 <b>Params:</b><br>
 <table><tr>
-<td nowrap valign="top" style="padding-right: 8px">void function(LuaState, string) <span class="funcparam">onPanic</span></td>
+<td nowrap valign="top" style="padding-right: 8px">void function(LuaState, in const(char[])) <span class="funcparam">onPanic</span></td>
 
                
 <td>new panic handler</td></tr>
@@ -183,9 +183,9 @@ LuaState for the given lua_State*.<br><br>
 <pre class="d_code">	<font color=blue>auto</font> L = luaL_newstate(); <font color=green>// found in luad.c.all
 </font>	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState(L);
 
-	<font color=blue>static</font> <font color=blue>void</font> panic(LuaState lua, string error)
+	<font color=blue>static</font> <font color=blue>void</font> panic(LuaState lua, <font color=blue>in</font> <font color=blue>char</font>[] error)
 	{
-		<font color=blue>throw</font> <font color=blue>new</font> LuaErrorException(error);
+		<font color=blue>throw</font> <font color=blue>new</font> LuaErrorException(error.idup);
 	}
 
 	lua.<u>setPanicHandler</u>(&amp;panic);
@@ -438,7 +438,7 @@ A reference to value as a LuaObject<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sun Aug 14 01:49:39 2011
+			on Sun Aug 14 02:25:08 2011
 
 		</td></tr>
 	</table>
