@@ -15,7 +15,7 @@ DDOC =
 	<table class="content">
 		<tr><td id="docbody">
 			<div id="logo">
-				<a href="/"><img src="/LuaD/logo.png" alt="LuaD logo" /></a>
+				<a href="/LuaD"><img src="/LuaD/logo.png" alt="LuaD logo" /></a>
 			</div>
 			<h1>$(TITLE)</h1>
 			$(BODY)
