@@ -1,6 +1,4 @@
 MODULES = 
-	$(MODULE index)
-	
 	$(MODULE luad.all)
 	$(MODULE luad.state)
 	$(MODULE luad.base)

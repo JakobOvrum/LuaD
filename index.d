@@ -7,7 +7,7 @@ See_Also:
 Check out the $(LINK2 http://github.com/JakobOvrum/LuaD,github project page) for the full source code
 and usage information.
 
-See $(LINK2 /LuaD/luad/stack.html,stack.d) for the full list of possible type conversions.
+See $(LINK2 /LuaD/luad/stack.html,luad.stack) for the full list of possible type conversions.
 
 Examples:
 "Hello, world"
