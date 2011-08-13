@@ -141,7 +141,7 @@ struct LuaObject
 	}
 	
 	/**
-	 * Attempt to convert the referenced object to any D type.
+	 * Attempt _to convert the referenced object _to any D type.
 	 * Examples:
 	 -----------------------
 	auto results = lua.doString(`return "hello!"`);
