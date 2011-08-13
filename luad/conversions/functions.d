@@ -1,8 +1,10 @@
 /**
-Internal module for pushing and getting functions and delegates. The details of the function conversions are explained here.
+Internal module for pushing and getting functions and delegates.
 
 LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see $(LINK2 /LuaD/luad/stack.html,luad.stack)).
 As a special case for const(char)[] parameter types, no copy of the string is made; take care not to escape such references (they are effectively scope). When a copy is desired, use char[] or string, or dup or idup the string manually.
+
+If a function with the lua_CFunction signature is encountered, it is pushed directly with no inserted conversions or overhead.
 */
 module luad.conversions.functions;
 

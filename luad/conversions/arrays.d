@@ -1,4 +1,7 @@
-/// Internal module for pushing and getting arrays.
+/** 
+Internal module for pushing and getting arrays.
+All arrays with LuaD compatible element types are supported.
+*/
 module luad.conversions.arrays;
 
 import std.traits;

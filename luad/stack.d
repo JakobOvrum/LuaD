@@ -16,31 +16,33 @@ $(DL
 		$(DD char)
 	)
 	$(DT table
-		$(DD associative arrays)
-		$(DD arrays)
-		$(DD structs)
-		$(DD LuaTable)
+		$(DD $(LINK2 /LuaD/luad/conversions/assocarrays.html,associative arrays))
+		$(DD $(LINK2 /LuaD/luad/conversions/arrays.html,arrays))
+		$(DD $(LINK2 /LuaD/luad/conversions/structs.html,structs))
+		$(DD $(LINK2 /LuaD/luad/table.html,LuaTable))
 	)
 	$(DT function (see $(LINK2 /LuaD/luad/conversions/functions.html,luad.conversions.functions)
 		$(DD function pointers)
 		$(DD delegates)
-		$(DD LuaFunction)
+		$(DD $(LINK2 /LuaD/luad/lfunction.html,LuaFunction))
 	)
 	$(DT userdata
-		$(DD classes)
+		$(DD $(LINK2 /LuaD/luad/conversions/classes.html,classes))
 	)
 	$(DT nil
 		$(DD the special identifier nil)
 		$(DD null class references)
 	)
 	$(DT any of the above
-		$(DD LuaObject)
-		$(DD Algebraic (from std.variant), when given a compatible value)
+		$(DD $(LINK2 /LuaD/luad/base.html,LuaObject))
+		$(DD $(LINK2 /LuaD/luad/conversions/variant.html,Algebraic), when given a compatible value)
 	)
 )
 
 The conversions are checked in the specified order. For example, even though bool is implicitly convertible
 to lua_Integer, it will be converted to a boolean because boolean has precedence.
+
+wchar and dchar are explicitly disallowed. Lua strings consist of 8-bit characters, if you want to push UTF-16 or UTF-32 strings, convert to UTF-8 first.
 
 Additionally, the following types are pushable to Lua, but can't be retrieved back:
 $(DL

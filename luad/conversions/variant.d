@@ -1,4 +1,7 @@
-/// Internal module for pushing and getting variants.
+/**
+Internal module for pushing and getting variants (from std.variant).
+Currently, only Algebraic is supported.
+*/
 module luad.conversions.variant;
 
 import luad.c.all;
@@ -37,7 +40,7 @@ T getVariant(T)(lua_State* L, int idx) if (isVariant!T)
 		if(t == luaTypeOf!Type)
 			return T(getValue!Type(L, idx));
 
-	assert(false);
+	assert(false); // TODO: runtime error
 }
 
 bool isAllowedType(T)(lua_State* L, int idx) {
