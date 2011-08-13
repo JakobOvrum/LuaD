@@ -17,7 +17,7 @@ void pushArray(T)(lua_State* L, T arr) if (isArray!T)
 	{
 		pushValue(L, i + 1); //Lua tables start at 1, not 0
 		pushValue(L, v);
-		lua_settable(L, -3);
+		lua_rawset(L, -3);
 	}
 }
 

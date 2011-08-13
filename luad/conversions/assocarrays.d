@@ -1,7 +1,7 @@
 /**
 Internal module for pushing and getting associative arrays.
 All associative arrays with LuaD compatible key and value types are supported.
-For tables with heterogeneous key or value types, use $(LINK2 /LuaD/luad/conversions/variant.html,Algebraic) keys or $(LINK2 /LuaD/luad/table.html,LuaTable).
+For tables with heterogeneous key or value types, use $(LINK2 /LuaD/luad/conversions/variant.html,Algebraic) keys/values or $(LINK2 /LuaD/luad/table.html,LuaTable).
 For string keys and heterogeneous value types, consider using a $(LINK2 /LuaD/luad/conversions/structs.html,struct). 
 */
 module luad.conversions.assocarrays;
@@ -18,7 +18,7 @@ void pushAssocArray(T, U)(lua_State* L, T[U] aa)
 	{
 		pushValue(L, key);
 		pushValue(L, value);
-		lua_settable(L, -3);
+		lua_rawset(L, -3);
 	}
 }
 
