@@ -21,7 +21,7 @@ $(DL
 		$(DD structs)
 		$(DD LuaTable)
 	)
-	$(DT function
+	$(DT function (see $(LINK2 /LuaD/luad/conversions/functions.html,luad.conversions.functions)
 		$(DD function pointers)
 		$(DD delegates)
 		$(DD LuaFunction)

@@ -1,4 +1,9 @@
-/// Internal module for pushing and getting functions and delegates.
+/**
+Internal module for pushing and getting functions and delegates. The details of the function conversions are explained here.
+
+LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see $(LINK2 /LuaD/luad/stack.html,luad.stack)).
+As a special case for const(char)[] parameter types, no copy of the string is made; take care not to escape such references (they are effectively scope). When a copy is desired, use char[] or string, or dup or idup the string manually.
+*/
 module luad.conversions.functions;
 
 import core.memory;
@@ -54,7 +59,8 @@ public void typeMismatch(lua_State* L, int idx, int expectedType)
 
 extern(C) int methodWrapper(T, Class)(lua_State* L)
 {
-	ParameterTypeTuple!T args;
+	alias ParameterTypeTuple!T Args;
+	Args args;
 	
 	//Check arguments
 	int top = lua_gettop(L);
@@ -67,10 +73,16 @@ extern(C) int methodWrapper(T, Class)(lua_State* L)
 	func.funcptr = cast(typeof(func.funcptr))lua_touserdata(L, lua_upvalueindex(1));
 	
 	//Assemble arguments
-	foreach(i, arg; args)
+	foreach(i, Arg; Args)
 	{
-		//stack indexes start at 1, index 1 is the 'this' reference
-		args[i] = getValue!(typeof(arg), typeMismatch)(L, i + 2);
+		static if(is(Arg == const(char)[]))
+		{
+			size_t len;
+			const(char)* cstr = lua_tolstring(L, i + 2, &len);
+			args[i] = cstr[0 .. len];
+		}
+		else //stack indexes start at 1, and index 1 is the 'this' reference
+			args[i] = getValue!(Arg, typeMismatch)(L, i + 2);
 	}
 	
 	return callFunction!T(L, func, args);
@@ -92,10 +104,16 @@ extern(C) int functionWrapper(T)(lua_State* L)
 	//Assemble arguments
 	foreach(i, Arg; Args)
 	{
-		//stack indexes start at 1
-		args[i] = getValue!(Arg, typeMismatch)(L, i + 1);
+		static if(is(Arg == const(char)[]))
+		{
+			size_t len;
+			const(char)* cstr = lua_tolstring(L, i + 1, &len);
+			args[i] = cstr[0 .. len];
+		}
+		else //stack indexes start at 1
+			args[i] = getValue!(Arg, typeMismatch)(L, i + 1);
 	}
-	
+
 	return callFunction!T(L, func, args);
 }
 
@@ -203,6 +221,24 @@ unittest
 		assert(ret == expect, 
 			("sayHello return type - got '%s', expected '%s'"):format(ret, expect)
 		)
+	`);
+	
+	static uint countSpaces(const(char)[] s)
+	{
+		uint n = 0;
+		foreach(dchar c; s)
+			if(c == ' ')
+				++n;
+		
+		return n;
+	}
+	
+	pushValue(L, &countSpaces);
+	assert(lua_isfunction(L, -1));
+	lua_setglobal(L, "countSpaces");
+	
+	unittest_lua(L, `
+		assert(countSpaces("Hello there, world!") == 2)
 	`);
 	
 	//delegates
