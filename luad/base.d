@@ -1,7 +1,6 @@
 module luad.base;
 
 import luad.c.all;
-import luad.reference;
 import luad.stack;
 
 import std.c.string : strlen;

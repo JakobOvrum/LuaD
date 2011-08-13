@@ -3,14 +3,13 @@ module luad.table;
 import luad.c.all;
 
 import luad.base;
-import luad.reference;
-
 import luad.stack;
 import luad.conversions.structs;
 
 /// Represents a Lua table.
 struct LuaTable
 {
+	/// LuaTable sub-types LuaObject through this reference.
 	LuaObject object;
 	alias object this;
 	
