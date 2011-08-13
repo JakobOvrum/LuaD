@@ -1,6 +1,6 @@
 module luad.state;
 
-import std.string;
+import std.string : toStringz;
 
 import luad.c.all;
 import luad.stack;
@@ -52,11 +52,12 @@ public:
 	 * Create a D wrapper for an existing Lua state.
 	 *
 	 * The new LuaState does not assume ownership of the state.
-	 *
-	 * Note: 
-	 *	 The panic function is not changed - a Lua panic will not throw a D exception!
 	 * Params:
 	 *	 L = state to wrap.
+	 * Note:
+	 *	 The panic function is not changed - a Lua panic will not throw a D exception!
+	 * See Also:
+		setPanicHandler
 	 */
 	this(lua_State* L)
 	{
@@ -90,8 +91,9 @@ public:
 	static LuaState fromPointer(lua_State* L)
 	{
 		lua_getfield(L, LUA_REGISTRYINDEX, "__dstate");
-		scope(exit) lua_pop(L, 1);
-		return cast(LuaState)lua_touserdata(L, -1);
+		auto lua = cast(LuaState)lua_touserdata(L, -1);
+		lua_pop(L, 1);
+		return lua;
 	}
 	
 	/// Open the standard library.
@@ -121,27 +123,27 @@ public:
 	auto L = luaL_newstate(); // found in luad.c.all
 	auto lua = new LuaState(L);
 	
-	static void panic(LuaState lua, string error)
+	static void panic(LuaState lua, in char[] error)
 	{
-		throw new LuaErrorException(error);
+		throw new LuaErrorException(error.idup);
 	}
 	
 	lua.setPanicHandler(&panic);
 	 * ----------------------
 	 */
-	void setPanicHandler(void function(LuaState, string) onPanic)
+	void setPanicHandler(void function(LuaState, in char[]) onPanic)
 	{
 		extern(C) static int panic(lua_State* L)
 		{
 			size_t len;
 			const(char)* message = lua_tolstring(L, -1, &len);
-			auto error = message[0 .. len].idup;
+			auto error = message[0 .. len];
 			
 			lua_getfield(L, LUA_REGISTRYINDEX, "__dpanic");
-			auto callback = cast(void function(LuaState, string))lua_touserdata(L, -1);
+			auto callback = cast(void function(LuaState, in char[]))lua_touserdata(L, -1);
 			assert(callback);
 			
-			lua_pop(L, 2);
+			scope(exit) lua_pop(L, 2);
 			
 			callback(LuaState.fromPointer(L), error);
 			return 0;
@@ -339,7 +341,7 @@ unittest
 	assert(lua.get!bool("success"));
 	
 	// setPanicHandler
-	static void panic(LuaState lua, string error)
+	static void panic(LuaState lua, in char[] error)
 	{
 		throw new Exception("hijacked error!");
 	}

@@ -209,7 +209,7 @@ unittest
 	luaL_openlibs(L);
 	
 	//functions
-	static string func(string s)
+	static const(char)[] func(const(char)[] s)
 	{
 		return "Hello, " ~ s;
 	}
