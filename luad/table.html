@@ -39,6 +39,20 @@
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">LuaObject 
+<span class="currsymbol">object</span>
+<script>explorer.outline.addDecl('object');</script>
+
+;
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>LuaTable sub-types LuaObject through this reference.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">T 
 <span class="currsymbol">get</span>
 <script>explorer.outline.addDecl('get');</script>
@@ -106,18 +120,14 @@ get<br><br>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Sets a key-value pair in this table.
+<dd>Set a key-value pair in this table.
 <br><br>
 <b>Params:</b><br>
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">key</td>
 
                
-<td>key to 
-<span class="currsymbol">set</span>
-<script>explorer.outline.addDecl('set');</script>
-
-</td></tr>
+<td>key to set</td></tr>
 <tr>
 <td nowrap valign="top" style="padding-right: 8px">value</td>
 
@@ -137,7 +147,7 @@ get<br><br>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Sets a key-value pair this table or in a sub-table of this table.
+<dd>Set a key-value pair this table or in a sub-table of this table.
 <br><br>
 <b>Params:</b><br>
 <table><tr>
@@ -201,7 +211,7 @@ Newly created struct<br><br>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Fills a struct's members with fields from this table.
+<dd>Fill a struct's members with fields from this table.
 <br><br>
 <b>Params:</b><br>
 <table><tr>
@@ -223,7 +233,7 @@ Newly created struct<br><br>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Sets the metatable for this table.
+<dd>Set the metatable for this table.
 <br><br>
 <b>Params:</b><br>
 <table><tr>
@@ -245,10 +255,10 @@ Newly created struct<br><br>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Gets the metatable for this table.
+<dd>Get the metatable for this table.
 <br><br>
 <b>Returns:</b><br>
-A reference to the metatable for this table, or <b>null</b> if this table has no metatable.<br><br>
+A reference to the metatable for this table. The reference is nil if this table has no metatable.<br><br>
 
 </dd>
 
@@ -262,7 +272,7 @@ A reference to the metatable for this table, or <b>null</b> if this table has no
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Iterates over the values in this table.<br><br>
+<dd>Iterate over the values in this table.<br><br>
 
 </dd>
 
@@ -276,7 +286,7 @@ A reference to the metatable for this table, or <b>null</b> if this table has no
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Iterates over the key-value pairs in this table.<br><br>
+<dd>Iterate over the key-value pairs in this table.<br><br>
 
 </dd>
 </dl>
@@ -294,7 +304,7 @@ A reference to the metatable for this table, or <b>null</b> if this table has no
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sat Aug 13 21:08:40 2011
+			on Sat Aug 13 22:14:37 2011
 
 		</td></tr>
 	</table>
@@ -307,7 +317,6 @@ A reference to the metatable for this table, or <b>null</b> if this table has no
 	explorer.packageExplorer.addModule("luad.lfunction");
 	explorer.packageExplorer.addModule("luad.error");
 	explorer.packageExplorer.addModule("luad.stack");
-	explorer.packageExplorer.addModule("luad.reference");
 	
 	explorer.packageExplorer.addModule("luad.conversions.arrays");
 	explorer.packageExplorer.addModule("luad.conversions.assocarrays");

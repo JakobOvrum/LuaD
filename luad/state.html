@@ -142,11 +142,7 @@ LuaState for the given lua_State*.<br><br>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>The 
-<span class="currsymbol">registry</span>
-<script>explorer.outline.addDecl('registry');</script>
-
- table for this instance.<br><br>
+<dd>The registry table for this instance.<br><br>
 
 </dd>
 
@@ -251,6 +247,8 @@ Loaded code as a function.<br><br>
                
 <td>code to run</td></tr>
 </table><br>
+<b>Returns:</b><br>
+Any code return values<br><br>
 
 </dd>
 
@@ -273,6 +271,8 @@ Loaded code as a function.<br><br>
                
 <td>path to file</td></tr>
 </table><br>
+<b>Returns:</b><br>
+Any script return values<br><br>
 
 </dd>
 
@@ -289,7 +289,7 @@ Loaded code as a function.<br><br>
 <dd>Create a new, empty table.
 <br><br>
 <b>Returns:</b><br>
-new table<br><br>
+The new table<br><br>
 
 </dd>
 
@@ -318,7 +318,7 @@ new table<br><br>
 <td>number of pre-allocated non-array slots</td></tr>
 </table><br>
 <b>Returns:</b><br>
-new table<br><br>
+The new table<br><br>
 
 </dd>
 
@@ -342,7 +342,7 @@ new table<br><br>
 <td>D value to wrap</td></tr>
 </table><br>
 <b>Returns:</b><br>
-reference to value as a LuaObject<br><br>
+A reference to value as a LuaObject<br><br>
 
 </dd>
 
@@ -424,7 +424,7 @@ reference to value as a LuaObject<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sat Aug 13 21:34:04 2011
+			on Sat Aug 13 22:14:37 2011
 
 		</td></tr>
 	</table>
@@ -437,7 +437,6 @@ reference to value as a LuaObject<br><br>
 	explorer.packageExplorer.addModule("luad.lfunction");
 	explorer.packageExplorer.addModule("luad.error");
 	explorer.packageExplorer.addModule("luad.stack");
-	explorer.packageExplorer.addModule("luad.reference");
 	
 	explorer.packageExplorer.addModule("luad.conversions.arrays");
 	explorer.packageExplorer.addModule("luad.conversions.assocarrays");

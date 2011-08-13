@@ -176,7 +176,7 @@ Useful for clearing keys in a table:
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Represents a reference to a Lua value of any type<br><br>
+<dd>Represents a reference to a Lua value of any type.<br><br>
 
 
 <script>explorer.outline.incSymbolLevel();</script>
@@ -191,7 +191,7 @@ Useful for clearing keys in a table:
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Type of referenced object
+<dd>Type of referenced object.
 <br><br>
 <b>See Also:</b><br>
 LuaType<br><br>
@@ -208,7 +208,7 @@ LuaType<br><br>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Type name of referenced object<br><br>
+<dd>Type name of referenced object.<br><br>
 
 </dd>
 
@@ -222,7 +222,7 @@ LuaType<br><br>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Boolean whether or not the referenced object is nil<br><br>
+<dd>Boolean whether or not the referenced object is nil.<br><br>
 
 </dd>
 
@@ -242,7 +242,7 @@ The returned string is formatted exactly like the Lua 'tostring' function.
 
 <br><br>
 <b>Returns:</b><br>
-string representation of referenced object<br><br>
+String representation of referenced object<br><br>
 
 </dd>
 
@@ -264,7 +264,13 @@ string representation of referenced object<br><br>
 <span class="currsymbol">to</span>
 <script>explorer.outline.addDecl('to');</script>
 
- any D type.<br><br>
+ any D type.
+<br><br>
+<b>Examples:</b><br>
+<pre class="d_code">	<font color=blue>auto</font> results = lua.doString(<font color=red>`return "hello!"`</font>);
+	<font color=blue>assert</font>(results[0].<u>to</u>!string() == <font color=red>"hello!"</font>);
+</pre>
+<br><br>
 
 </dd>
 
@@ -278,9 +284,8 @@ string representation of referenced object<br><br>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Compares this object to another with Lua's equality semantics.
- Also, if the other object is not a LuaObject or a derived class of LuaObject,
- or the two refer to objects in different Lua states, this function returns <b>false</b>.<br><br>
+<dd>Compare this object to another with Lua's equality semantics.
+ Also returns <b>false</b> if the two objects are in different Lua states.<br><br>
 
 </dd>
 </dl>
@@ -298,7 +303,7 @@ string representation of referenced object<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sat Aug 13 21:08:40 2011
+			on Sat Aug 13 22:14:37 2011
 
 		</td></tr>
 	</table>
@@ -311,7 +316,6 @@ string representation of referenced object<br><br>
 	explorer.packageExplorer.addModule("luad.lfunction");
 	explorer.packageExplorer.addModule("luad.error");
 	explorer.packageExplorer.addModule("luad.stack");
-	explorer.packageExplorer.addModule("luad.reference");
 	
 	explorer.packageExplorer.addModule("luad.conversions.arrays");
 	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
