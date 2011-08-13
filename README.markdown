@@ -2,7 +2,7 @@ LuaD - Lua for the D Programming Language
 ============================================
 Hello, world!
 --------------------------------------------
-```D
+```C++
 	import luad.all;
 
 	void main()
