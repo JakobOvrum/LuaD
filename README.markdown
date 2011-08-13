@@ -2,17 +2,17 @@ LuaD - Lua for the D Programming Language
 ============================================
 Hello, world!
 --------------------------------------------
-```C++
-	import luad.all;
+```D
+import luad.all;
 
-	void main()
-	{
-		auto lua = new LuaState;
-		lua.openLibs();
-		
-		auto print = lua.get!LuaFunction("print");
-		print("hello, world!");
-	}
+void main()
+{
+	auto lua = new LuaState;
+	lua.openLibs();
+	
+	auto print = lua.get!LuaFunction("print");
+	print("hello, world!");
+}
 ```
 LuaD is a bridge between the D and Lua programming languages.
 Unlike many other libraries built on the Lua C API, LuaD doesn't expose the Lua stack - instead,
