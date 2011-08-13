@@ -1,10 +1,18 @@
-/// Internal module for pushing and getting _structs.
+/**
+Internal module for pushing and getting _structs.
+
+A struct is treated as a table layout schema.
+Pushing a struct to Lua will create a table and fill it with key-value pairs - corresponding to struct fields - from the struct; the field name becomes the table key as a string.
+Struct methods are treated as if they were delegate fields pointing to the method.
+For an example, see the "Configuration File" example on the ($LINK2 /LuaD,front page).
+*/
 module luad.conversions.structs;
 
 import luad.c.all;
 
 import luad.stack;
 
+//TODO: ignore static fields, post-blits, destructors, etc?
 void pushStruct(T)(lua_State* L, ref T value) if (is(T == struct))
 {
 	lua_createtable(L, 0, value.tupleof.length);
