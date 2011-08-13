@@ -1,5 +1,5 @@
 /**
-Internal module for pushing and getting variants (from std.variant).
+Internal module for pushing and getting variants (from std._variant).
 Currently, only Algebraic is supported.
 */
 module luad.conversions.variant;

@@ -1,6 +1,6 @@
 /**
 Internal module for pushing and getting class types.
-This feature is still a work in progress, currently, only the simplest of classes are supported.
+This feature is still a work in progress, currently, only the simplest of _classes are supported.
 See the source code for details.
 */
 module luad.conversions.classes;

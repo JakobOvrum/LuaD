@@ -1,4 +1,4 @@
-/// Internal module for pushing and getting structs.
+/// Internal module for pushing and getting _structs.
 module luad.conversions.structs;
 
 import luad.c.all;

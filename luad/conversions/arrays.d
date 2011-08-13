@@ -1,6 +1,6 @@
 /** 
-Internal module for pushing and getting arrays.
-All arrays with LuaD compatible element types are supported.
+Internal module for pushing and getting _arrays.
+All _arrays with LuaD compatible element types are supported.
 */
 module luad.conversions.arrays;
 
