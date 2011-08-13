@@ -49,6 +49,42 @@ struct LuaTable
 	}
 	
 	/**
+	 * Read a string value in this table without making a copy of the string.
+	 * The read string is passed to dg, and should not be escaped.
+	 * If the value for key is not a string, dg is not called.
+	 * Params:
+	 *    key = lookup _key
+	 *    dg = delegate to receive string
+	 * Returns:
+	 *    true if the value for key was a string and passed to dg, false otherwise
+	 * Examples:
+	 --------------------
+	 t[2] = "two";
+	 t.readString(2, (in char[] str) {
+		assert(str == "two");
+	 });
+	 --------------------
+	 */
+	bool readString(T)(T key, scope void delegate(in char[] str) dg)
+	{
+		this.push();
+		scope(exit) lua_pop(this.state, 1);
+		
+		pushValue(this.state, key);
+		
+		lua_gettable(this.state, -2);
+		scope(exit) lua_pop(this.state, 1);
+		
+		size_t len;
+		const(char)* cstr = lua_tolstring(this.state, -1, &len);
+		if(cstr is null)
+			return false;
+		
+		dg(cstr[0 .. len]);
+		return true;
+	}
+	
+	/**
 	 * Same as calling get!LuaObject with the same arguments.
 	 * Examples:
 	 * ---------------------
@@ -248,15 +284,25 @@ unittest
 	auto s2 = t.get!(string)("foo", "outer", "inner");
 	assert(s2 == "hello!");
 	
-	//metatable
+	// readString
+	t[2] = "two";
+	bool success = t.readString(2, (in char[] str) {
+		assert(str == "two");
+	});
+	assert(success);
+	
+	t[2] = true;
+	success = t.readString(2, (in char[] str) { assert(false); });
+	assert(!success);
+	
+	// metatable
 	pushValue(L, ["__index": (LuaObject self, string key){
 		return key;
 	}]);
 	auto meta = popValue!LuaTable(L);
 	
 	lua_newtable(L);
-	auto t2 = new LuaTable(L, -1);
-	lua_pop(L, 1);
+	auto t2 = popValue!LuaTable(L);
 	
 	t2.setMetaTable(meta);
 	
