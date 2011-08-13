@@ -81,6 +81,20 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">@property lua_State* 
+<span class="currsymbol">state</span>
+<script>explorer.outline.addDecl('state');</script>
+
+();
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>The underlying lua_State pointer for interfacing with C.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">static LuaState 
 <span class="currsymbol">fromPointer</span>
 <script>explorer.outline.addDecl('fromPointer');</script>
@@ -424,7 +438,7 @@ A reference to value as a LuaObject<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sun Aug 14 00:39:45 2011
+			on Sun Aug 14 01:49:39 2011
 
 		</td></tr>
 	</table>
