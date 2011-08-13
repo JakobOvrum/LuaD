@@ -202,7 +202,7 @@ void luaL_addchar(luaL_Buffer* B, char c)
 
 /* compatibility only */
 //C	 #define luaL_putchar(B,c)	luaL_addchar(B,c)
-void luaL_putchar(luaL_Buffer* B, char c) { luaL_addchar(B, c); }
+alias luaL_addchar luaL_putchar;
 
 //C	 #define luaL_addsize(B,n)	((B)->p += (n))
 void luaL_addsize(luaL_Buffer* B, int n) { B.p += n; }
@@ -212,9 +212,9 @@ void  luaL_buffinit(lua_State *L, luaL_Buffer *B);
 //C	 LUALIB_API char *(luaL_prepbuffer) (luaL_Buffer *B);
 char * luaL_prepbuffer(luaL_Buffer *B);
 //C	 LUALIB_API void (luaL_addlstring) (luaL_Buffer *B, const char *s, size_t l);
-void  luaL_addlstring(luaL_Buffer *B, char *s, size_t l);
+void  luaL_addlstring(luaL_Buffer *B, const char *s, size_t l);
 //C	 LUALIB_API void (luaL_addstring) (luaL_Buffer *B, const char *s);
-void  luaL_addstring(luaL_Buffer *B, char *s);
+void  luaL_addstring(luaL_Buffer *B, const char *s);
 //C	 LUALIB_API void (luaL_addvalue) (luaL_Buffer *B);
 void  luaL_addvalue(luaL_Buffer *B);
 //C	 LUALIB_API void (luaL_pushresult) (luaL_Buffer *B);
