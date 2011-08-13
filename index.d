@@ -41,7 +41,7 @@ Simple function example
 import luad.all;
 import std.stdio;
 
-int printTimes(int times, string message)
+int printTimes(int times, const(char)[] message)
 {
     for(int i = 0; i <= times; i++)
         writeln(message);

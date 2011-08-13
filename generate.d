@@ -45,7 +45,10 @@ int main(string[] args)
 	
 	auto cmdLine = format(`dmd -c -op -o- -Dd"_dochack_" -I"%s" candydoc/candy.ddoc candydoc/modules.ddoc index.d`, sourcePath);
 	foreach(source; sources)
-		cmdLine ~= format(` "%s/luad/%s"`, sourcePath, source);
+	{
+		if(source != "index.d")
+			cmdLine ~= format(` "%s/luad/%s"`, sourcePath, source);
+	}
 	
 	auto result = system(cmdLine);
 	if(result != 0)
