@@ -5,25 +5,31 @@ import std.file;
 import std.string;
 import std.process;
 
-int main()
+string[] allSources = [
+	"all.d",
+	"state.d",
+	"error.d",
+	"base.d",
+	"lfunction.d",
+	"stack.d",
+	"table.d",
+	"testing.d",
+	"conversions/arrays.d",
+	"conversions/assocarrays.d",
+	"conversions/classes.d",
+	"conversions/functions.d",
+	"conversions/structs.d",
+	"conversions/variant.d",
+	"c/all.d"
+];
+
+int main(string[] args)
 {
-	static immutable sources = [
-		"all.d",
-		"state.d",
-		"error.d",
-		"base.d",
-		"lfunction.d",
-		"stack.d",
-		"table.d",
-		"testing.d",
-		"conversions/arrays.d",
-		"conversions/assocarrays.d",
-		"conversions/classes.d",
-		"conversions/functions.d",
-		"conversions/structs.d",
-		"conversions/variant.d",
-		"c/all.d"
-	];
+	string[] sources;
+	if(args.length > 1)
+		sources = args[1..$];
+	else
+		sources = allSources;
 
 	auto sourcePath = environment.get("LUAD_PATH");
 	if(sourcePath is null)
