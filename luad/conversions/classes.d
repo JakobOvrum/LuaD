@@ -1,3 +1,4 @@
+/// Internal module for pushing and getting class types.
 module luad.conversions.classes;
 
 import luad.conversions.functions;

@@ -8,6 +8,7 @@ import luad.c.all;
 /// Represents a Lua function.
 struct LuaFunction
 {
+	/// LuaTable sub-types LuaObject through this reference.
 	LuaObject object;
 	alias object this;
 	
@@ -40,7 +41,6 @@ struct LuaFunction
 	assert(ret[2].to!bool());
 	 -----------------------
 	 */
-	// TODO: why doesn't this work? see unittest
 	LuaObject[] opCall(U...)(U args)
 	{
 		return call!(LuaObject[])(args);

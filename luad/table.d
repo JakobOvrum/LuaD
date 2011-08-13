@@ -64,9 +64,9 @@ struct LuaTable
 	}
 	
 	/**
-	 * Sets a key-value pair in this table.
+	 * Set a key-value pair in this table.
 	 * Params:
-	 *	 key = key to set
+	 *	 key = key to _set
 	 *	 value = value of key
 	 */
 	void set(T, U)(T key, U value)
@@ -80,7 +80,7 @@ struct LuaTable
 	}
 	
 	/**
-	 * Sets a key-value pair this table or in a sub-table of this table.
+	 * Set a key-value pair this table or in a sub-table of this table.
 	 * Params:
 	 *	 value = value to set
 	 *	 args = list of keys, where all keys but the last one should result in a table
@@ -133,7 +133,7 @@ struct LuaTable
 	}
 	
 	/**
-	 * Fills a struct's members with fields from this table.
+	 * Fill a struct's members with fields from this table.
 	 * Params:
 	 *	 s = struct to fill
 	 */
@@ -145,7 +145,7 @@ struct LuaTable
 	}
 	
 	/**
-	 * Sets the metatable for this table.
+	 * Set the metatable for this table.
 	 * Params:
 	 *	 meta = new metatable
  	 */
@@ -160,9 +160,9 @@ struct LuaTable
 	}
 	
 	/**
-	 * Gets the metatable for this table.
+	 * Get the metatable for this table.
 	 * Returns:
-	 *	 A reference to the metatable for this table, or null if this table has no metatable.
+	 *	 A reference to the metatable for this table. The reference is nil if this table has no metatable.
 	 */
 	LuaTable getMetaTable()
 	{
@@ -173,7 +173,7 @@ struct LuaTable
 	}
 	
 	/**
-	 * Iterates over the values in this table.
+	 * Iterate over the values in this table.
 	 */
 	int opApply(T)(int delegate(ref T value) dg)
 	{
@@ -194,7 +194,7 @@ struct LuaTable
 	}
 	
 	/**
-	 * Iterates over the key-value pairs in this table.
+	 * Iterate over the key-value pairs in this table.
 	 */
 	int opApply(T, U)(int delegate(ref U key, ref T value) dg)
 	{

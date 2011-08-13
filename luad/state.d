@@ -100,7 +100,7 @@ public:
 		return _G;
 	}
 	
-	/// The registry table for this instance.
+	/// The _registry table for this instance.
 	@property LuaTable registry()
 	{
 		return _R;
@@ -171,11 +171,11 @@ public:
 	}
 
 	/**
-	 * Compile a string of Lua code.
+	 * Compile a string of Lua _code.
 	 * Params:
-	 *	 code = code to compile
+	 *	 code = _code to compile
 	 * Returns:
-	 *   Loaded code as a function.
+	 *   Loaded _code as a function.
 	 */
 	LuaFunction loadString(in char[] code)
 	{
@@ -188,7 +188,7 @@ public:
 	/**
 	 * Compile a file of Lua code.
 	 * Params:
-	 *	 path = path to file
+	 *	 path = _path to file
 	 * Returns:
 	 *   Loaded code as a function.
 	 */
@@ -201,9 +201,11 @@ public:
 	}
 
 	/**
-	 * Execute a string of Lua code.
+	 * Execute a string of Lua _code.
 	 * Params:
-	 *	 code = code to run
+	 *	 code = _code to run
+	 * Returns:
+	 *	 Any _code return values
 	 */
 	LuaObject[] doString(in char[] code)
 	{
@@ -215,7 +217,9 @@ public:
 	/**
 	 * Execute a file of Lua code.
 	 * Params:
-	 *	 path = path to file
+	 *	 path = _path to file
+	 * Returns:
+	 *	 Any script return values
 	 */
 	LuaObject[] doFile(in char[] path)
 	{
@@ -226,7 +230,7 @@ public:
 	/**
 	 * Create a new, empty table.
 	 * Returns:
-	 *	 new table
+	 *	 The new table
 	 */
 	LuaTable newTable()
 	{
@@ -239,7 +243,7 @@ public:
 	 *	 narr = number of pre-allocated array slots
 	 *	 nrec = number of pre-allocated non-array slots
 	 * Returns:
-	 *	 new table
+	 *	 The new table
 	 */
 	LuaTable newTable(uint narr, uint nrec)
 	{
@@ -250,9 +254,9 @@ public:
 	/**
 	 * Wrap a D value in a LuaObject.
 	 * Params:
-	 *	 value = D value to wrap
+	 *	 value = D value to _wrap
 	 * Returns:
-	 *	 reference to value as a LuaObject
+	 *	 A reference to value as a LuaObject
 	 */
 	LuaObject wrap(T)(T value)
 	{
@@ -260,11 +264,10 @@ public:
 		return popValue!LuaObject(L);
 	}
 	
-	/// This state can be used as a table to operate on its global table.
 	/**
-	 * Same as calling globals.get with the same arguments.
+	 * Same as calling globals._get with the same arguments.
 	 * See Also:
-	 *	 LuaTable.get
+	 *	 LuaTable._get
 	 */
 	T get(T, U...)(U args)
 	{
@@ -274,7 +277,7 @@ public:
 	/**
 	 * Same as calling globals.get!LuaObject with the same arguments.
 	 * See Also:
-	 *	 LuaTable.opIndex
+	 *	 LuaTable._opIndex
 	 */
 	LuaObject opIndex(T...)(T args)
 	{
@@ -282,9 +285,9 @@ public:
 	}
 	
 	/**
-	 * Same as calling globals.set with the same arguments.
+	 * Same as calling globals._set with the same arguments.
 	 * See Also:
-	 *	 LuaTable.set
+	 *	 LuaTable._set
 	 */
 	void set(T, U)(T key, U value)
 	{
@@ -292,9 +295,9 @@ public:
 	}
 	
 	/**
-	 * Same as calling globals.opIndexAssign with the same arguments.
+	 * Same as calling globals._opIndexAssign with the same arguments.
 	 * See Also:
-	 *	 LuaTable.opIndexAssign
+	 *	 LuaTable._opIndexAssign
 	 */
 	void opIndexAssign(T, U...)(T value, U args)
 	{

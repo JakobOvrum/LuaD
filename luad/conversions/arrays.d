@@ -1,3 +1,4 @@
+/// Internal module for pushing and getting arrays.
 module luad.conversions.arrays;
 
 import std.traits;

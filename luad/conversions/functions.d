@@ -1,3 +1,4 @@
+/// Internal module for pushing and getting functions and delegates.
 module luad.conversions.functions;
 
 import core.memory;

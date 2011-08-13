@@ -46,7 +46,7 @@ package struct Nil{}
  */
 public Nil nil;
 
-/// Represents a reference to a Lua value of any type
+/// Represents a reference to a Lua value of any type.
 struct LuaObject
 {
 	private:
@@ -94,7 +94,7 @@ struct LuaObject
 	}
 	
 	/**
-	 * Type of referenced object
+	 * Type of referenced object.
 	 * See_Also:
 	 *	 LuaType
 	 */
@@ -106,7 +106,7 @@ struct LuaObject
 	}
 	
 	/**
-	 * Type name of referenced object
+	 * Type name of referenced object.
 	 */
 	@property string typeName()
 	{
@@ -116,7 +116,7 @@ struct LuaObject
 		return name[0.. strlen(name)].idup;
 	}
 	
-	/// Boolean whether or not the referenced object is nil
+	/// Boolean whether or not the referenced object is nil.
 	@property bool isNil()
 	{
 		return r == LUA_REFNIL;
@@ -127,7 +127,8 @@ struct LuaObject
 	 *
 	 * The returned string is formatted exactly like the Lua 'tostring' function.
 	 *
-	 * Returns: string representation of referenced object
+	 * Returns:
+	 * String representation of referenced object
 	 */
 	string toString()
 	{
@@ -141,6 +142,11 @@ struct LuaObject
 	
 	/**
 	 * Attempt to convert the referenced object to any D type.
+	 * Examples:
+	 -----------------------
+	auto results = lua.doString(`return "hello!"`);
+	assert(results[0].to!string() == "hello!");
+	 -----------------------
 	 */
 	T to(T)()
 	{
@@ -154,9 +160,8 @@ struct LuaObject
 	}
 	
 	/**
-	 * Compares this object to another with Lua's equality semantics.
-	 * Also, if the other object is not a LuaObject or a derived class of LuaObject,
-	 * or the two refer to objects in different Lua states, this function returns false.
+	 * Compare this object to another with Lua's equality semantics.
+	 * Also returns false if the two objects are in different Lua states. 
 	 */
 	bool equals(ref LuaObject o)
 	{
@@ -169,17 +174,6 @@ struct LuaObject
 		
 		return lua_equal(state, -1, -2);
 	}
-	/+
-	bool opEquals(ref const(LuaObject) o) const
-	{
-		if(o.state != state)
-			return false;
-		
-		push();
-		other.push();
-		scope(success) lua_pop(state, 2);
-		return lua_equal(state, -1, -2);
-	}+/
 }
 
 unittest

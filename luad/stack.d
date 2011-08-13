@@ -1,5 +1,5 @@
 /++
-This module takes care of converting between D and Lua types.
+This internal module, with the help of the luad.conversions package, takes care of converting between D and Lua types.
 
 The conversion rules are as follows, where conversion goes both ways:
 $(DL
@@ -11,7 +11,7 @@ $(DL
 		$(DD lua_Number (default double))
 	)
 	$(DT string
-		$(DD const(char)[] (string), char[])
+		$(DD string, const(char)[], char[])
 		$(DD const(char)*)
 		$(DD char)
 	)
@@ -31,13 +31,14 @@ $(DL
 	)
 	$(DT nil
 		$(DD the special identifier nil)
-		$(DD null LuaObject references)
 		$(DD null class references)
 	)
 	$(DT any of the above
 		$(DD LuaObject)
+		$(DD Algebraic (from std.variant), when given a compatible value)
 	)
 )
+
 The conversions are checked in the specified order. For example, even though bool is implicitly convertible
 to lua_Integer, it will be converted to a boolean because boolean has precedence.
 

@@ -1,3 +1,4 @@
+/// Internal module for pushing and getting associative arrays.
 module luad.conversions.assocarrays;
 
 import luad.c.all;

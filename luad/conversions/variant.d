@@ -1,3 +1,4 @@
+/// Internal module for pushing and getting variants.
 module luad.conversions.variant;
 
 import luad.c.all;
