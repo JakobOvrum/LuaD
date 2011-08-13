@@ -12,5 +12,6 @@ MODULES =
 	$(MODULE luad.conversions.assocarrays)
 	$(MODULE luad.conversions.functions)
 	$(MODULE luad.conversions.structs)
+	$(MODULE luad.conversions.variant)
 	
 	$(MODULE luad.c.all)

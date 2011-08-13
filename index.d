@@ -51,7 +51,7 @@ int printTimes(int times, string message)
 void main()
 {
     auto lua = new LuaState;
-    lua.set("printTimes", &printTimes);
+    lua["printTimes"] = &printTimes;
     lua.doString(`
         printTimes(3, "hello, world!")
     `);
@@ -77,7 +77,7 @@ void main()
 	auto lua = new LuaState;
 	
 	lua.doString(configFile);
-	auto config = lua.toStruct!Config();
+	auto config = lua.globals.toStruct!Config();
 	
 	assert(config.Name == "foo");
 	assert(config.Version == 1.23);
