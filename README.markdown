@@ -1,4 +1,4 @@
-LuaD
+LuaD - Lua for the D Programming Language
 ============================================
 Hello, world!
 --------------------------------------------
