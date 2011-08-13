@@ -70,7 +70,7 @@ Simple function example
 <font color=blue>void</font> main()
 {
     <font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
-    lua.set(<font color=red>"printTimes"</font>, &amp;printTimes);
+    lua[<font color=red>"printTimes"</font>] = &amp;printTimes;
     lua.doString(<font color=red>`
         printTimes(3, "hello, world!")
     `</font>);
@@ -95,7 +95,7 @@ Version = 1.23
 	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
 
 	lua.doString(configFile);
-	<font color=blue>auto</font> config = lua.toStruct!Config();
+	<font color=blue>auto</font> config = lua.globals.toStruct!Config();
 
 	<font color=blue>assert</font>(config.Name == <font color=red>"foo"</font>);
 	<font color=blue>assert</font>(config.Version == 1.23);
@@ -109,7 +109,7 @@ Version = 1.23
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Thu Sep  9 00:21:42 2010
+			on Sat Aug 13 21:08:40 2011
 
 		</td></tr>
 	</table>
@@ -128,6 +128,7 @@ Version = 1.23
 	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
 	explorer.packageExplorer.addModule("luad.conversions.functions");
 	explorer.packageExplorer.addModule("luad.conversions.structs");
+	explorer.packageExplorer.addModule("luad.conversions.variant");
 	
 	explorer.packageExplorer.addModule("luad.c.all");</script>
 </body></html>
