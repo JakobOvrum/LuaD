@@ -22,7 +22,8 @@
 This internal module, with the help of the luad.conversions package, takes care of converting between D and Lua types.
 <br><br>
 The conversion rules are as follows, where conversion goes both ways:
-<dl><dt>boolean
+(DL
+	<dt>boolean
 		<dd>bool</dd>
 	</dt>
 	<dt>number
@@ -35,32 +36,35 @@ The conversion rules are as follows, where conversion goes both ways:
 		<dd>char</dd>
 	</dt>
 	<dt>table
-		<dd>associative arrays</dd>
-		<dd>arrays</dd>
-		<dd>structs</dd>
-		<dd>LuaTable</dd>
+		<dd><a href="/LuaD/luad/conversions/assocarrays.html">associative arrays</a></dd>
+		<dd><a href="/LuaD/luad/conversions/arrays.html">arrays</a></dd>
+		<dd><a href="/LuaD/luad/conversions/structs.html">structs</a></dd>
+		<dd><a href="/LuaD/luad/table.html">LuaTable</a></dd>
 	</dt>
-	<dt>function
+	<dt>function (see <a href="/LuaD/luad/conversions/functions.html">luad.conversions.functions</a>
 		<dd>function pointers</dd>
 		<dd>delegates</dd>
-		<dd>LuaFunction</dd>
-	</dt>
+		<dd><a href="/LuaD/luad/lfunction.html">LuaFunction</a></dd>
+	)
 	<dt>userdata
-		<dd>classes</dd>
+		<dd><a href="/LuaD/luad/conversions/classes.html">classes</a></dd>
 	</dt>
 	<dt>nil
 		<dd>the special identifier nil</dd>
 		<dd><b>null</b> class references</dd>
 	</dt>
 	<dt>any of the above
-		<dd>LuaObject</dd>
-		<dd>Algebraic (from std.variant), when given a compatible value</dd>
+		<dd><a href="/LuaD/luad/base.html">LuaObject</a></dd>
+		<dd><a href="/LuaD/luad/conversions/variant.html">Algebraic</a>, when given a compatible value</dd>
 	</dt>
-</dl>
+</dt>
 <br><br>
 
 The conversions are checked in the specified order. For example, even though bool is implicitly convertible
 to lua_Integer, it will be converted to a boolean because boolean has precedence.
+<br><br>
+
+wchar and dchar are explicitly disallowed. Lua strings consist of 8-bit characters, if you want to push UTF-16 or UTF-32 strings, convert to UTF-8 first.
 <br><br>
 
 Additionally, the following types are pushable to Lua, but can't be retrieved back:
@@ -203,7 +207,7 @@ getValue<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sat Aug 13 22:32:32 2011
+			on Sun Aug 14 00:22:17 2011
 
 		</td></tr>
 	</table>

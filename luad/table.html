@@ -89,6 +89,45 @@ t[k] where t is the table for the second-to-last parameter, and k is the last pa
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">bool 
+<span class="currsymbol">readString</span>
+<script>explorer.outline.addDecl('readString');</script>
+
+(T)(T <span class="funcparam">key</span>, scope void delegate(in char[] str) <span class="funcparam">dg</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Read a string value in this table without making a copy of the string.
+ The read string is passed to dg, and should not be escaped.
+ If the value for key is not a string, dg is not called.
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">key</td>
+
+               
+<td>lookup key</td></tr>
+<tr>
+<td nowrap valign="top" style="padding-right: 8px">dg</td>
+
+               
+<td>delegate to receive string</td></tr>
+</table><br>
+<b>Returns:</b><br>
+<b>true</b> if the value for key was a string and passed to dg, <b>false</b> otherwise
+<br><br>
+<b>Examples:</b><br>
+<pre class="d_code">	 t[2] = <font color=red>"two"</font>;
+	 t.<u>readString</u>(2, (<font color=blue>in</font> <font color=blue>char</font>[] str) {
+		<font color=blue>assert</font>(str == <font color=red>"two"</font>);
+	 });
+</pre>
+<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">LuaObject 
 <span class="currsymbol">opIndex</span>
 <script>explorer.outline.addDecl('opIndex');</script>
@@ -304,7 +343,7 @@ A reference to the metatable for this table. The reference is nil if this table 
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sat Aug 13 22:32:32 2011
+			on Sun Aug 14 00:22:17 2011
 
 		</td></tr>
 	</table>
