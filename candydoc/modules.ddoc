@@ -6,7 +6,6 @@ MODULES =
 	$(MODULE luad.lfunction)
 	$(MODULE luad.error)
 	$(MODULE luad.stack)
-	$(MODULE luad.reference)
 	
 	$(MODULE luad.conversions.arrays)
 	$(MODULE luad.conversions.assocarrays)

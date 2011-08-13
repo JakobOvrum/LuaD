@@ -13,7 +13,6 @@ int main()
 		"error.d",
 		"base.d",
 		"lfunction.d",
-		"reference.d",
 		"stack.d",
 		"table.d",
 		"testing.d",
