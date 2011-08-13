@@ -74,6 +74,12 @@ public:
 			lua_close(L);
 	}
 	
+	/// The underlying lua_State pointer for interfacing with C.
+	@property lua_State* state()
+	{
+		return L;
+	}
+	
 	/**
 	 * Get the LuaState instance for a Lua state.
 	 * Params:
