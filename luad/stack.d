@@ -291,6 +291,32 @@ LuaObject[] getStack(lua_State* L)
 	return stack;
 }
 
+private void argumentTypeMismatch(lua_State* L, int idx, int expectedType)
+{
+	luaL_typerror(L, idx, lua_typename(L, expectedType));
+}
+
+auto getArgument(T, int narg)(lua_State* L, int idx)
+{
+	alias ParameterTypeTuple!T Args;
+	alias Args[narg] Arg;
+	enum isVarargs = variadicFunctionStyle!T == Variadic.TYPESAFE;
+	
+	static if(isVarargs && narg == Args.length-1)
+	{
+		alias Args[$-1] LastArg;
+		
+	}
+	else static if(is(Arg == const(char)[]))
+	{
+		size_t len;
+		const(char)* cstr = lua_tolstring(L, idx, &len);
+		return cstr[0 .. len];
+	}
+	else 
+		return getValue!(Arg, argumentTypeMismatch)(L, idx);
+}
+
 /// Used for getting a suitable nresults argument to lua_call or lua_pcall.
 template returnTypeSize(T)
 {
@@ -331,6 +357,10 @@ T popReturnValues(T)(lua_State* L)
 		return popValue!T(L);
 }
 
+/**
+ * Push return values to the stack.
+ * Defaults to pushValue, but has special handling for LuaObject[] and Tuple!(...).
+ */
 int pushReturnValues(T)(lua_State* L, T value)
 {
 	static if(is(T == LuaObject[]))
@@ -354,7 +384,7 @@ int pushReturnValues(T)(lua_State* L, T value)
 	}
 }
 
-/// Pops a Tuple from the top of the stack.
+/// Pops a Tuple from the values at the top of the stack.
 T popTuple(T)(lua_State* L) if(isTuple!T)
 {
 	T tup;
@@ -365,7 +395,7 @@ T popTuple(T)(lua_State* L) if(isTuple!T)
 	return tup;
 }
 
-/// Pushes a Tuple to the stack.
+/// Pushes all the values in a Tuple to the stack.
 void pushTuple(T)(lua_State* L, ref T tup) if(isTuple!T)
 {
 	foreach(i, Elem; T.Types)
@@ -379,7 +409,7 @@ unittest
 	lua_State* L = luaL_newstate();
 	scope(success) lua_close(L);
 	
-	//	pushValue and popValue
+	// pushValue and popValue
 	//number
 	pushValue(L, cast(ubyte)123);
 	assert(lua_isnumber(L, -1) && (popValue!ubyte(L) == 123));

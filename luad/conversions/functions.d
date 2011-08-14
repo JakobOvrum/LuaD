@@ -5,7 +5,7 @@ LuaD allows for pushing of all D function or delegate types with return type and
 
 For multiple return values, return a Tuple (from std.typecons). For a variable number of return values, return LuaObject[] (for returning an array of LuaObject as a table, wrap it in LuaTable).
 
-As a special case for const(char)[] parameter types in functions pushed to Lua, no copy of the string is made when called; take care not to escape such references, they are effectively scope parameters.
+As a special case for const(char)[] parameter types in _functions pushed to Lua, no copy of the string is made when called; take care not to escape such references, they are effectively scope parameters.
 When a copy is desired, use char[] or string, or dup or idup the string manually.
 
 If a function with the lua_CFunction signature is encountered, it is pushed directly with no inserted conversions or overhead.
@@ -59,20 +59,14 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 		return 0;
 }
 
-public void typeMismatch(lua_State* L, int idx, int expectedType)
-{
-	luaL_typerror(L, idx, lua_typename(L, expectedType));
-}
-
 extern(C) int methodWrapper(T, Class)(lua_State* L)
 {
 	alias ParameterTypeTuple!T Args;
-	Args args;
 	
 	//Check arguments
 	int top = lua_gettop(L);
-	if(top < args.length + 1)
-		argsError(L, top, args.length + 1);
+	if(top < Args.length + 1)
+		argsError(L, top, Args.length + 1);
 	
 	//Assemble method
 	T func;
@@ -80,17 +74,9 @@ extern(C) int methodWrapper(T, Class)(lua_State* L)
 	func.funcptr = cast(typeof(func.funcptr))lua_touserdata(L, lua_upvalueindex(1));
 	
 	//Assemble arguments
+	Args args;
 	foreach(i, Arg; Args)
-	{
-		static if(is(Arg == const(char)[]))
-		{
-			size_t len;
-			const(char)* cstr = lua_tolstring(L, i + 2, &len);
-			args[i] = cstr[0 .. len];
-		}
-		else //stack indexes start at 1, and index 1 is the 'this' reference
-			args[i] = getValue!(Arg, typeMismatch)(L, i + 2);
-	}
+		args[i] = getArgument!(T, i)(L, i + 2);
 	
 	return callFunction!T(L, func, args);
 }
@@ -98,28 +84,19 @@ extern(C) int methodWrapper(T, Class)(lua_State* L)
 extern(C) int functionWrapper(T)(lua_State* L)
 {
 	alias ParameterTypeTuple!T Args;
-	Args args;
 	
 	//Check arguments
 	int top = lua_gettop(L);
-	if(top < args.length)
-		argsError(L, top, args.length);
+	if(top < Args.length)
+		argsError(L, top, Args.length);
 	
 	//Get function
 	T func = *cast(T*)lua_touserdata(L, lua_upvalueindex(1));
 	
 	//Assemble arguments
+	Args args;
 	foreach(i, Arg; Args)
-	{
-		static if(is(Arg == const(char)[]))
-		{
-			size_t len;
-			const(char)* cstr = lua_tolstring(L, i + 1, &len);
-			args[i] = cstr[0 .. len];
-		}
-		else //stack indexes start at 1
-			args[i] = getValue!(Arg, typeMismatch)(L, i + 1);
-	}
+		args[i] = getArgument!(T, i)(L, i + 1);
 
 	return callFunction!T(L, func, args);
 }
