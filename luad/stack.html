@@ -157,6 +157,23 @@ Lua type for T<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">T 
+<span class="currsymbol">popValue</span>
+<script>explorer.outline.addDecl('popValue');</script>
+
+(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* <span class="funcparam">L</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Same as calling getValue!(T, typeMismatchHandler)(L, -1), then popping one value from the stack.
+<br><br>
+<b>See Also:</b><br>
+getValue<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">LuaObject[] 
 <span class="currsymbol">getStack</span>
 <script>explorer.outline.addDecl('getStack');</script>
@@ -181,19 +198,58 @@ array of objects<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">T 
-<span class="currsymbol">popValue</span>
-<script>explorer.outline.addDecl('popValue');</script>
+<dt><span class="decl">template 
+<span class="currsymbol">returnTypeSize</span>
+<script>explorer.outline.addDecl('returnTypeSize');</script>
 
-(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* <span class="funcparam">L</span>);
+(T)</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Used for getting a suitable nresults argument to lua_call or lua_pcall.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">T 
+<span class="currsymbol">popReturnValues</span>
+<script>explorer.outline.addDecl('popReturnValues');</script>
+
+(T)(lua_State* <span class="funcparam">L</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Same as calling getValue!(T, typeMismatchHandler)(L, -1), then popping one value from the stack.
-<br><br>
-<b>See Also:</b><br>
-getValue<br><br>
+<dd>Pop return values from stack.
+ Defaults to popValue, but has special handling for LuaObject[], Tuple!(...), and void.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">T 
+<span class="currsymbol">popTuple</span>
+<script>explorer.outline.addDecl('popTuple');</script>
+
+(T)(lua_State* <span class="funcparam">L</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Pops a Tuple from the top of the stack.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">void 
+<span class="currsymbol">pushTuple</span>
+<script>explorer.outline.addDecl('pushTuple');</script>
+
+(T)(lua_State* <span class="funcparam">L</span>, ref T <span class="funcparam">tup</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Pushes a Tuple to the stack.<br><br>
 
 </dd>
 </dl>
@@ -206,7 +262,7 @@ getValue<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sun Aug 14 01:49:39 2011
+			on Sun Aug 14 21:47:49 2011
 
 		</td></tr>
 	</table>

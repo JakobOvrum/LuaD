@@ -22,7 +22,16 @@
 Internal module for pushing and getting functions and delegates.
 <br><br>
 LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see <a href="/LuaD/luad/stack.html">luad.stack</a>).
-As a special case for const(char)[] parameter types, no copy of the string is made; take care not to escape such references, they are effectively scope parameters.
+<br><br>
+
+For multiple return values, return a Tuple (from std.typecons). For a variable number of return values, return LuaObject[] (for returning an array of LuaObject as a table, wrap it in LuaTable).
+<br><br>
+
+As a special case for const(char)[] parameter types in 
+<span class="currsymbol">functions</span>
+<script>explorer.outline.addDecl('functions');</script>
+
+ pushed to Lua, no copy of the string is made when called; take care not to escape such references, they are effectively scope parameters.
 When a copy is desired, use char[] or string, or dup or idup the string manually.
 <br><br>
 
@@ -55,7 +64,7 @@ If a function with the lua_CFunction signature is encountered, it is pushed dire
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sun Aug 14 01:49:39 2011
+			on Sun Aug 14 21:47:49 2011
 
 		</td></tr>
 	</table>
