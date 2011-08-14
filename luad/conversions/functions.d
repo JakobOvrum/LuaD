@@ -171,12 +171,10 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 	return delegate RetType(Args args)
 	{
 		func.push();
-		
 		foreach(arg; args)
 			pushValue(L, arg);
-		
+			
 		lua_call(L, args.length, returnTypeSize!RetType);
-		
 		return popReturnValues!RetType(L);
 	};
 }
@@ -268,7 +266,7 @@ unittest
 		`);
 	}
 	
-	// D-style varargs
+	// D-style typesafe varargs
 	{
 		static string concat(const(char)[][] pieces...)
 		{
@@ -296,7 +294,10 @@ unittest
 		
 		auto result = match("foobar@example.com", "([^@]+)@example.com");
 		assert(result == "foobar");
-		
+	}
+	
+	// multiple return values
+	{
 		luaL_dostring(L, `function multRet(a) return "foo", a end`);
 		lua_getglobal(L, "multRet");
 		auto multRet = popValue!(Tuple!(string, int) delegate(int))(L);

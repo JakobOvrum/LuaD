@@ -296,6 +296,7 @@ private void argumentTypeMismatch(lua_State* L, int idx, int expectedType)
 	luaL_typerror(L, idx, lua_typename(L, expectedType));
 }
 
+/// Get a function argument from the stack.
 auto getArgument(T, int narg)(lua_State* L, int idx)
 {
 	alias ParameterTypeTuple!T Args;
