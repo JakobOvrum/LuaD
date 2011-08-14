@@ -53,11 +53,13 @@ bool isAllowedType(T)(lua_State* L, int idx) {
 	return false;
 }
 
-// TODO: Make this not suck
+// Urgh...
 template isVariant(T)
 {
-	enum isVariant = __traits(hasMember, T, "AllowedTypes");
+	enum isVariant = is(typeof(isVariantImpl(T.init)));
 }
+
+private void isVariantImpl(size_t max, AllowedTypes...)(VariantN!(max, AllowedTypes) v){}
 
 version(unittest) import luad.testing;
 
