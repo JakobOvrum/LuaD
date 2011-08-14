@@ -268,6 +268,25 @@ unittest
 		`);
 	}
 	
+	// D-style varargs
+	{
+		static string concat(const(char)[][] pieces...)
+		{
+			string result;
+			foreach(piece; pieces)
+				result ~= piece;
+			return result;
+		}
+		
+		pushValue(L, &concat);
+		lua_setglobal(L, "concat");
+		
+		unittest_lua(L, `
+			local whole = concat("he", "llo", ", ", "world!")
+			assert(whole == "hello, world!")
+		`);
+	}
+	
 	// get functions from Lua
 	{
 		lua_getglobal(L, "string");

@@ -299,13 +299,27 @@ private void argumentTypeMismatch(lua_State* L, int idx, int expectedType)
 auto getArgument(T, int narg)(lua_State* L, int idx)
 {
 	alias ParameterTypeTuple!T Args;
-	alias Args[narg] Arg;
+	
+	static if(narg >= Args.length) // varargs causes this
+		alias ForeachType!(Args[$-1]) Arg;
+	else
+		alias Args[narg] Arg;
+		
 	enum isVarargs = variadicFunctionStyle!T == Variadic.TYPESAFE;
 	
 	static if(isVarargs && narg == Args.length-1)
 	{
-		alias Args[$-1] LastArg;
+		alias Args[narg] LastArg;
+		alias ForeachType!LastArg ElemType;
 		
+		auto top = lua_gettop(L);
+		auto size = top - idx + 1;
+		LastArg result = new LastArg(size);
+		foreach(i; 0 .. size)
+		{
+			result[i] = getArgument!(T, narg + 1)(L, idx + i);
+		}
+		return result;
 	}
 	else static if(is(Arg == const(char)[]))
 	{
