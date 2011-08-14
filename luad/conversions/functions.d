@@ -9,6 +9,8 @@ As a special case for const(char)[] parameter types in _functions pushed to Lua,
 When a copy is desired, use char[] or string, or dup or idup the string manually.
 
 If a function with the lua_CFunction signature is encountered, it is pushed directly with no inserted conversions or overhead.
+
+Typesafe varargs is supported when pushing functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use $(LINK2 /LuaD/luad/lfunction.html,LuaFunction) instead).
 */
 module luad.conversions.functions;
 
