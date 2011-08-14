@@ -2,7 +2,10 @@
 Internal module for pushing and getting _functions and delegates.
 
 LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see $(LINK2 /LuaD/luad/stack.html,luad.stack)).
-As a special case for const(char)[] parameter types, no copy of the string is made; take care not to escape such references, they are effectively scope parameters.
+
+For multiple return values, return a Tuple (from std.typecons). For a variable number of return values, return LuaObject[] (for returning an array of LuaObject as a table, wrap it in LuaTable).
+
+As a special case for const(char)[] parameter types in functions pushed to Lua, no copy of the string is made when called; take care not to escape such references, they are effectively scope parameters.
 When a copy is desired, use char[] or string, or dup or idup the string manually.
 
 If a function with the lua_CFunction signature is encountered, it is pushed directly with no inserted conversions or overhead.
@@ -36,7 +39,8 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 	enum hasReturnValue = !is(RetType == void);
 	
 	static if(hasReturnValue)
-			RetType ret;
+		RetType ret;
+
 	try
 	{
 		static if(hasReturnValue)
@@ -48,11 +52,11 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 	{
 		luaL_error(L, "%s", toStringz(e.toString()));
 	}
-	
+
 	static if(hasReturnValue)
-		pushValue(L, ret);
-	
-	return hasReturnValue? 1 : 0;
+		return pushReturnValues(L, ret);
+	else
+		return 0;
 }
 
 public void typeMismatch(lua_State* L, int idx, int expectedType)
@@ -194,13 +198,17 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 		foreach(arg; args)
 			pushValue(L, arg);
 		
-		lua_call(L, args.length, hasReturnValue? 1 : 0);
-		static if(hasReturnValue)
-			return popValue!RetType(L);
+		lua_call(L, args.length, returnTypeSize!RetType);
+		
+		return popReturnValues!RetType(L);
 	};
 }
 
-version(unittest) import luad.testing;
+version(unittest)
+{
+	import luad.testing;
+	import std.typecons;
+}
 
 unittest
 {
@@ -259,6 +267,31 @@ unittest
 		assert(circle(2) == 3.14 * 4, "closure return type mismatch!")
 	`);
 	
+	// multiple return values
+	{
+		auto nameInfo = ["foo"];
+		auto ageInfo = [42];
+		
+		alias Tuple!(string, "name", uint, "age") GetInfoResult;
+		GetInfoResult getInfo(int idx)
+		{
+			GetInfoResult result;
+			result.name = nameInfo[idx];
+			result.age = ageInfo[idx];
+			return result;
+		}
+		
+		pushValue(L, &getInfo);
+		lua_setglobal(L, "getInfo");
+		
+		unittest_lua(L, `
+			local name, age = getInfo(0)
+			assert(name == "foo")
+			assert(age == 42)
+		`);
+	}
+	
+	// get functions from Lua
 	{
 		lua_getglobal(L, "string");
 		lua_getfield(L, -1, "match");
@@ -267,5 +300,13 @@ unittest
 		
 		auto result = match("foobar@example.com", "([^@]+)@example.com");
 		assert(result == "foobar");
+		
+		luaL_dostring(L, `function multRet(a) return "foo", a end`);
+		lua_getglobal(L, "multRet");
+		auto multRet = popValue!(Tuple!(string, int) delegate(int))(L);
+		
+		auto results = multRet(42);
+		assert(results[0] == "foo");
+		assert(results[1] == 42);
 	}
 }

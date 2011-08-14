@@ -54,6 +54,7 @@ $(DL
 module luad.stack;
 
 import std.traits;
+import std.typecons;
 
 import luad.c.all;
 
@@ -262,6 +263,16 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 }
 
 /**
+ * Same as calling getValue!(T, typeMismatchHandler)(L, -1), then popping one value from the stack.
+ * See_Also: getValue
+ */
+T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
+{
+	scope(success) lua_pop(L, 1);
+	return getValue!(T, typeMismatchHandler)(L, -1);
+}
+
+/**
  * Get all objects on a stack, then clear the stack.
  * Params:
  *	 L = stack to dump
@@ -280,14 +291,85 @@ LuaObject[] getStack(lua_State* L)
 	return stack;
 }
 
-/**
- * Same as calling getValue!(T, typeMismatchHandler)(L, -1), then popping one value from the stack.
- * See_Also: getValue
- */
-T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
+/// Used for getting a suitable nresults argument to lua_call or lua_pcall.
+template returnTypeSize(T)
 {
-	scope(success) lua_pop(L, 1);
-	return getValue!(T, typeMismatchHandler)(L, -1);
+	static if(is(T == LuaObject[]))
+		enum returnTypeSize = LUA_MULTRET;
+		
+	else static if(isTuple!T)
+		enum returnTypeSize = T.Types.length;
+		
+	else static if(is(T == void))
+		enum returnTypeSize = 0;
+		
+	else
+		enum returnTypeSize = 1;
+}
+
+/**
+ * Pop return values from stack. 
+ * Defaults to popValue, but has special handling for LuaObject[], Tuple!(...), and void.
+ */
+T popReturnValues(T)(lua_State* L)
+{
+	static if(is(T == LuaObject[]))
+		return getStack(L);
+		
+	else static if(isTuple!T)
+	{
+		auto top = lua_gettop(L);
+		if(top < T.Types.length)
+			luaL_error(L, "expected %s return values, got %s", T.Types.length, top);
+		
+		return popTuple!T(L);
+	}	
+	else static if(is(T == void))
+		return;
+		
+	else
+		return popValue!T(L);
+}
+
+int pushReturnValues(T)(lua_State* L, T value)
+{
+	static if(is(T == LuaObject[]))
+	{
+		foreach(obj; value)
+		{
+			assert(obj.state == L);
+			obj.push();
+		}
+		return value.length;
+	}
+	else static if(isTuple!T)
+	{
+		pushTuple(L, value);
+		return T.Types.length;
+	}
+	else
+	{
+		pushValue(L, value);
+		return 1;
+	}
+}
+
+/// Pops a Tuple from the top of the stack.
+T popTuple(T)(lua_State* L) if(isTuple!T)
+{
+	T tup;
+	foreach(i, Elem; T.Types)
+		tup[i] = getValue!Elem(L, -T.Types.length + i);
+		
+	lua_pop(L, T.Types.length);
+	return tup;
+}
+
+/// Pushes a Tuple to the stack.
+void pushTuple(T)(lua_State* L, ref T tup) if(isTuple!T)
+{
+	foreach(i, Elem; T.Types)
+		pushValue(L, tup[i]);
 }
 
 version(unittest) import luad.testing;

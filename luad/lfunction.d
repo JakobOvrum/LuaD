@@ -53,7 +53,8 @@ struct LuaFunction
 	 *	 args = list of arguments.
 	 * Returns:
 	 *	 Return value of type T, or nothing if T was unspecified.
-	 *	 As a special case, a value of LuaObject[] for T will result
+	 *   For multiple return values, use a Tuple (from std.typecons).
+	 *	 Additionally, a value of LuaObject[] for T will result
 	 *	 all return values being collected and returned in a LuaObject[].
 	 * Examples:
 	 * ------------------
@@ -69,20 +70,17 @@ struct LuaFunction
 		this.push();
 		foreach(arg; args)
 			pushValue(this.state, arg);
+
+		lua_call(this.state, args.length, returnTypeSize!T);
 		
-		enum hasReturnValue = !is(T == void);
-		enum multiRet = is(T == LuaObject[]);
-		
-		lua_call(this.state, args.length, hasReturnValue? (multiRet? LUA_MULTRET : 1) : 0);
-		
-		static if(hasReturnValue)
-		{
-			static if(multiRet)
-				return getStack(this.state);
-			else
-				return popValue!T(this.state);
-		}
+		return popReturnValues!T(this.state);
 	}
+}
+
+version(unittest)
+{
+	import std.variant;
+	import std.typecons;
 }
 
 unittest
@@ -100,4 +98,27 @@ unittest
 	assert(tostring.call!string(123) == "123");
 	
 	tostring.call(321);
+	
+	// Multiple return values
+	luaL_dostring(L, "function singleRet() return 42 end");
+	lua_getglobal(L, "singleRet");
+	auto singleRet = popValue!LuaFunction(L);
+	
+	auto singleRetResult = singleRet.call!(Tuple!int)();
+	assert(singleRetResult[0] == 42);
+	
+	alias Algebraic!(string, double) BasicLuaType;
+	BasicLuaType a = "foo";
+	BasicLuaType b = 1.5;
+	
+	pushValue(L, [a, b]);
+	lua_setglobal(L, "test");
+	
+	luaL_dostring(L, "function multRet() return unpack(test) end");
+	lua_getglobal(L, "multRet");
+	auto multRet = popValue!LuaFunction(L);
+
+	auto result = multRet.call!(Tuple!(string, double))();
+	assert(result[0] == a);
+	assert(result[1] == b);
 }
