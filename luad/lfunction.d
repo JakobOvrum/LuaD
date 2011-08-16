@@ -67,6 +67,8 @@ struct LuaFunction
 	 */
 	T call(T = void, U...)(U args)
 	{
+		assert(lua_gettop(this.state) == 0); // this function assumes empty stack
+		
 		this.push();
 		foreach(arg; args)
 			pushValue(this.state, arg);

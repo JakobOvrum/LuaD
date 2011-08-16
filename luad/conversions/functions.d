@@ -10,7 +10,7 @@ When a copy is desired, use char[] or string, or dup or idup the string manually
 
 If a function with the lua_CFunction signature is encountered, it is pushed directly with no inserted conversions or overhead.
 
-Typesafe varargs is supported when pushing functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use $(LINK2 /LuaD/luad/lfunction.html,LuaFunction) instead).
+Typesafe varargs is supported when pushing _functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use $(LINK2 /LuaD/luad/lfunction.html,LuaFunction) instead).
 */
 module luad.conversions.functions;
 
@@ -172,6 +172,8 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 	
 	return delegate RetType(Args args)
 	{
+		assert(lua_gettop(L) == 0); // this function assumes empty stack
+		
 		func.push();
 		foreach(arg; args)
 			pushValue(L, arg);
