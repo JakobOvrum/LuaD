@@ -12,15 +12,6 @@ struct LuaFunction
 	LuaObject object;
 	alias object this;
 	
-	// WORKAROUND: bug #6036
-	package static LuaFunction make(lua_State* L, int idx)
-	{
-		LuaObject.checkType(L, idx, LUA_TFUNCTION, "LuaFunction");
-		LuaFunction f;
-		f.object = LuaObject(L, idx);
-		return f;
-	}
-	
 	version(none) package this(lua_State* L, int idx)
 	{
 		LuaObject.checkType(L, idx, LUA_TFUNCTION, "LuaFunction");

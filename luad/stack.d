@@ -61,6 +61,7 @@ import luad.c.all;
 import luad.base;
 import luad.table;
 import luad.lfunction;
+import luad.dynamic;
 
 import luad.conversions.functions;
 import luad.conversions.arrays;
@@ -78,9 +79,11 @@ import luad.conversions.variant;
 void pushValue(T)(lua_State* L, T value)
 {
 	static if(is(T : LuaObject))
-	{
 		value.push();
-	}
+		
+	else static if(is(T == LuaDynamic))
+		value.object.push();
+		
 	else static if(is(T == Nil))
 		lua_pushnil(L);
 	
@@ -193,7 +196,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		static assert("Ambiguous type " ~ T.stringof ~ " in stack push operation. Consider converting before pushing.");
 	}
 
-	static if(!is(T : LuaObject) && !isVariant!T)
+	static if(!is(T : LuaObject) && !is(T == LuaDynamic) && !isVariant!T)
 	{
 		int type = lua_type(L, idx);
 		int expectedType = luaTypeOf!T();
@@ -202,11 +205,20 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	}
 	
 	static if(is(T == LuaFunction)) // WORKAROUND: bug #6036
-		return LuaFunction.make(L, idx);
-		
+	{
+		LuaFunction func;
+		func.object = LuaObject(L, idx);
+		return func;
+	}	
+	else static if(is(T == LuaDynamic)) // ditto
+	{
+		LuaDynamic obj;
+		obj.object = LuaObject(L, idx);
+		return obj;
+	}	
 	else static if(is(T == LuaObject) || is(T == LuaTable))
 		return T(L, idx);
-	
+		
 	else static if(is(T == Nil))
 		return nil;
 	

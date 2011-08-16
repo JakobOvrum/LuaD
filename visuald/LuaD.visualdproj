@@ -291,6 +291,7 @@
    <File path="..\luad\all.d" />
    <File path="..\luad\base.d" />
    <File path="..\luad\error.d" />
+   <File path="..\luad\dynamic.d" />
    <File path="..\luad\lfunction.d" />
    <File path="..\luad\stack.d" />
    <File path="..\luad\state.d" />
