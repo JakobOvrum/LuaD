@@ -218,9 +218,8 @@ public:
 	LuaObject[] doString(in char[] code)
 	{
 		doChunk!(luaL_loadstring)(code);
-		return getStack(L);
+		return popStack(L);
 	}
-	
 
 	/**
 	 * Execute a file of Lua code.
@@ -232,7 +231,7 @@ public:
 	LuaObject[] doFile(in char[] path)
 	{
 		doChunk!(luaL_loadfile)(path);
-		return getStack(L);
+		return popStack(L);
 	}
 	
 	/**

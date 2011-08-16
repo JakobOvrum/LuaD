@@ -275,17 +275,18 @@ T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
 /**
  * Get all objects on a stack, then clear the stack.
  * Params:
- *	 L = stack to dump
+ *   T = wrapper type to use
+ *   L = stack to dump
  * Returns:
  *	 array of objects
  */
-LuaObject[] getStack(lua_State* L)
+T[] popStack(T = LuaObject)(lua_State* L)
 {
 	int top = lua_gettop(L);
-	auto stack = new LuaObject[top];
+	auto stack = new T[top];
 	foreach(i; 0..top)
 	{
-		stack[i] = getValue!LuaObject(L, i + 1);
+		stack[i] = getValue!T(L, i + 1);
 	}
 	lua_settop(L, 0);
 	return stack;
@@ -322,7 +323,7 @@ auto getArgument(T, int narg)(lua_State* L, int idx)
 		}
 		return result;
 	}
-	else static if(is(Arg == const(char)[]))
+	else static if(is(Arg == const(char)[]) || is(Arg == const(void)[]))
 	{
 		size_t len;
 		const(char)* cstr = lua_tolstring(L, idx, &len);
@@ -355,7 +356,7 @@ template returnTypeSize(T)
 T popReturnValues(T)(lua_State* L)
 {
 	static if(is(T == LuaObject[]))
-		return getStack(L);
+		return popStack(L);
 		
 	else static if(isTuple!T)
 	{
@@ -468,7 +469,7 @@ unittest
 	
 	assert(lua_gettop(L) == 0, "bad popValue semantics for primitives");
 	
-	//getStack
+	//popStack
 	extern(C) static int luacfunc(lua_State* L)
 	{
 		return 0;
@@ -479,7 +480,7 @@ unittest
 	pushValue(L, 123);
 	pushValue(L, true);
 	
-	auto stack = getStack(L);
+	auto stack = popStack(L);
 	assert(lua_gettop(L) == 0);
 	assert(stack[0].type == LuaType.Function);
 	assert(stack[1].type == LuaType.String);
