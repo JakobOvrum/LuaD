@@ -5,7 +5,7 @@
 <title>luad.table</title>
 <link rel="stylesheet" type="text/css" href="/LuaD/candydoc/style.css">
 <link rel="icon" type="image/png" href="/LuaD/favicon.png">
-<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="LuaD/candydoc/ie56hack.css"><![endif]-->
+<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="/LuaD/candydoc/ie56hack.css"><![endif]-->
 <script language="JavaScript" src="/LuaD/candydoc/util.js" type="text/javascript"></script>
 <script language="JavaScript" src="/LuaD/candydoc/tree.js" type="text/javascript"></script>
 <script language="JavaScript" src="/LuaD/candydoc/explorer.js" type="text/javascript"></script>
@@ -206,7 +206,7 @@ t[k] = value, where t is the table for the second-to-last parameter in args,
 
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code">	lua[<font color=red>"string"</font>, <font color=red>"empty"</font>] = (string s){ <font color=blue>return</font> s.length == 0; };
+<pre class="d_code">	lua[<font color=red>"string"</font>, <font color=red>"empty"</font>] = (<font color=blue>const</font>(<font color=blue>char</font>)[] s){ <font color=blue>return</font> s.length == 0; };
 	lua.doString(<font color=red>`assert(string.empty(""))`</font>);
 </pre>
 <br><br>
@@ -343,7 +343,7 @@ A reference to the metatable for this table. The reference is nil if this table 
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sun Aug 14 01:49:39 2011
+			on Wed Aug 17 15:52:20 2011
 
 		</td></tr>
 	</table>
@@ -354,6 +354,7 @@ A reference to the metatable for this table. The reference is nil if this table 
 	explorer.packageExplorer.addModule("luad.base");
 	explorer.packageExplorer.addModule("luad.table");
 	explorer.packageExplorer.addModule("luad.lfunction");
+	explorer.packageExplorer.addModule("luad.dynamic");
 	explorer.packageExplorer.addModule("luad.error");
 	explorer.packageExplorer.addModule("luad.stack");
 	

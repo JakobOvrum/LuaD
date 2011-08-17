@@ -4,6 +4,7 @@ MODULES =
 	$(MODULE luad.base)
 	$(MODULE luad.table)
 	$(MODULE luad.lfunction)
+	$(MODULE luad.dynamic)
 	$(MODULE luad.error)
 	$(MODULE luad.stack)
 	

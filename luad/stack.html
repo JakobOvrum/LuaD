@@ -5,7 +5,7 @@
 <title>luad.stack</title>
 <link rel="stylesheet" type="text/css" href="/LuaD/candydoc/style.css">
 <link rel="icon" type="image/png" href="/LuaD/favicon.png">
-<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="LuaD/candydoc/ie56hack.css"><![endif]-->
+<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="/LuaD/candydoc/ie56hack.css"><![endif]-->
 <script language="JavaScript" src="/LuaD/candydoc/util.js" type="text/javascript"></script>
 <script language="JavaScript" src="/LuaD/candydoc/tree.js" type="text/javascript"></script>
 <script language="JavaScript" src="/LuaD/candydoc/explorer.js" type="text/javascript"></script>
@@ -174,11 +174,11 @@ getValue<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">LuaObject[] 
-<span class="currsymbol">getStack</span>
-<script>explorer.outline.addDecl('getStack');</script>
+<dt><span class="decl">T[] 
+<span class="currsymbol">popStack</span>
+<script>explorer.outline.addDecl('popStack');</script>
 
-(lua_State* <span class="funcparam">L</span>);
+(T = LuaObject)(lua_State* <span class="funcparam">L</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -187,13 +187,32 @@ getValue<br><br>
 <br><br>
 <b>Params:</b><br>
 <table><tr>
-<td nowrap valign="top" style="padding-right: 8px">lua_State* <span class="funcparam">L</span></td>
+<td nowrap valign="top" style="padding-right: 8px">T</td>
+
+               
+<td>wrapper type to use</td></tr>
+<tr>
+<td nowrap valign="top" style="padding-right: 8px">L</td>
 
                
 <td>stack to dump</td></tr>
 </table><br>
 <b>Returns:</b><br>
 array of objects<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">auto 
+<span class="currsymbol">getArgument</span>
+<script>explorer.outline.addDecl('getArgument');</script>
+
+(T, int narg)(lua_State* <span class="funcparam">L</span>, int <span class="funcparam">idx</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Get a function argument from the stack.<br><br>
 
 </dd>
 
@@ -226,6 +245,21 @@ array of objects<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">int 
+<span class="currsymbol">pushReturnValues</span>
+<script>explorer.outline.addDecl('pushReturnValues');</script>
+
+(T)(lua_State* <span class="funcparam">L</span>, T <span class="funcparam">value</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Push return values to the stack.
+ Defaults to pushValue, but has special handling for LuaObject[] and Tuple!(...).<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">T 
 <span class="currsymbol">popTuple</span>
 <script>explorer.outline.addDecl('popTuple');</script>
@@ -235,7 +269,7 @@ array of objects<br><br>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Pops a Tuple from the top of the stack.<br><br>
+<dd>Pops a Tuple from the values at the top of the stack.<br><br>
 
 </dd>
 
@@ -249,7 +283,7 @@ array of objects<br><br>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Pushes a Tuple to the stack.<br><br>
+<dd>Pushes all the values in a Tuple to the stack.<br><br>
 
 </dd>
 </dl>
@@ -262,7 +296,7 @@ array of objects<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sun Aug 14 21:47:49 2011
+			on Wed Aug 17 15:52:20 2011
 
 		</td></tr>
 	</table>
@@ -273,6 +307,7 @@ array of objects<br><br>
 	explorer.packageExplorer.addModule("luad.base");
 	explorer.packageExplorer.addModule("luad.table");
 	explorer.packageExplorer.addModule("luad.lfunction");
+	explorer.packageExplorer.addModule("luad.dynamic");
 	explorer.packageExplorer.addModule("luad.error");
 	explorer.packageExplorer.addModule("luad.stack");
 	

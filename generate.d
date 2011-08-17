@@ -11,6 +11,7 @@ string[] allSources = [
 	"error.d",
 	"base.d",
 	"lfunction.d",
+	"dynamic.d",
 	"stack.d",
 	"table.d",
 	"testing.d",

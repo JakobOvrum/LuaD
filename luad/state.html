@@ -5,7 +5,7 @@
 <title>luad.state</title>
 <link rel="stylesheet" type="text/css" href="/LuaD/candydoc/style.css">
 <link rel="icon" type="image/png" href="/LuaD/favicon.png">
-<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="LuaD/candydoc/ie56hack.css"><![endif]-->
+<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="/LuaD/candydoc/ie56hack.css"><![endif]-->
 <script language="JavaScript" src="/LuaD/candydoc/util.js" type="text/javascript"></script>
 <script language="JavaScript" src="/LuaD/candydoc/tree.js" type="text/javascript"></script>
 <script language="JavaScript" src="/LuaD/candydoc/explorer.js" type="text/javascript"></script>
@@ -75,8 +75,9 @@ The new LuaState does not assume ownership of the state.
 </table><br>
 <b>Note:</b><br>
 The panic function is not changed - a Lua panic will not throw a D exception!
- See Also:
-		setPanicHandler<br><br>
+<br><br>
+<b>See Also:</b><br>
+setPanicHandler<br><br>
 
 </dd>
 
@@ -371,8 +372,9 @@ A reference to value as a LuaObject<br><br>
 
 
 <dd>Same as calling globals.get with the same arguments.
- See Also:
-	 LuaTable.get<br><br>
+<br><br>
+<b>See Also:</b><br>
+LuaTable.get<br><br>
 
 </dd>
 
@@ -387,8 +389,9 @@ A reference to value as a LuaObject<br><br>
 
 
 <dd>Same as calling globals.get!LuaObject with the same arguments.
- See Also:
-	 LuaTable.opIndex<br><br>
+<br><br>
+<b>See Also:</b><br>
+LuaTable.opIndex<br><br>
 
 </dd>
 
@@ -403,8 +406,9 @@ A reference to value as a LuaObject<br><br>
 
 
 <dd>Same as calling globals.set with the same arguments.
- See Also:
-	 LuaTable.set<br><br>
+<br><br>
+<b>See Also:</b><br>
+LuaTable.set<br><br>
 
 </dd>
 
@@ -419,8 +423,9 @@ A reference to value as a LuaObject<br><br>
 
 
 <dd>Same as calling globals.opIndexAssign with the same arguments.
- See Also:
-	 LuaTable.opIndexAssign<br><br>
+<br><br>
+<b>See Also:</b><br>
+LuaTable.opIndexAssign<br><br>
 
 </dd>
 </dl>
@@ -438,7 +443,7 @@ A reference to value as a LuaObject<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Sun Aug 14 02:25:08 2011
+			on Wed Aug 17 15:52:20 2011
 
 		</td></tr>
 	</table>
@@ -449,6 +454,7 @@ A reference to value as a LuaObject<br><br>
 	explorer.packageExplorer.addModule("luad.base");
 	explorer.packageExplorer.addModule("luad.table");
 	explorer.packageExplorer.addModule("luad.lfunction");
+	explorer.packageExplorer.addModule("luad.dynamic");
 	explorer.packageExplorer.addModule("luad.error");
 	explorer.packageExplorer.addModule("luad.stack");
 	
