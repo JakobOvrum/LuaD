@@ -22,8 +22,7 @@
 This internal module, with the help of the luad.conversions package, takes care of converting between D and Lua types.
 <br><br>
 The conversion rules are as follows, where conversion goes both ways:
-(DL
-	<dt>boolean
+<dl><dt>boolean
 		<dd>bool</dd>
 	</dt>
 	<dt>number
@@ -53,12 +52,12 @@ The conversion rules are as follows, where conversion goes both ways:
 		<dd>the special identifier nil</dd>
 		<dd><b>null</b> class references</dd>
 	</dt>
-	(DT any of the above
-		<dd><a href="/LuaD/luad/base.html">LuaObject</a>
-		<dd><a href="/LuaD/luad/dynamic.html">LuaDynamic</a>
+	<dt>any of the above
+		<dd><a href="/LuaD/luad/base.html">LuaObject</a></dd>
+		<dd><a href="/LuaD/luad/dynamic.html">LuaDynamic</a></dd>
 		<dd><a href="/LuaD/luad/conversions/variant.html">Algebraic</a> (when given a compatible value)</dd>
-	</dd>
-</dd>
+	</dt>
+</dl>
 <br><br>
 
 The conversions are checked in the specified order. For example, even though bool is implicitly convertible
@@ -298,7 +297,7 @@ array of objects<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Wed Aug 17 19:00:20 2011
+			on Wed Aug 17 19:03:38 2011
 
 		</td></tr>
 	</table>
