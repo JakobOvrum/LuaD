@@ -1,6 +1,7 @@
 module luad.lfunction;
 
 import luad.base;
+import luad.table;
 import luad.stack;
 
 import luad.c.all;
@@ -68,6 +69,33 @@ struct LuaFunction
 		
 		return popReturnValues!T(this.state);
 	}
+	
+	/**
+	 * Set a new environment for this function.
+	 *
+	 * The environment of a function is the table used for looking up non-local (global) variables.
+	 * Params:
+	 *    env = new environment
+	 * Examples:
+	 * -------------------
+	 * lua["foo"] = "bar";
+	 * auto func = lua.loadString(`return foo`);
+	 * assert(func.call!string() == "bar");
+	 *
+	 * auto env = lua.wrap(["foo": "test"]);
+	 * func.setEnvironment(env);
+	 * assert(func.call!string() == "test");
+	 * -------------------
+	 */
+	void setEnvironment(ref LuaTable env)
+	in { assert(this.state == env.state); }
+	body
+	{
+		this.push();
+		env.push();
+		lua_setfenv(this.state, -2);
+		lua_pop(this.state, 1);
+	}
 }
 
 version(unittest)
@@ -114,4 +142,14 @@ unittest
 	auto result = multRet.call!(Tuple!(string, double))();
 	assert(result[0] == a);
 	assert(result[1] == b);
+	
+	// setEnvironment
+	pushValue(L, ["test": [42]]);
+	auto env = popValue!LuaTable(L);
+	
+	lua_getglobal(L, "unpack");
+	env["unpack"] = popValue!LuaObject(L);
+	
+	multRet.setEnvironment(env);
+	assert(multRet.call!int() == 42);
 }
