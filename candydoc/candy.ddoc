@@ -1,21 +1,22 @@
+GHROOT = /LuaD
 DDOC =  
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta content="text/javascript" http-equiv="content-script-type">
 <title>$(TITLE)</title>
-<link rel="stylesheet" type="text/css" href="/LuaD/candydoc/style.css">
-<link rel="icon" type="image/png" href="/LuaD/favicon.png">
-<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="LuaD/candydoc/ie56hack.css"><![endif]-->
-<script language="JavaScript" src="/LuaD/candydoc/util.js" type="text/javascript"></script>
-<script language="JavaScript" src="/LuaD/candydoc/tree.js" type="text/javascript"></script>
-<script language="JavaScript" src="/LuaD/candydoc/explorer.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="$(GHROOT)/candydoc/style.css">
+<link rel="icon" type="image/png" href="$(GHROOT)/favicon.png">
+<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="$(GHROOT)/candydoc/ie56hack.css"><![endif]-->
+<script language="JavaScript" src="$(GHROOT)/candydoc/util.js" type="text/javascript"></script>
+<script language="JavaScript" src="$(GHROOT)/candydoc/tree.js" type="text/javascript"></script>
+<script language="JavaScript" src="$(GHROOT)/candydoc/explorer.js" type="text/javascript"></script>
 </head><body>
 <div id="tabarea"></div><div id="explorerclient"></div>
 <div id="content"><script>explorer.initialize("$(TITLE)");</script>
 	<table class="content">
 		<tr><td id="docbody">
 			<div id="logo">
-				<a href="/LuaD"><img src="/LuaD/logo.png" alt="LuaD logo" /></a>
+				<a href="$(GHROOT)"><img src="$(GHROOT)/logo.png" alt="LuaD logo" /></a>
 			</div>
 			<h1>$(TITLE)</h1>
 			$(BODY)
@@ -23,7 +24,7 @@ DDOC =
 		</tr>
 		<tr><td id="docfooter">
 			Page was generated with
-			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
+			<img src="$(GHROOT)/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
 			on $(DATETIME)
 		</td></tr>
 	</table>

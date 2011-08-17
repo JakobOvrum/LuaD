@@ -4,6 +4,8 @@
    This file is javascript with classes that represents explorer window.
    And things related to navigation. */
    
+var LinkRoot = "/LuaD";
+   
 var explorer = new Explorer();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -121,15 +123,15 @@ function Outline()
                 var text = n.firstChild.data; // text before declaration
                 
                 if ( this.classRegExp.test(text) )
-                    iconSrc = "/LuaD/candydoc/img/outline/class.gif";
+                    iconSrc = "/candydoc/img/outline/class.gif";
                 else if ( this.structRegExp.test(text) )
-                    iconSrc = "/LuaD/candydoc/img/outline/struct.gif";
+                    iconSrc = "/candydoc/img/outline/struct.gif";
                 else if ( this.enumRegExp.test(text) )
-                    iconSrc = "/LuaD/candydoc/img/outline/enum.gif";
+                    iconSrc = "/candydoc/img/outline/enum.gif";
                 else if ( this.templateRegExp.test(text) )
-                    iconSrc = "/LuaD/candydoc/img/outline/template.gif";
+                    iconSrc = "/candydoc/img/outline/template.gif";
                 else if ( this.aliasRegExp.test(text) )
-                    iconSrc = "/LuaD/candydoc/img/outline/alias.gif";
+                    iconSrc = "/candydoc/img/outline/alias.gif";
                 else // function or variable? check whether '(' ')' exists on the right
                 {
                     var np = n.firstChild;
@@ -139,16 +141,16 @@ function Outline()
                     if (np && np.nextSibling && np.nextSibling.nodeName == "#text" &&
                         this.funcRegExp.test(np.nextSibling.data))
                     {
-                        iconSrc = "/LuaD/candydoc/img/outline/func.gif";
+                        iconSrc = "/candydoc/img/outline/func.gif";
                     }
                     else
-                        iconSrc = "/LuaD/candydoc/img/outline/var.gif";
+                        iconSrc = "/candydoc/img/outline/var.gif";
                 }
             }
             else // enum member ?
-                iconSrc = "/LuaD/candydoc/img/outline/var.gif";
+                iconSrc = "/candydoc/img/outline/var.gif";
                     
-            child.icon.src = iconSrc;
+            child.icon.src = LinkRoot + iconSrc;
             child.icon.width = 16;
             child.icon.height = 16;
         }
@@ -210,8 +212,8 @@ function PackageExplorer()
     
     this.addModule = function(mod)
     {
-        var moduleIco = "/LuaD/candydoc/img/outline/module.gif";
-        var packageIco = "/LuaD/candydoc/img/outline/package.gif";
+        var moduleIco = LinkRoot + "/candydoc/img/outline/module.gif";
+        var packageIco = LinkRoot + "/candydoc/img/outline/package.gif";
 		
         var path = mod.split("\.");
         var node = this.tree.branch(path[0]);
@@ -229,7 +231,7 @@ function PackageExplorer()
             if (path.length == i + 1)
 			{
 				var fullPath = mod.replace(/\./g, "/");
-                node.setRef("/LuaD/" + fullPath + ".html");
+                node.setRef(LinkRoot + "/" + fullPath + ".html");
 			}
         }
     }
@@ -260,7 +262,7 @@ function Explorer()
         this.clientArea.onclick = new Function("return true;");
         this.clientArea.onselectstart = new Function("return false;");
         
-        this.outline.tree.createBranch( moduleName, "/LuaD/candydoc/img/outline/module.gif" );
+        this.outline.tree.createBranch( moduleName, LinkRoot + "/candydoc/img/outline/module.gif" );
         
         // create tabs
         this.createTab("Outline", this.outline.tree.domEntry);

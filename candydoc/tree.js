@@ -2,7 +2,9 @@
    File is written by Victor Nakoryakov and placed into the public domain.
 
    This file is javascript with classes that represents native style tree control. */
-   
+
+var LinkRoot = "/LuaD";
+
 var pmNone = 0;
 var pmPlus = 1;
 var pmMinus = 2;
@@ -100,7 +102,7 @@ function TreeNode(text, iconSrc, hrefMode)
         if (name == "")
             name = "shim";
         
-        return "/LuaD/candydoc/img/tree/" + name + ".gif";
+        return LinkRoot + "/candydoc/img/tree/" + name + ".gif";
     }
     
     function setSrc(icon, src)
