@@ -94,12 +94,12 @@
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">T</td>
 
-               
+
 <td>expected return type.</td></tr>
 <tr>
 <td nowrap valign="top" style="padding-right: 8px">args</td>
 
-               
+
 <td>list of arguments.</td></tr>
 </table><br>
 <b>Returns:</b><br>
@@ -114,6 +114,40 @@ Return value of type T, or nothing if T was unspecified.
 
 	<font color=blue>auto</font> answer = ask.<u>call</u>!<font color=blue>int</font>(<font color=red>"What's the answer to life, the universe and everything?"</font>);
 	<font color=blue>assert</font>(answer == 42);
+</pre>
+<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">void 
+<span class="currsymbol">setEnvironment</span>
+<script>explorer.outline.addDecl('setEnvironment');</script>
+
+(ref LuaTable <span class="funcparam">env</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Set a new environment for this function.
+<br><br>
+The environment of a function is the table used for looking up non-local (global) variables.
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">LuaTable <span class="funcparam">env</span></td>
+
+
+<td>new environment</td></tr>
+</table><br>
+<b>Examples:</b><br>
+<pre class="d_code"> lua[<font color=red>"foo"</font>] = <font color=red>"bar"</font>;
+ <font color=blue>auto</font> func = lua.loadString(<font color=red>`return foo`</font>);
+ <font color=blue>assert</font>(func.call!string() == <font color=red>"bar"</font>);
+
+ <font color=blue>auto</font> <i>env</i> = lua.wrap([<font color=red>"foo"</font>: <font color=red>"test"</font>]);
+ func.<u>setEnvironment</u>(<i>env</i>);
+ <font color=blue>assert</font>(func.call!string() == <font color=red>"test"</font>);
 </pre>
 <br><br>
 
@@ -133,28 +167,12 @@ Return value of type T, or nothing if T was unspecified.
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Wed Aug 17 15:52:20 2011
+			on Wed Aug 17 18:52:49 2011
 
 		</td></tr>
 	</table>
 </div>
-<script>
-	explorer.packageExplorer.addModule("luad.all");
-	explorer.packageExplorer.addModule("luad.state");
-	explorer.packageExplorer.addModule("luad.base");
-	explorer.packageExplorer.addModule("luad.table");
-	explorer.packageExplorer.addModule("luad.lfunction");
-	explorer.packageExplorer.addModule("luad.dynamic");
-	explorer.packageExplorer.addModule("luad.error");
-	explorer.packageExplorer.addModule("luad.stack");
-	
-	explorer.packageExplorer.addModule("luad.conversions.arrays");
-	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
-	explorer.packageExplorer.addModule("luad.conversions.functions");
-	explorer.packageExplorer.addModule("luad.conversions.structs");
-	explorer.packageExplorer.addModule("luad.conversions.variant");
-	
-	explorer.packageExplorer.addModule("luad.c.all");</script>
+<script></script>
 </body></html>
 
 

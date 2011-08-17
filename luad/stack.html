@@ -22,7 +22,8 @@
 This internal module, with the help of the luad.conversions package, takes care of converting between D and Lua types.
 <br><br>
 The conversion rules are as follows, where conversion goes both ways:
-<dl><dt>boolean
+(DL
+	<dt>boolean
 		<dd>bool</dd>
 	</dt>
 	<dt>number
@@ -35,28 +36,184 @@ The conversion rules are as follows, where conversion goes both ways:
 		<dd>char</dd>
 	</dt>
 	<dt>table
-		<dd><a href="/LuaD/luad/conversions/assocarrays.html">associative arrays</a></dd>
-		<dd><a href="/LuaD/luad/conversions/arrays.html">arrays</a></dd>
-		<dd><a href="/LuaD/luad/conversions/structs.html">structs</a></dd>
-		<dd><a href="/LuaD/luad/table.html">LuaTable</a></dd>
+		<dd><a href="/LuaD/luad/conversions/assocarrays.html">associative arrays</a>MODULES = 
+	explorer.packageExplorer.addModule("luad.all");
+
+	explorer.packageExplorer.addModule("luad.state");
+
+	explorer.packageExplorer.addModule("luad.base");
+
+	explorer.packageExplorer.addModule("luad.table");
+
+	explorer.packageExplorer.addModule("luad.lfunction");
+
+	explorer.packageExplorer.addModule("luad.dynamic");
+
+	explorer.packageExplorer.addModule("luad.error");
+
+	explorer.packageExplorer.addModule("luad.stack");
+
+	
+	explorer.packageExplorer.addModule("luad.conversions.arrays");
+
+	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
+
+	explorer.packageExplorer.addModule("luad.conversions.functions");
+
+	explorer.packageExplorer.addModule("luad.conversions.structs");
+
+	explorer.packageExplorer.addModule("luad.conversions.variant");
+
+	
+	explorer.packageExplorer.addModule("luad.c.all");
+</dd>
+		<dd><a href="/LuaD/luad/conversions/arrays.html">arrays</a>MODULES = 
+	explorer.packageExplorer.addModule("luad.all");
+
+	explorer.packageExplorer.addModule("luad.state");
+
+	explorer.packageExplorer.addModule("luad.base");
+
+	explorer.packageExplorer.addModule("luad.table");
+
+	explorer.packageExplorer.addModule("luad.lfunction");
+
+	explorer.packageExplorer.addModule("luad.dynamic");
+
+	explorer.packageExplorer.addModule("luad.error");
+
+	explorer.packageExplorer.addModule("luad.stack");
+
+	
+	explorer.packageExplorer.addModule("luad.conversions.arrays");
+
+	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
+
+	explorer.packageExplorer.addModule("luad.conversions.functions");
+
+	explorer.packageExplorer.addModule("luad.conversions.structs");
+
+	explorer.packageExplorer.addModule("luad.conversions.variant");
+
+	
+	explorer.packageExplorer.addModule("luad.c.all");
+</dd>
+		<dd><a href="/LuaD/luad/conversions/structs.html">structs</a>MODULES = 
+	explorer.packageExplorer.addModule("luad.all");
+
+	explorer.packageExplorer.addModule("luad.state");
+
+	explorer.packageExplorer.addModule("luad.base");
+
+	explorer.packageExplorer.addModule("luad.table");
+
+	explorer.packageExplorer.addModule("luad.lfunction");
+
+	explorer.packageExplorer.addModule("luad.dynamic");
+
+	explorer.packageExplorer.addModule("luad.error");
+
+	explorer.packageExplorer.addModule("luad.stack");
+
+	
+	explorer.packageExplorer.addModule("luad.conversions.arrays");
+
+	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
+
+	explorer.packageExplorer.addModule("luad.conversions.functions");
+
+	explorer.packageExplorer.addModule("luad.conversions.structs");
+
+	explorer.packageExplorer.addModule("luad.conversions.variant");
+
+	
+	explorer.packageExplorer.addModule("luad.c.all");
+</dd>
+		<dd><a href="/LuaD/luad/table.html">LuaTable</a>
+</dd>
 	</dt>
-	<dt>function (see <a href="/LuaD/luad/conversions/functions.html">luad.conversions.functions</a>)
+	<dt>function (see <a href="/LuaD/luad/conversions/functions.html">luad.conversions.functions</a>
+)
 		<dd>function pointers</dd>
 		<dd>delegates</dd>
-		<dd><a href="/LuaD/luad/lfunction.html">LuaFunction</a></dd>
+		<dd><a href="/LuaD/luad/lfunction.html">LuaFunction</a>
+</dd>
 	</dt>
 	<dt>userdata
-		<dd><a href="/LuaD/luad/conversions/classes.html">classes</a></dd>
+		<dd><a href="/LuaD/luad/conversions/classes.html">classes</a>MODULES = 
+	explorer.packageExplorer.addModule("luad.all");
+
+	explorer.packageExplorer.addModule("luad.state");
+
+	explorer.packageExplorer.addModule("luad.base");
+
+	explorer.packageExplorer.addModule("luad.table");
+
+	explorer.packageExplorer.addModule("luad.lfunction");
+
+	explorer.packageExplorer.addModule("luad.dynamic");
+
+	explorer.packageExplorer.addModule("luad.error");
+
+	explorer.packageExplorer.addModule("luad.stack");
+
+	
+	explorer.packageExplorer.addModule("luad.conversions.arrays");
+
+	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
+
+	explorer.packageExplorer.addModule("luad.conversions.functions");
+
+	explorer.packageExplorer.addModule("luad.conversions.structs");
+
+	explorer.packageExplorer.addModule("luad.conversions.variant");
+
+	
+	explorer.packageExplorer.addModule("luad.c.all");
+</dd>
 	</dt>
 	<dt>nil
 		<dd>the special identifier nil</dd>
 		<dd><b>null</b> class references</dd>
 	</dt>
-	<dt>any of the above
-		<dd><a href="/LuaD/luad/base.html">LuaObject</a></dd>
-		<dd><a href="/LuaD/luad/conversions/variant.html">Algebraic</a>, when given a compatible value</dd>
-	</dt>
-</dl>
+	(DT any of the above
+		<dd><a href="/LuaD/luad/base.html">LuaObject</a>
+
+		<dd><a href="/LuaD/luad/dynamic.html">LuaDynamic</a>
+
+		<dd><a href="/LuaD/luad/conversions/variant.html">Algebraic</a>MODULES = 
+	explorer.packageExplorer.addModule("luad.all");
+
+	explorer.packageExplorer.addModule("luad.state");
+
+	explorer.packageExplorer.addModule("luad.base");
+
+	explorer.packageExplorer.addModule("luad.table");
+
+	explorer.packageExplorer.addModule("luad.lfunction");
+
+	explorer.packageExplorer.addModule("luad.dynamic");
+
+	explorer.packageExplorer.addModule("luad.error");
+
+	explorer.packageExplorer.addModule("luad.stack");
+
+	
+	explorer.packageExplorer.addModule("luad.conversions.arrays");
+
+	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
+
+	explorer.packageExplorer.addModule("luad.conversions.functions");
+
+	explorer.packageExplorer.addModule("luad.conversions.structs");
+
+	explorer.packageExplorer.addModule("luad.conversions.variant");
+
+	
+	explorer.packageExplorer.addModule("luad.c.all");
+ (when given a compatible value)</dd>
+	</dd>
+</dd>
 <br><br>
 
 The conversions are checked in the specified order. For example, even though bool is implicitly convertible
@@ -91,12 +248,12 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">L</td>
 
-               
+
 <td>stack to push to</td></tr>
 <tr>
 <td nowrap valign="top" style="padding-right: 8px">value</td>
 
-               
+
 <td>value to push</td></tr>
 </table><br>
 
@@ -135,22 +292,22 @@ Lua type for T<br><br>
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">T</td>
 
-               
+
 <td>type of value</td></tr>
 <tr>
 <td nowrap valign="top" style="padding-right: 8px">typeMismatchHandler</td>
 
-               
+
 <td>function called to produce an error in case of an invalid conversion.</td></tr>
 <tr>
 <td nowrap valign="top" style="padding-right: 8px">L</td>
 
-               
+
 <td>stack to get from</td></tr>
 <tr>
 <td nowrap valign="top" style="padding-right: 8px">idx</td>
 
-               
+
 <td>value stack index</td></tr>
 </table><br>
 
@@ -189,12 +346,12 @@ getValue<br><br>
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">T</td>
 
-               
+
 <td>wrapper type to use</td></tr>
 <tr>
 <td nowrap valign="top" style="padding-right: 8px">L</td>
 
-               
+
 <td>stack to dump</td></tr>
 </table><br>
 <b>Returns:</b><br>
@@ -296,28 +453,12 @@ array of objects<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Wed Aug 17 15:52:20 2011
+			on Wed Aug 17 18:52:49 2011
 
 		</td></tr>
 	</table>
 </div>
-<script>
-	explorer.packageExplorer.addModule("luad.all");
-	explorer.packageExplorer.addModule("luad.state");
-	explorer.packageExplorer.addModule("luad.base");
-	explorer.packageExplorer.addModule("luad.table");
-	explorer.packageExplorer.addModule("luad.lfunction");
-	explorer.packageExplorer.addModule("luad.dynamic");
-	explorer.packageExplorer.addModule("luad.error");
-	explorer.packageExplorer.addModule("luad.stack");
-	
-	explorer.packageExplorer.addModule("luad.conversions.arrays");
-	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
-	explorer.packageExplorer.addModule("luad.conversions.functions");
-	explorer.packageExplorer.addModule("luad.conversions.structs");
-	explorer.packageExplorer.addModule("luad.conversions.variant");
-	
-	explorer.packageExplorer.addModule("luad.c.all");</script>
+<script></script>
 </body></html>
 
 

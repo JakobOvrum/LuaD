@@ -70,7 +70,7 @@ The new LuaState does not assume ownership of the state.
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">lua_State* <span class="funcparam">L</span></td>
 
-               
+
 <td>state to wrap.</td></tr>
 </table><br>
 <b>Note:</b><br>
@@ -111,7 +111,7 @@ setPanicHandler<br><br>
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">lua_State* <span class="funcparam">L</span></td>
 
-               
+
 <td>Lua state</td></tr>
 </table><br>
 <b>Returns:</b><br>
@@ -177,7 +177,7 @@ LuaState for the given lua_State*.<br><br>
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">void function(LuaState, in const(char[])) <span class="funcparam">onPanic</span></td>
 
-               
+
 <td>new panic handler</td></tr>
 </table><br>
 <b>Examples:</b><br>
@@ -211,7 +211,7 @@ LuaState for the given lua_State*.<br><br>
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">char[] <span class="funcparam">code</span></td>
 
-               
+
 <td>code to compile</td></tr>
 </table><br>
 <b>Returns:</b><br>
@@ -235,7 +235,7 @@ Loaded code as a function.<br><br>
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">char[] <span class="funcparam">path</span></td>
 
-               
+
 <td>path to file</td></tr>
 </table><br>
 <b>Returns:</b><br>
@@ -259,7 +259,7 @@ Loaded code as a function.<br><br>
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">char[] <span class="funcparam">code</span></td>
 
-               
+
 <td>code to run</td></tr>
 </table><br>
 <b>Returns:</b><br>
@@ -283,7 +283,7 @@ Any code return values<br><br>
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">char[] <span class="funcparam">path</span></td>
 
-               
+
 <td>path to file</td></tr>
 </table><br>
 <b>Returns:</b><br>
@@ -324,12 +324,12 @@ The new table<br><br>
 <table><tr>
 <td nowrap valign="top" style="padding-right: 8px">uint <span class="funcparam">narr</span></td>
 
-               
+
 <td>number of pre-allocated array slots</td></tr>
 <tr>
 <td nowrap valign="top" style="padding-right: 8px">uint <span class="funcparam">nrec</span></td>
 
-               
+
 <td>number of pre-allocated non-array slots</td></tr>
 </table><br>
 <b>Returns:</b><br>
@@ -338,26 +338,35 @@ The new table<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">LuaObject 
+<dt><span class="decl">T 
 <span class="currsymbol">wrap</span>
 <script>explorer.outline.addDecl('wrap');</script>
 
-(T)(T <span class="funcparam">value</span>);
+(T = LuaObject, U)(U <span class="funcparam">value</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Wrap a D value in a LuaObject.
+<dd>Wrap a D value in a Lua reference.
+<br><br>
+Note that using this method is only necessary in certain situations,
+ like when you want to act on the reference before fully exposing it to Lua.
 <br><br>
 <b>Params:</b><br>
 <table><tr>
+<td nowrap valign="top" style="padding-right: 8px">T</td>
+
+
+<td>type of reference. Must be LuaObject, LuaTable, LuaFunction or LuaDynamic.
+   Defaults to LuaObject.</td></tr>
+<tr>
 <td nowrap valign="top" style="padding-right: 8px">value</td>
 
-               
+
 <td>D value to wrap</td></tr>
 </table><br>
 <b>Returns:</b><br>
-A reference to value as a LuaObject<br><br>
+A Lua reference to value<br><br>
 
 </dd>
 
@@ -443,28 +452,12 @@ LuaTable.opIndexAssign<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Wed Aug 17 15:52:20 2011
+			on Wed Aug 17 18:52:49 2011
 
 		</td></tr>
 	</table>
 </div>
-<script>
-	explorer.packageExplorer.addModule("luad.all");
-	explorer.packageExplorer.addModule("luad.state");
-	explorer.packageExplorer.addModule("luad.base");
-	explorer.packageExplorer.addModule("luad.table");
-	explorer.packageExplorer.addModule("luad.lfunction");
-	explorer.packageExplorer.addModule("luad.dynamic");
-	explorer.packageExplorer.addModule("luad.error");
-	explorer.packageExplorer.addModule("luad.stack");
-	
-	explorer.packageExplorer.addModule("luad.conversions.arrays");
-	explorer.packageExplorer.addModule("luad.conversions.assocarrays");
-	explorer.packageExplorer.addModule("luad.conversions.functions");
-	explorer.packageExplorer.addModule("luad.conversions.structs");
-	explorer.packageExplorer.addModule("luad.conversions.variant");
-	
-	explorer.packageExplorer.addModule("luad.c.all");</script>
+<script></script>
 </body></html>
 
 
