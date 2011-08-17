@@ -5,12 +5,33 @@ import luad.c.all;
 import luad.base;
 import luad.stack;
 
+/**
+ * Represents a reference to a Lua value of any type.
+ * Supports all operations you can perform on values in Lua.
+ */
 struct LuaDynamic
 {
+	/// Underlying Lua reference.
 	LuaObject object;
 	
 	/**
+	 * Perform a Lua method call on this object.
 	 *
+	 * Performs a call similar to calling functions in Lua with the colon operator.
+	 * The name string is looked up in this object and called. This object is prepended
+	 * to the arguments args.
+	 * Params:
+	 *    name = _name of method
+	 *    args = additional arguments
+	 * Returns:
+	 *    All return values
+	 * Examples:
+	 * ----------------
+	 * auto luaString = lua.wrap!LuaDynamic("test");
+	 * auto results = luaString.gsub("t", "f");
+	 * assert(results[0] == "fesf");
+	 * assert(results[1] == 2); // two instances of 't' replaced
+	 * ----------------
 	 */
 	LuaDynamic[] opDispatch(string name, Args...)(Args args)
 	{
