@@ -18,7 +18,7 @@ struct LuaDynamic
 	 * Perform a Lua method call on this object.
 	 *
 	 * Performs a call similar to calling functions in Lua with the colon operator.
-	 * The name string is looked up in this object and called. This object is prepended
+	 * The name string is looked up in this object and the result is called. This object is prepended
 	 * to the arguments args.
 	 * Params:
 	 *    name = _name of method
@@ -28,7 +28,7 @@ struct LuaDynamic
 	 * Examples:
 	 * ----------------
 	 * auto luaString = lua.wrap!LuaDynamic("test");
-	 * auto results = luaString.gsub("t", "f");
+	 * auto results = luaString.gsub("t", "f"); // opDispatch
 	 * assert(results[0] == "fesf");
 	 * assert(results[1] == 2); // two instances of 't' replaced
 	 * ----------------
@@ -63,7 +63,7 @@ struct LuaDynamic
 		
 		return popStack!LuaDynamic(object.state);
 	}
-	
+
 	bool opEquals(T)(auto ref T other)
 	{
 		object.push();

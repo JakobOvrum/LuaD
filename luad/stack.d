@@ -34,8 +34,8 @@ $(DL
 		$(DD null class references)
 	)
 	$(DT any of the above
-		$(DD $(LINKMODULE2 base,LuaObject)
-		$(DD $(LINKMODULE2 dynamic,LuaDynamic)
+		$(DD $(LINKMODULE2 base,LuaObject))
+		$(DD $(LINKMODULE2 dynamic,LuaDynamic))
 		$(DD $(LINKSUBMODULE2 conversions,variant,Algebraic) (when given a compatible value))
 	)
 )
