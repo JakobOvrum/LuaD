@@ -1,4 +1,5 @@
 GHROOT = /LuaD
+GHPACKAGE =luad
 DDOC =  
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -53,7 +54,15 @@ $(DL $0)
 DDOC_PARAM_ID =
 <td nowrap valign="top" style="padding-right: 8px">$0</td>
 
-               
+
 DDOC_PARAM =<span class="funcparam">$0</span>
 ADD_MODULES =<script>$(MODULES)</script>
 MODULE =explorer.packageExplorer.addModule("$0");
+
+LINKMODULE =$(LINK2 $(GHROOT)/$(GHPACKAGE)/$0.html,$(GHPACKAGE).$0)
+
+LINKMODULE2 =$(LINK2 $(GHROOT)/$(GHPACKAGE)/$1.html,$2)
+
+LINKSUBMODULE =$(LINK2 $(GHROOT)/$(GHPACKAGE)/$1/$2.html,$(GHPACKAGE).$1.$2)
+
+LINKSUBMODULE2 =$(LINK2 $(GHROOT)/$(GHPACKAGE)/$1/$2.html,$3)
