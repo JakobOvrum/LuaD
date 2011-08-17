@@ -5,7 +5,7 @@ import std.string : toStringz;
 import luad.c.all;
 import luad.stack;
 
-import luad.base, luad.table, luad.lfunction, luad.error;
+import luad.base, luad.table, luad.lfunction, luad.dynamic, luad.error;
 
 /**
  * Represents a Lua state instance.
@@ -259,16 +259,21 @@ public:
 	}
 	
 	/**
-	 * Wrap a D value in a LuaObject.
+	 * Wrap a D value in a Lua reference.
+	 *
+	 * Note that using this method is only necessary in certain situations,
+	 * like when you want to act on the reference before fully exposing it to Lua.
 	 * Params:
+	 *   T = type of reference. Must be LuaObject, LuaTable, LuaFunction or LuaDynamic.
+	 *   Defaults to LuaObject.
 	 *	 value = D value to _wrap
 	 * Returns:
-	 *	 A reference to value as a LuaObject
+	 *	 A Lua reference to value
 	 */
-	LuaObject wrap(T)(T value)
+	T wrap(T = LuaObject, U)(U value) if(is(T : LuaObject) || is(T == LuaDynamic))
 	{
 		pushValue(L, value);
-		return popValue!LuaObject(L);
+		return popValue!T(L);
 	}
 	
 	/**
@@ -312,7 +317,11 @@ public:
 	}
 }
 
-version(unittest) import std.string : splitLines;
+version(unittest)
+{
+	import luad.testing;
+	import std.string : splitLines;
+}
 
 unittest
 {
@@ -339,7 +348,25 @@ unittest
 	lua.doString(`success = true`);
 	assert(lua.get!bool("success"));
 	
-	// setPanicHandler
+	auto foo = lua.wrap!LuaTable([1, 2, 3]);
+	foo[4] = "test"; // Lua tables start at 1
+	lua["foo"] = foo;
+	unittest_lua(lua.state, `
+		for i = 1, 3 do
+			assert(foo[i] == i)
+		end
+		assert(foo[4] == "test")
+	`);
+
+	LuaFunction multipleReturns = lua.loadString(`return 1, "two", 3`);
+	LuaObject[] results = multipleReturns();
+	
+	assert(results.length == 3);
+	assert(results[0].type == LuaType.Number);
+	assert(results[1].type == LuaType.String);
+	assert(results[2].type == LuaType.Number);
+	
+	// setPanicHandler, keep this test last
 	static void panic(LuaState lua, in char[] error)
 	{
 		throw new Exception("hijacked error!");
@@ -355,18 +382,4 @@ unittest
 	{
 		assert(e.msg == "hijacked error!");
 	}
-	
-	lua["foo"] = lua.wrap("bar");
-	lua.doString(`assert(foo == "bar")`);
-	
-	lua["foo"] = lua.wrap(12.34);
-	lua.doString(`assert(foo == 12.34)`);
-
-	LuaFunction multipleReturns = lua.loadString(`return 1, "two", 3`);
-	LuaObject[] results = multipleReturns();
-	
-	assert(results.length == 3);
-	assert(results[0].type == LuaType.Number);
-	assert(results[1].type == LuaType.String);
-	assert(results[2].type == LuaType.Number);
 }
