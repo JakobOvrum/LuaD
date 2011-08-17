@@ -56,7 +56,7 @@ public:
 	 *	 L = state to wrap.
 	 * Note:
 	 *	 The panic function is not changed - a Lua panic will not throw a D exception!
-	 * See Also:
+	 * See_Also:
 		setPanicHandler
 	 */
 	this(lua_State* L)
@@ -273,7 +273,7 @@ public:
 	
 	/**
 	 * Same as calling globals._get with the same arguments.
-	 * See Also:
+	 * See_Also:
 	 *	 LuaTable._get
 	 */
 	T get(T, U...)(U args)
@@ -283,7 +283,7 @@ public:
 	
 	/**
 	 * Same as calling globals.get!LuaObject with the same arguments.
-	 * See Also:
+	 * See_Also:
 	 *	 LuaTable._opIndex
 	 */
 	LuaObject opIndex(T...)(T args)
@@ -293,7 +293,7 @@ public:
 	
 	/**
 	 * Same as calling globals._set with the same arguments.
-	 * See Also:
+	 * See_Also:
 	 *	 LuaTable._set
 	 */
 	void set(T, U)(T key, U value)
@@ -303,7 +303,7 @@ public:
 	
 	/**
 	 * Same as calling globals._opIndexAssign with the same arguments.
-	 * See Also:
+	 * See_Also:
 	 *	 LuaTable._opIndexAssign
 	 */
 	void opIndexAssign(T, U...)(T value, U args)

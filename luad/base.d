@@ -46,7 +46,11 @@ package struct Nil{}
  */
 public Nil nil;
 
-/// Represents a reference to a Lua value of any type.
+/**
+ * Represents a reference to a Lua value of any type.
+ * It contains only the bare minimum of functionality which all Lua values support.
+ * For a generic reference type with more functionality, see $(LINKMODULE2 dynamic,LuaDynamic).
+ */
 struct LuaObject
 {
 	private:
