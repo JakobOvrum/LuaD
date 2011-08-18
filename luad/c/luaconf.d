@@ -202,7 +202,7 @@ alias ptrdiff_t LUA_INTEGER;
 */
 //C	 #define LUA_QL(x)	"'" x "'"
 //C	 #define LUA_QS		LUA_QL("%s")
-
+enum LUA_QS = "'%s'";
 
 /*
 @@ LUA_IDSIZE gives the maximum size for the description of the source

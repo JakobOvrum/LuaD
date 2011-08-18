@@ -406,7 +406,7 @@ bool lua_isnone(lua_State* L, int n) { return lua_type(L, n) == LUA_TNONE; }
 bool lua_isnoneornil(lua_State* L, int n) { return lua_type(L, n) <= 0; }
 
 //C	 #define lua_pushliteral(L, s)		lua_pushlstring(L, "" s, (sizeof(s)/sizeof(char))-1)
-void lua_pushliteral(lua_State* L, string s) { lua_pushlstring(L, (s ~ '\0').ptr, s.length);  }
+void lua_pushliteral(lua_State* L, string s) { lua_pushlstring(L, s.ptr, s.length);  }
 
 //C	 #define lua_setglobal(L,s)	lua_setfield(L, LUA_GLOBALSINDEX, (s))
 void lua_setglobal(lua_State* L, const(char)* s) { lua_setfield(L, LUA_GLOBALSINDEX, s); }
