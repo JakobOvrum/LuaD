@@ -12,14 +12,19 @@ import luad.c.all;
 
 import luad.stack;
 
+private template isInternal(string field)
+{
+	enum isInternal = field.length >= 2 && field[0..2] == "__";
+}
+
 //TODO: ignore static fields, post-blits, destructors, etc?
 void pushStruct(T)(lua_State* L, ref T value) if (is(T == struct))
 {
 	lua_createtable(L, 0, value.tupleof.length);
 	
 	foreach(field; __traits(allMembers, T))
-	{	
-		static if(field != "this")
+	{
+		static if(field != "this" && !isInternal!(field))
 		{
 			pushValue(L, field);
 		
@@ -46,7 +51,7 @@ void fillStruct(T)(lua_State* L, int idx, ref T s) if(is(T == struct))
 {
 	foreach(field; __traits(allMembers, T))
 	{
-		static if(field != "this")
+		static if(field != "this" && !isInternal!(field))
 		{
 			static if(__traits(getOverloads, T, field).length == 0)
 			{
@@ -57,7 +62,11 @@ void fillStruct(T)(lua_State* L, int idx, ref T s) if(is(T == struct))
 	}
 }
 
-version(unittest) import luad.testing;
+version(unittest)
+{
+	import luad.testing;
+	import luad.base;
+}
 
 unittest
 {
@@ -65,8 +74,10 @@ unittest
 	scope(success) lua_close(L);
 	luaL_openlibs(L);
 	
+	// BUG: S.obj causes DMD to choke with "Internal error: ..\ztc\cgcs.c 363"
 	struct S
 	{
+		LuaObject o;
 		int i;
 		double n;
 		string s;
@@ -74,7 +85,10 @@ unittest
 		string f(){ return "foobar"; }
 	}
 	
-	pushValue(L, S(1, 2.3, "hello"));
+	pushValue(L, "test");
+	auto obj = popValue!LuaObject(L);
+	
+	pushValue(L, S(obj, 1, 2.3, "hello"));
 	assert(lua_istable(L, -1));
 	lua_setglobal(L, "struct");
 	
@@ -92,6 +106,7 @@ unittest
 	lua_getglobal(L, "struct");
 	S s = getStruct!S(L, -1);
 	
+	assert(s.o.equals(obj));
 	assert(s.i == 1);
 	assert(s.n == 2.3);
 	assert(s.s == "hello");
