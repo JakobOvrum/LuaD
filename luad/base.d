@@ -66,12 +66,6 @@ struct LuaObject
 		r = luaL_ref(L, LUA_REGISTRYINDEX);
 	}
 	
-	this(this)
-	{
-		push();
-		r = luaL_ref(L, LUA_REGISTRYINDEX);
-	}
-	
 	void push()
 	{
 		lua_rawgeti(L, LUA_REGISTRYINDEX, r);
@@ -92,6 +86,12 @@ struct LuaObject
 	}
 	
 	public:
+	this(this)
+	{
+		push();
+		r = luaL_ref(L, LUA_REGISTRYINDEX);
+	}
+	
 	~this()
 	{
 		luaL_unref(L, LUA_REGISTRYINDEX, r);
