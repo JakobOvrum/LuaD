@@ -7,15 +7,23 @@ import luad.stack;
 
 import luad.base, luad.table, luad.lfunction, luad.dynamic, luad.error;
 
+/// Specify error handling scheme for doString and doFile.
+enum LuaErrorHandler
+{
+	None, /// No extra error handler.
+	Traceback /// Append a stack traceback to the error message.
+}
+
 /**
  * Represents a Lua state instance.
  */
 class LuaState
 {
 private:
-	lua_State* L;
-	LuaTable _G, _R;
-	bool owner = false;
+	lua_State* L; // underlying state
+	LuaTable _G, _R; // global and registry tables
+	LuaFunction traceback; // debug.traceback, set in openLibs()
+	bool owner = false; // whether or not to close the underlying state in the finalizer
 	
 public:
 	/**
@@ -100,6 +108,7 @@ public:
 	void openLibs()
 	{
 		luaL_openlibs(L);
+		traceback = _G.get!LuaFunction("debug", "traceback");
 	}
 	
 	/// The global table for this instance.
@@ -160,22 +169,24 @@ public:
 	 */
 	private void pushErrorHandler()
 	{
-		lua_getfield(L, LUA_GLOBALSINDEX, "debug");
-		lua_getfield(L, -1, "traceback");
-		lua_remove(L, -2); // remove debug table from stack
+		if(traceback.isNil)
+			throw new Exception("LuaErrorHandler.Traceback requires openLibs()");
+		traceback.push();
 	}
 
 	/*
 	 * a variant of luaL_do(string|file) with advanced error handling
 	 */
-	private void doChunk(alias loader)(in char[] s)
+	private void doChunk(alias loader)(in char[] s, LuaErrorHandler handler)
 	{
-	    pushErrorHandler();
+		if(handler == LuaErrorHandler.Traceback)
+			pushErrorHandler();
 
-	    if(loader(L, toStringz(s)) || lua_pcall(L, 0, LUA_MULTRET, -2))
+	    if(loader(L, toStringz(s)) || lua_pcall(L, 0, LUA_MULTRET, handler == LuaErrorHandler.Traceback? -2 : 0))
             lua_error(L);
-
-        lua_remove(L, 1);
+		
+		if(handler == LuaErrorHandler.Traceback)
+			lua_remove(L, 1);
 	}
 
 	/**
@@ -212,12 +223,13 @@ public:
 	 * Execute a string of Lua _code.
 	 * Params:
 	 *	 code = _code to run
+	 *   handler = error handling scheme
 	 * Returns:
 	 *	 Any _code return values
 	 */
-	LuaObject[] doString(in char[] code)
+	LuaObject[] doString(in char[] code, LuaErrorHandler handler = LuaErrorHandler.None)
 	{
-		doChunk!(luaL_loadstring)(code);
+		doChunk!(luaL_loadstring)(code, handler);
 		return popStack(L);
 	}
 
@@ -225,12 +237,13 @@ public:
 	 * Execute a file of Lua code.
 	 * Params:
 	 *	 path = _path to file
+	 *   handler = error handling scheme
 	 * Returns:
 	 *	 Any script return values
 	 */
-	LuaObject[] doFile(in char[] path)
+	LuaObject[] doFile(in char[] path, LuaErrorHandler handler = LuaErrorHandler.None)
 	{
-		doChunk!(luaL_loadfile)(path);
+		doChunk!(luaL_loadfile)(path, handler);
 		return popStack(L);
 	}
 	
@@ -334,11 +347,12 @@ unittest
 	string msg;
 	try
 	{
-		lua.doString(`error("Hello, D!")`);
+		lua.doString(`error("Hello, D!")`, LuaErrorHandler.Traceback);
 	}
 	catch(LuaErrorException e)
 	{
 		auto lines = splitLines(e.msg);
+		assert(lines.length > 1);
 		assert(lines[0] == `[string "error("Hello, D!")"]:1: Hello, D!`);
 	}
 	
