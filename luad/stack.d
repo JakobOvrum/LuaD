@@ -315,7 +315,7 @@ auto getArgument(T, int narg)(lua_State* L, int idx)
 {
 	alias ParameterTypeTuple!T Args;
 	
-	static if(narg >= Args.length) // varargs causes this
+	static if(narg == -1) // varargs causes this
 		alias ForeachType!(Args[$-1]) Arg;
 	else
 		alias Args[narg] Arg;
@@ -332,17 +332,20 @@ auto getArgument(T, int narg)(lua_State* L, int idx)
 		LastArg result = new LastArg(size);
 		foreach(i; 0 .. size)
 		{
-			result[i] = getArgument!(T, narg + 1)(L, idx + i);
+			result[i] = getArgument!(T, -1)(L, idx + i);
 		}
 		return result;
 	}
 	else static if(is(Arg == const(char)[]) || is(Arg == const(void)[]))
 	{
+		if(lua_type(L, idx) != LUA_TSTRING)
+			argumentTypeMismatch(L, idx, LUA_TSTRING);
+			
 		size_t len;
 		const(char)* cstr = lua_tolstring(L, idx, &len);
 		return cstr[0 .. len];
 	}
-	else 
+	else
 		return getValue!(Arg, argumentTypeMismatch)(L, idx);
 }
 
