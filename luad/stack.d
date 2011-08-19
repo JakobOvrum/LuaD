@@ -421,7 +421,7 @@ T popTuple(T)(lua_State* L) if(isTuple!T)
 {
 	T tup;
 	foreach(i, Elem; T.Types)
-		tup[i] = getValue!Elem(L, -T.Types.length + i);
+		tup[i] = getValue!Elem(L, cast(int)(-T.Types.length + i));
 		
 	lua_pop(L, T.Types.length);
 	return tup;
