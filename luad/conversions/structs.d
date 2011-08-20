@@ -24,7 +24,9 @@ void pushStruct(T)(lua_State* L, ref T value) if (is(T == struct))
 	
 	foreach(field; __traits(allMembers, T))
 	{
-		static if(field != "this" && !isInternal!(field))
+		static if(!isInternal!(field) &&
+		          field != "this" &&
+		          field != "opAssign")
 		{
 			pushValue(L, field);
 		
@@ -77,7 +79,7 @@ unittest
 	// BUG: S.obj causes DMD to choke with "Internal error: ..\ztc\cgcs.c 363"
 	struct S
 	{
-		//LuaObject o;
+		LuaObject o;
 		int i;
 		double n;
 		string s;
@@ -85,10 +87,10 @@ unittest
 		string f(){ return "foobar"; }
 	}
 	
-	//pushValue(L, "test");
-	//auto obj = popValue!LuaObject(L);
+	pushValue(L, "test");
+	auto obj = popValue!LuaObject(L);
 	
-	pushValue(L, S(/*obj,*/ 1, 2.3, "hello"));
+	pushValue(L, S(obj, 1, 2.3, "hello"));
 	assert(lua_istable(L, -1));
 	lua_setglobal(L, "struct");
 	
@@ -106,7 +108,7 @@ unittest
 	lua_getglobal(L, "struct");
 	S s = getStruct!S(L, -1);
 	
-	//assert(s.o.equals(obj));
+	assert(s.o.equals(obj));
 	assert(s.i == 1);
 	assert(s.n == 2.3);
 	assert(s.s == "hello");
