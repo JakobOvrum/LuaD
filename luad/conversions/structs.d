@@ -76,7 +76,6 @@ unittest
 	scope(success) lua_close(L);
 	luaL_openlibs(L);
 	
-	// BUG: S.obj causes DMD to choke with "Internal error: ..\ztc\cgcs.c 363"
 	struct S
 	{
 		LuaObject o;
