@@ -15,7 +15,7 @@ ifneq ($(BUILD), debug)
 	endif
 endif
 
-DFLAGS = -v -w -wi -ignore -X -m$(MODEL)
+DFLAGS = -w -wi -ignore -X -m$(MODEL)
 
 ifeq ($(BUILD), release)
 	DFLAGS += -release -O -inline -noboundscheck
@@ -27,7 +27,13 @@ else
 	endif
 endif
 
-all: lib/libluad.a
+ifeq ($(BUILD), test)
+	LUAD_OUTPUT = test/luad_unittest
+else
+	LUAD_OUTPUT = lib/libluad.a
+endif
+
+all: $(LUAD_OUTPUT)
 
 clean:
 	-rm -f lib/libluad.o
@@ -35,9 +41,12 @@ clean:
 	-rm -f lib/libluad.deps
 	-rm -f lib/libluad.json
 	-rm -f lib/luad.*.lst
+	-rm -f test/luad_unittest
+	-rm -f test/luad_unittest.o
+	-rm -f *.lst
 
 LUAD_DFLAGS = $(DFLAGS)
-LUAD_DFLAGS += -Xf"lib/libluad.json" -deps="lib/libluad.deps" -L-llua
+LUAD_DFLAGS += -Xf"lib/libluad.json" -deps="lib/libluad.deps" -L-llua5.1
 
 ifneq ($(BUILD), test)
 	LUAD_DFLAGS += -lib
@@ -46,13 +55,13 @@ else
 endif
 
 lib/libluad.a: $(LUAD_SOURCES)
-	if [ ! -d lib ]; then \
-		mkdir lib; \
-	fi
+	if ! test -d lib; then mkdir lib; fi
 	dmd $(LUAD_DFLAGS) -of$@ $(LUAD_SOURCES);
-	if [ ${BUILD} = "test" ]; then \
-		gdb --command=luad.gdb lib/libluad.a; \
-	fi
+
+test/luad_unittest: $(LUAD_SOURCES)
+	if ! test -d test; then mkdir test; fi
+	dmd $(LUAD_DFLAGS) -of$@ $(LUAD_SOURCES);
+	gdb --command=luad.gdb test/luad_unittest;
 
 LUAD_SOURCES = \
 	luad/all.d \
