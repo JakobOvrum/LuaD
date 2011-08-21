@@ -156,11 +156,11 @@ int luaTypeOf(T)()
 	else static if(is(T : lua_Integer) || is(T : lua_Number))
 		return LUA_TNUMBER;
 	
-	else static if(isArray!T || isAssociativeArray!T || is(T == struct) || is(T == LuaTable))
-		return LUA_TTABLE;
-	
 	else static if(isSomeFunction!T || is(T == LuaFunction))
 		return LUA_TFUNCTION;
+		
+	else static if(isArray!T || isAssociativeArray!T || is(T == struct) || is(T == LuaTable))
+		return LUA_TTABLE;
 	
 	else static if(is(T : Object))
 		return LUA_TUSERDATA;
@@ -169,9 +169,16 @@ int luaTypeOf(T)()
 		static assert(false, "No Lua type defined for `" ~ T.stringof ~ "`");
 }
 
+// generic type mismatch message
 private void defaultTypeMismatch(lua_State* L, int idx, int expectedType)
 {
 	luaL_error(L, "expected %s, got %s", lua_typename(L, expectedType), luaL_typename(L, idx));
+}
+
+// type mismatch for function arguments of unexpected type
+private void argumentTypeMismatch(lua_State* L, int idx, int expectedType)
+{
+	luaL_typerror(L, idx, lua_typename(L, expectedType));
 }
 
 /**
@@ -196,15 +203,15 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	{
 		static assert("Ambiguous type " ~ T.stringof ~ " in stack push operation. Consider converting before pushing.");
 	}
-
-	static if(!is(T : LuaObject) && !is(T == LuaDynamic) && !isVariant!T)
+	
+	static if(!is(T == LuaObject) && !is(T == LuaDynamic) && !isVariant!T)
 	{
 		int type = lua_type(L, idx);
 		int expectedType = luaTypeOf!T();
 		if(type != expectedType)
 			typeMismatchHandler(L, idx, expectedType);
 	}
-	
+
 	static if(is(T == LuaFunction)) // WORKAROUND: bug #6036
 	{
 		LuaFunction func;
@@ -217,7 +224,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		obj.object = LuaObject(L, idx);
 		return obj;
 	}	
-	else static if(is(T == LuaObject) || is(T == LuaTable))
+	else static if(is(T : LuaObject))
 		return T(L, idx);
 		
 	else static if(is(T == Nil))
@@ -305,11 +312,6 @@ T[] popStack(T = LuaObject)(lua_State* L)
 	return stack;
 }
 
-private void argumentTypeMismatch(lua_State* L, int idx, int expectedType)
-{
-	luaL_typerror(L, idx, lua_typename(L, expectedType));
-}
-
 /// Get a function argument from the stack.
 auto getArgument(T, int narg)(lua_State* L, int idx)
 {
@@ -319,7 +321,7 @@ auto getArgument(T, int narg)(lua_State* L, int idx)
 		alias ForeachType!(Args[$-1]) Arg;
 	else
 		alias Args[narg] Arg;
-		
+
 	static if(is(typeof(Variadic.TYPESAFE)))
 		enum isVarargs = variadicFunctionStyle!T == Variadic.TYPESAFE;
 	else // Phobos >= 2.055

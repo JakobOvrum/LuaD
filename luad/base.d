@@ -81,7 +81,7 @@ struct LuaObject
 		int t = lua_type(L, idx);
 		if(t != expectedType)
 		{
-			luaL_error(L, "attempt to create %s with %s", expectedName, lua_typename(L, expectedType));
+			luaL_error(L, "attempt to create %s with %s", expectedName, lua_typename(L, t));
 		}
 	}
 	
