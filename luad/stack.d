@@ -320,7 +320,10 @@ auto getArgument(T, int narg)(lua_State* L, int idx)
 	else
 		alias Args[narg] Arg;
 		
-	enum isVarargs = variadicFunctionStyle!T == Variadic.TYPESAFE;
+	static if(is(typeof(Variadic.TYPESAFE)))
+		enum isVarargs = variadicFunctionStyle!T == Variadic.TYPESAFE;
+	else // Phobos >= 2.055
+		enum isVarargs = variadicFunctionStyle!T == Variadic.typesafe;
 	
 	static if(isVarargs && narg == Args.length-1)
 	{
