@@ -93,7 +93,10 @@ extern(C) int functionWrapper(T)(lua_State* L)
 		argsError(L, top, Args.length);
 	
 	//Get function
-	T func = *cast(T*)lua_touserdata(L, lua_upvalueindex(1));
+	static if(is(T == function))
+		T func = cast(T)lua_touserdata(L, lua_upvalueindex(1));
+	else
+		T func = *cast(T*)lua_touserdata(L, lua_upvalueindex(1));
 	
 	//Assemble arguments
 	Args args;
@@ -113,17 +116,23 @@ public:
 
 void pushFunction(T)(lua_State* L, T func) if (isSomeFunction!T)
 {	
-	T* udata = cast(T*)lua_newuserdata(L, T.sizeof);
-	*udata = func;
-	GC.addRoot(udata);
-	
-	if(luaL_newmetatable(L, "__dcall") == 1)
+	static if(is(T == function))
+		lua_pushlightuserdata(L, func);
+	else
 	{
-		lua_pushcfunction(L, &functionCleaner); 
-		lua_setfield(L, -2, "__gc");
-	}
+		T* udata = cast(T*)lua_newuserdata(L, T.sizeof);
+		*udata = func;
 	
-	lua_setmetatable(L, -2);
+		GC.addRoot(udata);
+		
+		if(luaL_newmetatable(L, "__dcall") == 1)
+		{
+			lua_pushcfunction(L, &functionCleaner); 
+			lua_setfield(L, -2, "__gc");
+		}
+		
+		lua_setmetatable(L, -2);
+	}
 	
 	lua_pushcclosure(L, &functionWrapper!T, 1);
 }
@@ -187,12 +196,12 @@ version(unittest)
 {
 	import luad.testing;
 	import std.typecons;
+	private lua_State* L;
 }
 
 unittest
 {
-	lua_State* L = luaL_newstate();
-	scope(success) lua_close(L);
+	L = luaL_newstate();
 	luaL_openlibs(L);
 	
 	//functions
@@ -245,69 +254,96 @@ unittest
 	unittest_lua(L, `
 		assert(circle(2) == 3.14 * 4, "closure return type mismatch!")
 	`);
+}
+
+// multiple return values
+unittest
+{
+	auto nameInfo = ["foo"];
+	auto ageInfo = [42];
+		
+	alias Tuple!(string, "name", uint, "age") GetInfoResult;
+	GetInfoResult getInfo(int idx)
+	{
+		GetInfoResult result;
+		result.name = nameInfo[idx];
+		result.age = ageInfo[idx];
+		return result;
+	}
+		
+	pushValue(L, &getInfo);
+	lua_setglobal(L, "getInfo");
+		
+	unittest_lua(L, `
+		local name, age = getInfo(0)
+		assert(name == "foo")
+		assert(age == 42)
+	`);
+}
 	
+// D-style typesafe varargs
+unittest
+{
+	static string concat(const(char)[][] pieces...)
+	{
+		string result;
+		foreach(piece; pieces)
+			result ~= piece;
+		return result;
+	}
+	
+	pushValue(L, &concat);
+	lua_setglobal(L, "concat");
+	
+	unittest_lua(L, `
+		local whole = concat("he", "llo", ", ", "world!")
+		assert(whole == "hello, world!")
+	`);
+	
+	static const(char)[] concat2(char separator, const(char)[][] pieces...)
+	{
+		if(pieces.length == 0)
+			return "";
+
+		string result;
+		foreach(piece; pieces[0..$-1])
+			result ~= piece ~ separator;
+		
+		return result ~ pieces[$-1];
+	}
+	
+	pushValue(L, &concat2);
+	lua_setglobal(L, "concat2");
+	
+	unittest_lua(L, `
+		local whole = concat2(",", "one", "two", "three", "four")
+		assert(whole == "one,two,three,four")
+	`);
+}
+
+// get delegates from Lua
+unittest
+{
+	lua_getglobal(L, "string");
+	lua_getfield(L, -1, "match");
+	auto match = popValue!(string delegate(string, string))(L); 
+	lua_pop(L, 1);
+		
+	auto result = match("foobar@example.com", "([^@]+)@example.com");
+	assert(result == "foobar");
+
 	// multiple return values
-	{
-		auto nameInfo = ["foo"];
-		auto ageInfo = [42];
-		
-		alias Tuple!(string, "name", uint, "age") GetInfoResult;
-		GetInfoResult getInfo(int idx)
-		{
-			GetInfoResult result;
-			result.name = nameInfo[idx];
-			result.age = ageInfo[idx];
-			return result;
-		}
-		
-		pushValue(L, &getInfo);
-		lua_setglobal(L, "getInfo");
-		
-		unittest_lua(L, `
-			local name, age = getInfo(0)
-			assert(name == "foo")
-			assert(age == 42)
-		`);
-	}
+	luaL_dostring(L, `function multRet(a) return "foo", a end`);
+	lua_getglobal(L, "multRet");
+	auto multRet = popValue!(Tuple!(string, int) delegate(int))(L);
 	
-	// D-style typesafe varargs
-	{
-		static string concat(const(char)[][] pieces...)
-		{
-			string result;
-			foreach(piece; pieces)
-				result ~= piece;
-			return result;
-		}
-		
-		pushValue(L, &concat);
-		lua_setglobal(L, "concat");
-		
-		unittest_lua(L, `
-			local whole = concat("he", "llo", ", ", "world!")
-			assert(whole == "hello, world!")
-		`);
-	}
-	
-	// get functions from Lua
-	{
-		lua_getglobal(L, "string");
-		lua_getfield(L, -1, "match");
-		auto match = popValue!(string delegate(string, string))(L); 
-		lua_pop(L, 1);
-		
-		auto result = match("foobar@example.com", "([^@]+)@example.com");
-		assert(result == "foobar");
-	}
-	
-	// multiple return values
-	{
-		luaL_dostring(L, `function multRet(a) return "foo", a end`);
-		lua_getglobal(L, "multRet");
-		auto multRet = popValue!(Tuple!(string, int) delegate(int))(L);
-		
-		auto results = multRet(42);
-		assert(results[0] == "foo");
-		assert(results[1] == 42);
-	}
+	auto results = multRet(42);
+	assert(results[0] == "foo");
+	assert(results[1] == 42);
+}
+
+unittest
+{
+	assert(lua_gettop(L) == 0);
+	lua_close(L);
 }
