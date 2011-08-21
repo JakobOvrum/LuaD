@@ -15,7 +15,7 @@ ifneq ($(BUILD), debug)
 	endif
 endif
 
-DFLAGS = -w -wi -ignore -X -m$(MODEL)
+DFLAGS = -w -wi -ignore -m$(MODEL)
 
 ifeq ($(BUILD), release)
 	DFLAGS += -release -O -inline -noboundscheck
@@ -45,11 +45,10 @@ clean:
 	-rm -f test/luad_unittest.o
 	-rm -f *.lst
 
-LUAD_DFLAGS = $(DFLAGS)
-LUAD_DFLAGS += -Xf"lib/libluad.json" -deps="lib/libluad.deps" -L-llua5.1
+LUAD_DFLAGS = $(DFLAGS) -L-llua5.1
 
 ifneq ($(BUILD), test)
-	LUAD_DFLAGS += -lib
+	LUAD_DFLAGS += -lib -X -Xf"lib/libluad.json" -deps="lib/libluad.deps"
 else
 	LUAD_DFLAGS += -version=luad_unittest_main
 endif
