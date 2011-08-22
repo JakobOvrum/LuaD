@@ -1,5 +1,6 @@
-MODEL ?= 64
+MODEL ?= $(shell getconf LONG_BIT)
 BUILD ?= debug
+LUA ?= lua
 
 ifneq ($(MODEL), 32)
 	ifneq ($(MODEL), 64)
@@ -13,6 +14,10 @@ ifneq ($(BUILD), debug)
 			$(error Unknown build mode: $(BUILD))
 		endif
 	endif
+endif
+
+ifeq ($(LUA), )
+	$(error No Lua library set)
 endif
 
 DFLAGS = -w -wi -ignore -m$(MODEL)
@@ -45,7 +50,7 @@ clean:
 	-rm -f test/luad_unittest.o
 	-rm -f *.lst
 
-LUAD_DFLAGS = $(DFLAGS) -L-llua5.1
+LUAD_DFLAGS = $(DFLAGS) -L-l$(LUA)
 
 ifneq ($(BUILD), test)
 	LUAD_DFLAGS += -lib -X -Xf"lib/libluad.json" -deps="lib/libluad.deps"
