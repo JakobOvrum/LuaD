@@ -1,5 +1,6 @@
-MODEL ?= 64
+MODEL ?= $(shell getconf LONG_BIT)
 BUILD ?= debug
+LUA ?= lua
 
 ifneq ($(MODEL), 32)
 	ifneq ($(MODEL), 64)
@@ -13,7 +14,11 @@ ifneq ($(BUILD), debug)
 	endif
 endif
 
-DFLAGS = -w -wi -ignore -m$(MODEL) -I../ -L-L../lib -L-lluad -L-llua5.1
+ifeq ($(LUA), )
+	$(error No Lua library set)
+endif
+
+DFLAGS = -w -wi -ignore -m$(MODEL) -I../ -L-L../lib -L-lluad -L-l$(LUA)
 
 ifeq ($(BUILD), release)
 	DFLAGS += -release -O -inline -noboundscheck
