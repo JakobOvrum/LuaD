@@ -264,10 +264,10 @@
   <postBuildCommand />
   <debugtarget>$(TARGETPATH)</debugtarget>
   <debugarguments />
-  <debugworkingdir />
+  <debugworkingdir>../test</debugworkingdir>
   <debugattach>0</debugattach>
   <debugremote />
-  <debugEngine>1</debugEngine>
+  <debugEngine>0</debugEngine>
   <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep</filesToClean>
  </Config>
  <Folder name="LuaD">
@@ -290,8 +290,8 @@
    </Folder>
    <File path="..\luad\all.d" />
    <File path="..\luad\base.d" />
-   <File path="..\luad\error.d" />
    <File path="..\luad\dynamic.d" />
+   <File path="..\luad\error.d" />
    <File path="..\luad\lfunction.d" />
    <File path="..\luad\stack.d" />
    <File path="..\luad\state.d" />
