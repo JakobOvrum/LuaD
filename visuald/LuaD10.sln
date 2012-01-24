@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{002A2DE9-8BB6-484D-9802-7E4AD4084715}") = "LuaD", "LuaD.visualdproj", "{76D6D594-A518-4587-8C73-2CA191AD6886}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+		Unittest|Win32 = Unittest|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76D6D594-A518-4587-8C73-2CA191AD6886}.Debug|Win32.ActiveCfg = Debug|Win32
+		{76D6D594-A518-4587-8C73-2CA191AD6886}.Debug|Win32.Build.0 = Debug|Win32
+		{76D6D594-A518-4587-8C73-2CA191AD6886}.Release|Win32.ActiveCfg = Release|Win32
+		{76D6D594-A518-4587-8C73-2CA191AD6886}.Release|Win32.Build.0 = Release|Win32
+		{76D6D594-A518-4587-8C73-2CA191AD6886}.Unittest|Win32.ActiveCfg = Unittest|Win32
+		{76D6D594-A518-4587-8C73-2CA191AD6886}.Unittest|Win32.Build.0 = Unittest|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
