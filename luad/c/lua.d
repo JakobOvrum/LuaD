@@ -68,10 +68,10 @@ const LUA_ERRMEM = 4;
 const LUA_ERRERR = 5;
 
 //C	 typedef struct lua_State lua_State;
-typedef void* lua_State; //Anders.. argh! (this used to be alias)
+alias void* lua_State; // TODO: Should be more type-safe
 
 //C	 typedef int (*lua_CFunction) (lua_State *L);
-alias int  function(lua_State *L)lua_CFunction;
+alias int function(lua_State *L) lua_CFunction;
 
 
 /*

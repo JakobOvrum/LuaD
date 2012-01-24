@@ -187,8 +187,8 @@ public:
 		if(handler == LuaErrorHandler.Traceback)
 			pushErrorHandler();
 
-	    if(loader(L, toStringz(s)) || lua_pcall(L, 0, LUA_MULTRET, handler == LuaErrorHandler.Traceback? -2 : 0))
-            lua_error(L);
+		if(loader(L, toStringz(s)) || lua_pcall(L, 0, LUA_MULTRET, handler == LuaErrorHandler.Traceback? -2 : 0))
+			lua_error(L);
 		
 		if(handler == LuaErrorHandler.Traceback)
 			lua_remove(L, 1);
