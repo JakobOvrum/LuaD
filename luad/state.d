@@ -80,7 +80,12 @@ public:
 	~this()
 	{
 		if(owner)
+		{
+			_R.release();
+			_G.release();
+			traceback.release();
 			lua_close(L);
+		}
 	}
 	
 	/// The underlying lua_State pointer for interfacing with C.

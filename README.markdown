@@ -41,23 +41,34 @@ Directory Structure
 
  * `luad` - the LuaD package.
  * `visuald` - [VisualD](http://www.dsource.org/projects/visuald) project files.
- * `test` - unittest executable (when built with VisualD).
- * `lib` - LuaD library files (when built with VisualD).
+ * `test` - unittest executable (when built).
+ * `lib` - LuaD library files (when built).
  * `example` - LuaD examples.
 
 Usage
 ============================================
-To use, import the `luad.all` module in your project, and compile all the files in the `luad` (except `luad/testing.d`), `luad.c` and `luad.conversions` packages. You can also compile the LuaD packages to a static libary, but you still need the full LuaD sources available at compile-time due to heavy use of templates. You must also link Lua version 5.1; on Unix-like systems, the library is typically called `liblua5.1.a` or similar. On Windows, you need a `lua51.lib` in OMF format to be linkable with DMD.
+To use, import the `luad.all` module in your project, and compile all the files in the `luad`, `luad.c` and `luad.conversions` packages. You can also compile the LuaD packages to a static libary, but you still need the full LuaD sources available at compile-time due to heavy use of templates. You must also link Lua version 5.1; on Unix-like systems, the library is typically called `liblua5.1.a` or similar. On Windows, you need a `lua51.lib` in OMF format to be linkable with DMD.
 
 Check out the [binaries branch](http://github.com/JakobOvrum/LuaD/tree/binaries) for a `lua51.lib` import library and download instructions for a DMD-compatible library for Unix-like systems. Since the provided `lua51.lib` is only an import library, you also need the Lua DLLs at runtime (which can be found [here](http://sourceforge.net/projects/luabinaries/files/5.1.4/Executables/lua5_1_4_Win32_bin.zip/download)).
 
-The `example/` directory is a work-in-progress collection of examples, it's a bit thin at the moment, in the mean-time look at the tutorial and the examples found throughout the documentation.
+The `example` directory is a work-in-progress collection of examples, it's a bit thin at the moment, in the mean-time look at the tutorial and the examples found throughout the documentation.
 
-VisualD project files are included for Windows users, but there is no makefile or similar for other platforms. Contributions are appreciated!
+Makefiles as well as VisualD project files are included for both the library and the examples.
 
 If you find any bugs, please report them to the Github issue tracker.
 
-Usage with VisualD/Windows
+Build with Make
+============================================
+The `MODEL` variable should be either `32` or `64` depending on whether you want to make a 32 bit or 64 bit build. It defaults to `64`.
+
+The `BUILD` variable controls the build configuration; it can be `debug`, `release` or `test`.
+`debug` and `release` will build `lib/libluad.a` in debug and release mode respectively. The `test` configuration will build `test/luad_unittest` and then run it with `gdb`. Additionally, code coverage files (*.lst) are generated. The `BUILD` variable defaults to `debug`.
+
+For example, if you want to build and run the unit tests on a 32 bit machine, the command would be:
+
+    make MODEL=32 BUILD=test
+
+Build with VisualD/Windows
 ============================================
 [VisualD](http://www.dsource.org/projects/visuald) project files are included in the `visuald` subdirectory. The Release and Debug configurations produce `lib/luad.lib` and `lib/luad-d.lib` respectively. The Unittest configuration produces `test/luad_unittest.exe`.
 

@@ -98,6 +98,19 @@ struct LuaObject
 	}
 	
 	/**
+	 * Release this reference.
+	 *
+	 * This reference becomes a nil reference.
+	 * This is only required when you want to release the reference before the lifetime
+	 * of this LuaObject has ended.
+	 */
+	void release()
+	{
+		r = LUA_REFNIL;
+		L = null;
+	}
+	
+	/**
 	 * Type of referenced object.
 	 * See_Also:
 	 *	 LuaType

@@ -3,8 +3,11 @@
 *.exe_cv
 *.map
 *.obj
+*.o
 *.json
 *.html
 *.build
 *.cmd
 *.dep
+/hello
+/phonebook

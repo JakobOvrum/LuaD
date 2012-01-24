@@ -1,5 +1,6 @@
-MODEL ?= 64
+MODEL ?= $(shell getconf LONG_BIT)
 BUILD ?= debug
+LUA ?= lua
 
 ifneq ($(MODEL), 32)
 	ifneq ($(MODEL), 64)
@@ -15,7 +16,11 @@ ifneq ($(BUILD), debug)
 	endif
 endif
 
-DFLAGS = -v -w -wi -ignore -X -m$(MODEL)
+ifeq ($(LUA), )
+	$(error No Lua library set)
+endif
+
+DFLAGS = -w -wi -ignore -m$(MODEL)
 
 ifeq ($(BUILD), release)
 	DFLAGS += -release -O -inline -noboundscheck
@@ -27,7 +32,13 @@ else
 	endif
 endif
 
-all: lib/libluad.a
+ifeq ($(BUILD), test)
+	LUAD_OUTPUT = test/luad_unittest
+else
+	LUAD_OUTPUT = lib/libluad.a
+endif
+
+all: $(LUAD_OUTPUT)
 
 clean:
 	-rm -f lib/libluad.o
@@ -35,24 +46,26 @@ clean:
 	-rm -f lib/libluad.deps
 	-rm -f lib/libluad.json
 	-rm -f lib/luad.*.lst
+	-rm -f test/luad_unittest
+	-rm -f test/luad_unittest.o
+	-rm -f *.lst
 
-LUAD_DFLAGS = $(DFLAGS)
-LUAD_DFLAGS += -Xf"lib/libluad.json" -deps="lib/libluad.deps" -L-llua
+LUAD_DFLAGS = $(DFLAGS) -L-l$(LUA)
 
 ifneq ($(BUILD), test)
-	LUAD_DFLAGS += -lib
+	LUAD_DFLAGS += -lib -X -Xf"lib/libluad.json" -deps="lib/libluad.deps"
 else
 	LUAD_DFLAGS += -version=luad_unittest_main
 endif
 
 lib/libluad.a: $(LUAD_SOURCES)
-	if [ ! -d lib ]; then \
-		mkdir lib; \
-	fi
+	if ! test -d lib; then mkdir lib; fi
 	dmd $(LUAD_DFLAGS) -of$@ $(LUAD_SOURCES);
-	if [ ${BUILD} = "test" ]; then \
-		gdb --command=luad.gdb lib/libluad.a; \
-	fi
+
+test/luad_unittest: $(LUAD_SOURCES)
+	if ! test -d test; then mkdir test; fi
+	dmd $(LUAD_DFLAGS) -of$@ $(LUAD_SOURCES);
+	gdb --command=luad.gdb test/luad_unittest;
 
 LUAD_SOURCES = \
 	luad/all.d \
