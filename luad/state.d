@@ -234,8 +234,13 @@ public:
 	 */
 	LuaObject[] doString(in char[] code, LuaErrorHandler handler = LuaErrorHandler.None)
 	{
+		auto top = lua_gettop(L);
+
 		doChunk!(luaL_loadstring)(code, handler);
-		return popStack(L);
+
+		auto nret = lua_gettop(L) - top;
+
+		return popStack(L, nret);
 	}
 
 	/**
@@ -248,8 +253,13 @@ public:
 	 */
 	LuaObject[] doFile(in char[] path, LuaErrorHandler handler = LuaErrorHandler.None)
 	{
+		auto top = lua_gettop(L);
+
 		doChunk!(luaL_loadfile)(path, handler);
-		return popStack(L);
+
+		auto nret = lua_gettop(L) - top;
+
+		return popStack(L, nret);
 	}
 	
 	/**

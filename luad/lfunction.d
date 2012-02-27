@@ -9,7 +9,7 @@ import luad.c.all;
 /// Represents a Lua function.
 struct LuaFunction
 {
-	/// LuaTable sub-types LuaObject through this reference.
+	/// LuaFunction sub-types LuaObject through this reference.
 	LuaObject object;
 	alias object this;
 	
@@ -59,15 +59,11 @@ struct LuaFunction
 	 */
 	T call(T = void, U...)(U args)
 	{
-		assert(lua_gettop(this.state) == 0); // this function assumes empty stack
-		
 		this.push();
 		foreach(arg; args)
 			pushValue(this.state, arg);
 
-		lua_call(this.state, args.length, returnTypeSize!T);
-		
-		return popReturnValues!T(this.state);
+		return callWithRet!T(this.state, args.length);
 	}
 	
 	/**

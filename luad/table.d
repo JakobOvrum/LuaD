@@ -11,6 +11,7 @@ struct LuaTable
 {
 	/// LuaTable sub-types LuaObject through this reference.
 	LuaObject object;
+
 	alias object this;
 	
 	package this(lua_State* L, int idx)

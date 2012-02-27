@@ -35,6 +35,8 @@
   <preservePaths>1</preservePaths>
   <warnings>1</warnings>
   <infowarnings>1</infowarnings>
+  <checkProperty>0</checkProperty>
+  <genStackFrame>0</genStackFrame>
   <pic>0</pic>
   <cov>0</cov>
   <nofloat>0</nofloat>
@@ -88,6 +90,8 @@
   <debugattach>0</debugattach>
   <debugremote />
   <debugEngine>1</debugEngine>
+  <debugStdOutToOutputWindow>0</debugStdOutToOutputWindow>
+  <pauseAfterRunning>0</pauseAfterRunning>
   <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep</filesToClean>
  </Config>
  <Config name="Release">
@@ -125,6 +129,8 @@
   <preservePaths>1</preservePaths>
   <warnings>1</warnings>
   <infowarnings>1</infowarnings>
+  <checkProperty>0</checkProperty>
+  <genStackFrame>0</genStackFrame>
   <pic>0</pic>
   <cov>0</cov>
   <nofloat>0</nofloat>
@@ -178,6 +184,8 @@
   <debugattach>0</debugattach>
   <debugremote />
   <debugEngine>1</debugEngine>
+  <debugStdOutToOutputWindow>0</debugStdOutToOutputWindow>
+  <pauseAfterRunning>0</pauseAfterRunning>
   <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep</filesToClean>
  </Config>
  <Config name="Unittest">
@@ -215,6 +223,8 @@
   <preservePaths>1</preservePaths>
   <warnings>1</warnings>
   <infowarnings>1</infowarnings>
+  <checkProperty>0</checkProperty>
+  <genStackFrame>0</genStackFrame>
   <pic>0</pic>
   <cov>0</cov>
   <nofloat>0</nofloat>
@@ -267,7 +277,9 @@
   <debugworkingdir>../test</debugworkingdir>
   <debugattach>0</debugattach>
   <debugremote />
-  <debugEngine>0</debugEngine>
+  <debugEngine>1</debugEngine>
+  <debugStdOutToOutputWindow>0</debugStdOutToOutputWindow>
+  <pauseAfterRunning>1</pauseAfterRunning>
   <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep</filesToClean>
  </Config>
  <Folder name="LuaD">

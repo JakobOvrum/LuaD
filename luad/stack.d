@@ -142,28 +142,28 @@ void pushValue(T)(lua_State* L, T value)
  * Get the associated Lua type for T.
  * Returns: Lua type for T
  */
-int luaTypeOf(T)()
+template luaTypeOf(T)
 {
 	static if(is(T == bool))
-		return LUA_TBOOLEAN;
+		enum luaTypeOf = LUA_TBOOLEAN;
 	
 	else static if(is(T == Nil))
-		return LUA_TNIL;
+		enum luaTypeOf = LUA_TNIL;
 	
 	else static if(is(T : const(char)[]) || is(T : const(char)*) || is(T == char))
-		return LUA_TSTRING;
+		enum luaTypeOf = LUA_TSTRING;
 		
 	else static if(is(T : lua_Integer) || is(T : lua_Number))
-		return LUA_TNUMBER;
+		enum luaTypeOf = LUA_TNUMBER;
 	
 	else static if(isSomeFunction!T || is(T == LuaFunction))
-		return LUA_TFUNCTION;
+		enum luaTypeOf = LUA_TFUNCTION;
 		
 	else static if(isArray!T || isAssociativeArray!T || is(T == struct) || is(T == LuaTable))
-		return LUA_TTABLE;
+		enum luaTypeOf = LUA_TTABLE;
 	
 	else static if(is(T : Object))
-		return LUA_TUSERDATA;
+		enum luaTypeOf = LUA_TUSERDATA;
 	
 	else
 		static assert(false, "No Lua type defined for `" ~ T.stringof ~ "`");
@@ -207,7 +207,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	static if(!is(T == LuaObject) && !is(T == LuaDynamic) && !isVariant!T)
 	{
 		int type = lua_type(L, idx);
-		int expectedType = luaTypeOf!T();
+		enum expectedType = luaTypeOf!T;
 		if(type != expectedType)
 			typeMismatchHandler(L, idx, expectedType);
 	}
@@ -293,22 +293,26 @@ T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
 }
 
 /**
- * Get all objects on a stack, then clear the stack.
+ * Pop a number of elements from the stack.
  * Params:
  *   T = wrapper type to use
- *   L = stack to dump
+ *   L = stack to pop from
+ *   n = number of elements to pop
  * Returns:
- *	 array of objects
+ *	 array of popped elements, or a null array if n = 0
  */
-T[] popStack(T = LuaObject)(lua_State* L)
+T[] popStack(T = LuaObject)(lua_State* L, size_t n)
 {
-	int top = lua_gettop(L);
-	auto stack = new T[top];
-	foreach(i; 0..top)
+	if(n == 0) // Don't allocate an array in this case
+		return null;
+
+	auto stack = new T[n];
+	foreach(i; 0 .. n)
 	{
-		stack[i] = getValue!T(L, i + 1);
+		stack[i] = getValue!T(L, -n + i);
 	}
-	lua_settop(L, 0);
+
+	lua_pop(L, n);
 	return stack;
 }
 
@@ -354,10 +358,15 @@ auto getArgument(T, int narg)(lua_State* L, int idx)
 		return getValue!(Arg, argumentTypeMismatch)(L, idx);
 }
 
+template isVariableReturnType(T)
+{
+	enum isVariableReturnType = is(T : const(LuaObject)[]);
+}
+
 /// Used for getting a suitable nresults argument to lua_call or lua_pcall.
 template returnTypeSize(T)
 {
-	static if(is(T == LuaObject[]))
+	static if(isVariableReturnType!T)
 		enum returnTypeSize = LUA_MULTRET;
 		
 	else static if(isTuple!T)
@@ -373,17 +382,20 @@ template returnTypeSize(T)
 /**
  * Pop return values from stack. 
  * Defaults to popValue, but has special handling for LuaObject[], Tuple!(...), and void.
+ * Params:
+ *    nret = number of return values
+ * Returns:
+ *    Return value, collection of return values, or nothing
  */
-T popReturnValues(T)(lua_State* L)
+T popReturnValues(T)(lua_State* L, size_t nret)
 {
-	static if(is(T == LuaObject[]))
-		return popStack(L);
+	static if(isVariableReturnType!T)
+		return popStack(L, nret);
 		
 	else static if(isTuple!T)
 	{
-		auto top = lua_gettop(L);
-		if(top < T.Types.length)
-			luaL_error(L, "expected %s return values, got %s", T.Types.length, top);
+		if(nret < T.Types.length)
+			luaL_error(L, "expected %d return values, got %d", T.Types.length, nret);
 		
 		return popTuple!T(L);
 	}	
@@ -391,7 +403,12 @@ T popReturnValues(T)(lua_State* L)
 		return;
 		
 	else
+	{
+		if(nret < 1)
+			luaL_error(L, "expected return value of type %s, got nil", lua_typename(L, luaTypeOf!T));
+
 		return popValue!T(L);
+	}
 }
 
 /**
@@ -400,7 +417,7 @@ T popReturnValues(T)(lua_State* L)
  */
 int pushReturnValues(T)(lua_State* L, T value)
 {
-	static if(is(T == LuaObject[]))
+	static if(isVariableReturnType!T)
 	{
 		foreach(obj; value)
 		{
@@ -437,6 +454,45 @@ void pushTuple(T)(lua_State* L, ref T tup) if(isTuple!T)
 {
 	foreach(i, Elem; T.Types)
 		pushValue(L, tup[i]);
+}
+
+/**
+ * Call a Lua function and handle its return values.
+ * Params:
+ *    T = type of return value or container of return values
+ *    nargs = number of arguments
+ * Returns:
+ * Zero, one or all return values as T, taking into account void, LuaObject[] and Tuple returns
+ */
+T callWithRet(T)(lua_State* L, int nargs)
+{
+	static if(isVariableReturnType!T)
+		auto frame = lua_gettop(L) - nargs - 1; // the size of the stack before arguments and the function
+
+	lua_call(L, nargs, returnTypeSize!T);
+
+	static if(isVariableReturnType!T)
+		auto nret = lua_gettop(L) - frame;
+	else
+		auto nret = returnTypeSize!T;
+
+	return popReturnValues!T(L, nret);
+}
+
+private extern(C) int printf(const(char)* fmt, ...);
+
+/// Print the Lua stack to stdout.
+void printStack(lua_State* L)
+{
+	auto top = lua_gettop(L);
+
+	foreach(n; 0 .. top)
+	{
+		auto str = luaL_tolstring(L, n + 1, null);
+		printf("\t[%d] %s (%s)\r\n", n + 1, str, luaL_typename(L, n + 1));
+	}
+
+	lua_pop(L, top); // luaL_tolstring always pushes one
 }
 
 version(unittest) import luad.testing;
@@ -500,8 +556,10 @@ unittest
 	pushValue(L, "test");
 	pushValue(L, 123);
 	pushValue(L, true);
+
+	assert(lua_gettop(L) == 4);
 	
-	auto stack = popStack(L);
+	auto stack = popStack(L, lua_gettop(L));
 	assert(lua_gettop(L) == 0);
 	assert(stack[0].type == LuaType.Function);
 	assert(stack[1].type == LuaType.String);

@@ -181,14 +181,11 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 	
 	return delegate RetType(Args args)
 	{
-		assert(lua_gettop(L) == 0); // this function assumes empty stack
-		
 		func.push();
 		foreach(arg; args)
 			pushValue(L, arg);
-			
-		lua_call(L, args.length, returnTypeSize!RetType);
-		return popReturnValues!RetType(L);
+
+		return callWithRet!RetType(L, args.length);
 	};
 }
 
@@ -340,6 +337,37 @@ unittest
 	auto results = multRet(42);
 	assert(results[0] == "foo");
 	assert(results[1] == 42);
+}
+
+// Nested call stack testing
+unittest
+{
+	alias string delegate(string) MyFun;
+	
+	MyFun[string] funcs;
+
+	pushValue(L, (string name, MyFun fun) {
+		funcs[name] = fun;	
+	});
+	lua_setglobal(L, "addFun");
+
+	pushValue(L, (string name, string arg) {
+		auto top = lua_gettop(L);
+		auto result = funcs[name](arg);
+		assert(lua_gettop(L) == top);
+		return result;
+	});
+	lua_setglobal(L, "callFun");
+
+	auto top = lua_gettop(L);
+
+	luaL_dostring(L, q{
+		addFun("echo", function(s) return s end)
+		local result = callFun("echo", "test")
+		assert(result == "test")
+	});
+
+	assert(lua_gettop(L) == top);
 }
 
 unittest

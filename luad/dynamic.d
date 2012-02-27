@@ -33,35 +33,56 @@ struct LuaDynamic
 	 * assert(results[1] == 2); // two instances of 't' replaced
 	 * ----------------
 	 */
-	LuaDynamic[] opDispatch(string name, Args...)(Args args)
+	LuaDynamic[] opDispatch(string name, string file = __FILE__, uint line = __LINE__, Args...)(Args args)
 	{
-		assert(lua_gettop(object.state) == 0); // this function assumes empty stack
-		
+		// Push self
 		object.push();
+
+		auto frame = lua_gettop(object.state);
+		
+		// push name and self[name]
 		lua_pushlstring(object.state, name.ptr, name.length);
 		lua_gettable(object.state, -2);
-		lua_pushvalue(object.state, 1);
-		lua_remove(object.state, 1);
+
+		// TODO: How do I properly generalize this to include other types,
+		// while not stepping on the __call metamethod?
+		if(lua_isnil(object.state, -1))
+		{
+			lua_pop(object.state, 2);
+			luaL_error(object.state, "%s:%d: attempt to call method '%s' (a nil value)", file.ptr, line, name.ptr);
+		}
+
+		// Copy 'this' to the top of the stack
+		lua_pushvalue(object.state, -2);
 		
 		foreach(arg; args)
 			pushValue(object.state, arg);
-		
+
 		lua_call(object.state, args.length + 1, LUA_MULTRET);
+
+		auto nret = lua_gettop(object.state) - frame;
+
+		auto ret = popStack!LuaDynamic(object.state, nret);
 		
-		return popStack!LuaDynamic(object.state);
+		// Pop self
+		lua_pop(object.state, 1);
+
+		return ret;
 	}
 	
 	LuaDynamic[] opCall(Args...)(Args args)
 	{
-		assert(lua_gettop(object.state) == 0); // this function assumes empty stack
-		
-		object.push();
+		auto frame = lua_gettop(object.state);
+
+		object.push(); // Callable
 		foreach(arg; args)
 			pushValue(object.state, arg);
 		
 		lua_call(object.state, args.length, LUA_MULTRET);
+
+		auto nret = lua_gettop(object.state) - frame;
 		
-		return popStack!LuaDynamic(object.state);
+		return popStack!LuaDynamic(object.state, nret);
 	}
 
 	bool opEquals(T)(auto ref T other)
@@ -98,6 +119,7 @@ unittest
 	auto luaString = popValue!LuaDynamic(L);
 	
 	LuaDynamic[] results = luaString.gsub("t", "f");
+
 	assert(results[0] == "fesf");
 	assert(results[1] == 2); // two instances of 't' replaced
 
