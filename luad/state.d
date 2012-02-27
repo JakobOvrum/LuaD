@@ -85,7 +85,9 @@ public:
 			_G.release();
 			traceback.release();
 			lua_close(L);
-		} else { // Unregister state.
+		}
+		else // Unregister state
+		{
 			lua_pushnil(L);
 			lua_setfield(L, LUA_REGISTRYINDEX, "__dstate");
 		}

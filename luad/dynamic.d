@@ -11,7 +11,10 @@ import luad.stack;
  */
 struct LuaDynamic
 {
-	/// Underlying Lua reference.
+	/**
+	 * Underlying Lua reference.
+	 * LuaDynamic does not sub-type LuaObject - qualify access to this reference explicitly.
+	 */
 	LuaObject object;
 	
 	/**
@@ -32,6 +35,8 @@ struct LuaDynamic
 	 * assert(results[0] == "fesf");
 	 * assert(results[1] == 2); // two instances of 't' replaced
 	 * ----------------
+	 * Note:
+	 *    To call a member named "object", instantiate this function template explicitly.
 	 */
 	LuaDynamic[] opDispatch(string name, string file = __FILE__, uint line = __LINE__, Args...)(Args args)
 	{
@@ -70,6 +75,14 @@ struct LuaDynamic
 		return ret;
 	}
 	
+	/**
+	 * Call this object.
+	 * This object must either be a function, or have a metatable providing the ___call metamethod.
+	 * Params:
+	 *    args = arguments for the call
+	 * Returns:
+	 *    Array of return values, or a null array if there were no return values
+	 */
 	LuaDynamic[] opCall(Args...)(Args args)
 	{
 		auto frame = lua_gettop(object.state);
@@ -84,15 +97,13 @@ struct LuaDynamic
 		
 		return popStack!LuaDynamic(object.state, nret);
 	}
-
-	bool opEquals(T)(auto ref T other)
-	{
-		object.push();
-		pushValue(object.state, other);
-		scope(success) lua_pop(object.state, 2);
-		return lua_equal(object.state, -1, -2);
-	}
 	
+	/**
+	 * Index this object.
+	 * This object must either be a table, or have a metatable providing the ___index metamethod.
+	 * Params:
+	 *    key = _key to lookup
+	 */
 	LuaDynamic opIndex(T)(auto ref T key)
 	{
 		object.push();
@@ -101,6 +112,28 @@ struct LuaDynamic
 		auto result = getValue!LuaDynamic(object.state, -1);
 		lua_pop(object.state, 2);
 		return result;
+	}
+
+	/**
+	 * Compare the referenced object to another value with Lua's equality semantics.
+	 * If the _other value is not a Lua reference wrapper, it will go through the
+	 * regular D to Lua conversion process first.
+	 * To check for nil, compare against the special constant "nil".
+	 */
+	bool opEquals(T)(auto ref T other)
+	{
+		object.push();
+		static if(is(T == Nil))
+		{
+			scope(success) lua_pop(object.state, 1);
+			return lua_isnil(object.state, -1) == 1;
+		}
+		else
+		{
+			pushValue(object.state, other);
+			scope(success) lua_pop(object.state, 2);
+			return lua_equal(object.state, -1, -2);
+		}
 	}
 }
 
@@ -130,4 +163,9 @@ unittest
 	assert(results[0] == results2[0]);
 	assert(results[1] == results2[1]);
 	assert(results == results2);
+
+	lua_getglobal(L, "thisisnil");
+	auto nilRef = popValue!LuaDynamic(L);
+
+	assert(nilRef == nil);
 }
