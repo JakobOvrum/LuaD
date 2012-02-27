@@ -57,6 +57,11 @@ bool isAllowedType(T)(lua_State* L, int idx) {
 template isVariant(T)
 {
 	enum isVariant = is(typeof(isVariantImpl(T.init)));
+	static if(isVariant)
+		static assert(
+			T.AllowedTypes.length > 0,
+			"Variant is not supported - use an instance of VariantN with an explicit AllowedTypes list, such as Algebraic"
+		);
 }
 
 private void isVariantImpl(size_t max, AllowedTypes...)(VariantN!(max, AllowedTypes) v){}
