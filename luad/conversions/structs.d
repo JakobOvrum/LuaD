@@ -107,7 +107,7 @@ unittest
 	lua_getglobal(L, "struct");
 	S s = getStruct!S(L, -1);
 	
-	assert(s.o.equals(obj));
+	assert(s.o == obj);
 	assert(s.i == 1);
 	assert(s.n == 2.3);
 	assert(s.s == "hello");

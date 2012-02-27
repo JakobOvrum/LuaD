@@ -310,7 +310,7 @@ unittest
 	auto test = t2.get!string("foobar");
 	assert(test == "foobar");
 		
-	assert(t2.getMetaTable().equals(meta));
+	assert(t2.getMetaTable() == meta);
 	
 	// opApply
 	auto input = [1, 2, 3];

@@ -180,7 +180,7 @@ struct LuaObject
 	 * Compare this object to another with Lua's equality semantics.
 	 * Also returns false if the two objects are in different Lua states. 
 	 */
-	bool equals(LuaObject o)
+	bool opEquals(T : LuaObject)(ref T o)
 	{
 		if(o.state != this.state)
 			return false;
