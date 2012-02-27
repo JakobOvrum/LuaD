@@ -85,6 +85,9 @@ public:
 			_G.release();
 			traceback.release();
 			lua_close(L);
+		} else { // Unregister state.
+			lua_pushnil(L);
+			lua_setfield(L, LUA_REGISTRYINDEX, "__dstate");
 		}
 	}
 	
@@ -99,7 +102,7 @@ public:
 	 * Params:
 	 *	 L = Lua state
 	 * Returns:
-	 *	 LuaState for the given lua_State*.
+	 *	 LuaState for the given lua_State*, or null if a LuaState is not currently attached to the state
 	 */
 	static LuaState fromPointer(lua_State* L)
 	{
