@@ -129,5 +129,5 @@ unittest
 	LuaDynamic[] results2 = gsub(luaString, "t", "f");
 	assert(results[0] == results2[0]);
 	assert(results[1] == results2[1]);
-	version(none) assert(results == results2); // this fails for some reason
+	assert(results == results2);
 }
