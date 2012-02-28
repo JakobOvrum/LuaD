@@ -127,7 +127,7 @@ struct LuaTable
 	 *
 	 * Examples:
 	 * ----------------------
-	lua["string", "empty"] = (const(char)[] s){ return s.length == 0; };
+	lua["string", "empty"] = (in char[] s){ return s.length == 0; };
 	lua.doString(`assert(string.empty(""))`);
 	 * ----------------------
 	 */

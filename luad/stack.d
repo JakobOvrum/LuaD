@@ -14,6 +14,7 @@ $(DL
 		$(DD string, const(char)[], char[])
 		$(DD const(char)*)
 		$(DD char)
+		$(DD immutable(void)[], const(void)[], void[] (binary data))
 	)
 	$(DT table
 		$(DD $(LINKSUBMODULE2 conversions,assocarrays,associative arrays))
@@ -102,6 +103,9 @@ void pushValue(T)(lua_State* L, T value)
 		
 	else static if(is(T : const(char)[]))
 		lua_pushlstring(L, value.ptr, value.length);
+
+	else static if(isSomeVoidArray!T)
+		lua_pushlstring(L, cast(const(char)*)value.ptr, value.length);
 	
 	else static if(is(T : const(char)*))
 		lua_pushstring(L, value);
@@ -138,6 +142,11 @@ void pushValue(T)(lua_State* L, T value)
 		static assert(false, "Unsupported type `" ~ T.stringof ~ "` in stack push operation");
 }
 
+template isSomeVoidArray(T)
+{
+	enum isSomeVoidArray = is(T == void[]) || is(T == const(void)[]) || is(T == const(void[])) || is(T : immutable(void)[]);
+}
+
 /**
  * Get the associated Lua type for T.
  * Returns: Lua type for T
@@ -150,7 +159,7 @@ template luaTypeOf(T)
 	else static if(is(T == Nil))
 		enum luaTypeOf = LUA_TNIL;
 	
-	else static if(is(T : const(char)[]) || is(T : const(char)*) || is(T == char))
+	else static if(is(T : const(char)[]) || is(T : const(char)*) || is(T == char) || isSomeVoidArray!T)
 		enum luaTypeOf = LUA_TSTRING;
 		
 	else static if(is(T : lua_Integer) || is(T : lua_Number))
@@ -242,11 +251,11 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	else static if(is(T : lua_Number))
 		return cast(T)lua_tonumber(L, idx);
 	
-	else static if(is(T : const(char)[]))
+	else static if(is(T : const(char)[]) || isSomeVoidArray!T)
 	{
 		size_t len;
 		const(char)* str = lua_tolstring(L, idx, &len);
-		static if(is(T == char[]))
+		static if(is(T == char[]) || is(T == void[]))
 			return str[0 .. len].dup;
 		else
 			return str[0 .. len].idup;
@@ -345,7 +354,8 @@ auto getArgument(T, int narg)(lua_State* L, int idx)
 		}
 		return result;
 	}
-	else static if(is(Arg == const(char)[]) || is(Arg == const(void)[]))
+	else static if(is(Arg == const(char)[]) || is(Arg == const(void)[]) ||
+				   is(Arg == const(char[])) || is(Arg == const(void[])))
 	{
 		if(lua_type(L, idx) != LUA_TSTRING)
 			argumentTypeMismatch(L, idx, LUA_TSTRING);
