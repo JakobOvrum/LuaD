@@ -16,6 +16,7 @@ module luad.conversions.functions;
 
 import core.memory;
 import std.traits;
+import std.typetuple;
 import std.string : toStringz;
 import luad.c.all;
 
@@ -32,12 +33,57 @@ void argsError(lua_State* L, int nargs, int expected)
 		debugInfo.namewhat, debugInfo.name, nargs, expected);
 }
 
+template StripHeadQual(T : const(T*))
+{
+	alias const(T)* StripHeadQual;
+}
+
+template StripHeadQual(T : const(T[]))
+{
+	alias const(T)[] StripHeadQual;
+}
+
+template StripHeadQual(T : immutable(T*))
+{
+	alias immutable(T)* StripHeadQual;
+}
+
+template StripHeadQual(T : immutable(T[]))
+{
+	alias immutable(T)[] StripHeadQual;
+}
+
+template StripHeadQual(T : T[])
+{
+	alias T[] StripHeadQual;
+}
+
+template StripHeadQual(T : T*)
+{
+	alias T* StripHeadQual;
+}
+
+template StripHeadQual(T)
+{
+	alias T StripHeadQual;
+}
+
+template FillableParameterTypeTuple(T)
+{
+	alias staticMap!(StripHeadQual, ParameterTypeTuple!T) FillableParameterTypeTuple;
+}
+
+template BindableReturnType(T)
+{
+	alias StripHeadQual!(ReturnType!T) BindableReturnType;
+}
+
 int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 {
 	//Call with or without return value, propagating Exceptions as Lua errors.
 	//This should rather be throwing a userdata with __tostring and a reference to
 	//the thrown exception, as it is now, everything but the error type and message is lost.
-	alias ReturnType!T RetType;
+	alias BindableReturnType!T RetType;
 	enum hasReturnValue = !is(RetType == void);
 	
 	static if(hasReturnValue)
@@ -61,6 +107,7 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 		return 0;
 }
 
+// TODO: right now, virtual functions on specialized classes can be called on base classes, not safe!
 extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 {
 	alias ParameterTypeTuple!T Args;
@@ -69,6 +116,8 @@ extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 	int top = lua_gettop(L);
 	if(top < Args.length + 1)
 		argsError(L, top, Args.length + 1);
+
+	Class self =  *cast(Class*)luaL_checkudata(L, 1, toStringz(Class.mangleof));
 	
 	static if(virtual)
 	{
@@ -78,7 +127,7 @@ extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 	else
 	{
 		T func;
-		func.ptr = *cast(void**)luaL_checkudata(L, 1, toStringz(Class.mangleof));
+		func.ptr = cast(void*)self;
 		func.funcptr = cast(typeof(func.funcptr))lua_touserdata(L, lua_upvalueindex(1));
 	}
 	
@@ -86,7 +135,7 @@ extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 	static if(virtual)
 	{
 		ParameterTypeTuple!VirtualWrapper allArgs;
-		allArgs[0] = *cast(Class*)luaL_checkudata(L, 1, toStringz(Class.mangleof));
+		allArgs[0] = self;
 		alias allArgs[1..$] args;
 	}
 	else
@@ -103,7 +152,7 @@ extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 
 extern(C) int functionWrapper(T)(lua_State* L)
 {
-	alias ParameterTypeTuple!T Args;
+	alias FillableParameterTypeTuple!T Args;
 	
 	//Check arguments
 	int top = lua_gettop(L);
@@ -276,6 +325,31 @@ unittest
 	unittest_lua(L, `
 		assert(circle(2) == 3.14 * 4, "closure return type mismatch!")
 	`);
+
+	// Const parameters
+	static bool isEmpty(const(char[]) str) { return str.length == 0; }
+	static bool isEmpty2(in char[] str) { return str.length == 0; }
+
+	pushValue(L, &isEmpty);
+	lua_setglobal(L, "isEmpty");
+
+	pushValue(L, &isEmpty2);
+	lua_setglobal(L, "isEmpty2");
+
+	unittest_lua(L, `
+		assert(isEmpty(""))
+		assert(isEmpty2(""))
+		assert(not isEmpty("a"))
+		assert(not isEmpty2("a"))
+	`);
+
+	// Immutable parameters
+	static immutable(char[]) returnArg(immutable(char[]) str) { return str; }
+
+	pushValue(L, &returnArg);
+	lua_setglobal(L, "returnArg");
+
+	unittest_lua(L, `assert(returnArg("foo") == "foo")`);
 }
 
 // multiple return values

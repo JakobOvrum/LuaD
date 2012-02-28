@@ -39,7 +39,7 @@ private void pushMeta(T)(lua_State* L, T obj)
 		static if(member != "this" && member != "__ctor" && //do not handle
 			member != "Monitor" && member != "toHash" && //do not handle
 			member != "toString" && member != "opEquals" && //handle below
-			member != "opCmp") //handle below (TODO)
+			member != "opCmp") //handle below
 		{
 			static if(__traits(getOverloads, T.init, member).length > 0)
 			{
@@ -56,6 +56,9 @@ private void pushMeta(T)(lua_State* L, T obj)
 	
 	pushMethod!(T, "opEquals")(L);
 	lua_setfield(L, -2, "__eq");
+
+	//TODO: handle opCmp here
+
 	
 	lua_pushcfunction(L, &classCleaner);
 	lua_setfield(L, -2, "__gc");
@@ -66,7 +69,7 @@ private void pushMeta(T)(lua_State* L, T obj)
 
 void pushClassInstance(T)(lua_State* L, T obj) if (is(T == class))
 {	
-	Object* ud = cast(Object*)lua_newuserdata(L, obj.sizeof);
+	T* ud = cast(T*)lua_newuserdata(L, obj.sizeof);
 	*ud = obj;
 	
 	pushMeta(L, obj);
@@ -75,6 +78,7 @@ void pushClassInstance(T)(lua_State* L, T obj) if (is(T == class))
 	GC.addRoot(ud);
 }
 
+//TODO: handle foreign userdata properly (i.e. raise errors)
 T getClassInstance(T)(lua_State* L, int idx) if (is(T == class))
 {
 	if(lua_getmetatable(L, idx) == 0)
