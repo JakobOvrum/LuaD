@@ -199,15 +199,13 @@ unittest
 	scope(success) lua_close(L);
 	
 	lua_pushstring(L, "foobar");
-	auto o = new LuaObject(L, -1);
-	lua_pop(L, 1);
+	auto o = popValue!LuaObject(L);
 	
 	assert(o.type == LuaType.String);
 	assert(o.to!string == "foobar");
 	
 	lua_pushnil(L);
-	auto nilref = new LuaObject(L, -1);
-	lua_pop(L, 1);
+	auto nilref = popValue!LuaObject(L);
 	
 	assert(nilref.isNil);
 }
