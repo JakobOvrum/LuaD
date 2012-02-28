@@ -61,7 +61,7 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 		return 0;
 }
 
-extern(C) int methodWrapper(T, Class)(lua_State* L)
+extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 {
 	alias ParameterTypeTuple!T Args;
 	
@@ -70,17 +70,35 @@ extern(C) int methodWrapper(T, Class)(lua_State* L)
 	if(top < Args.length + 1)
 		argsError(L, top, Args.length + 1);
 	
-	//Assemble method
-	T func;
-	func.ptr = *cast(void**)luaL_checkudata(L, 1, toStringz(Class.mangleof));
-	func.funcptr = cast(typeof(func.funcptr))lua_touserdata(L, lua_upvalueindex(1));
+	static if(virtual)
+	{
+		alias ReturnType!T function(Class, Args) VirtualWrapper;
+		VirtualWrapper func = cast(VirtualWrapper)lua_touserdata(L, lua_upvalueindex(1));
+	}
+	else
+	{
+		T func;
+		func.ptr = *cast(void**)luaL_checkudata(L, 1, toStringz(Class.mangleof));
+		func.funcptr = cast(typeof(func.funcptr))lua_touserdata(L, lua_upvalueindex(1));
+	}
 	
 	//Assemble arguments
-	Args args;
+	static if(virtual)
+	{
+		ParameterTypeTuple!VirtualWrapper allArgs;
+		allArgs[0] = *cast(Class*)luaL_checkudata(L, 1, toStringz(Class.mangleof));
+		alias allArgs[1..$] args;
+	}
+	else
+	{
+		Args allArgs;
+		alias allArgs args;
+	}
+
 	foreach(i, Arg; Args)
 		args[i] = getArgument!(T, i)(L, i + 2);
 	
-	return callFunction!T(L, func, args);
+	return callFunction!(typeof(func))(L, func, allArgs);
 }
 
 extern(C) int functionWrapper(T)(lua_State* L)
@@ -137,23 +155,27 @@ void pushFunction(T)(lua_State* L, T func) if (isSomeFunction!T)
 	lua_pushcclosure(L, &functionWrapper!T, 1);
 }
 
-void pushMethod(Class, T)(lua_State* L, T func) if (isSomeFunction!T)
+// TODO: optimize for non-virtual functions
+void pushMethod(Class, string member)(lua_State* L) if (isSomeFunction!(__traits(getMember, Class, member)))
 {
-	lua_pushlightuserdata(L, func.funcptr);
-	lua_pushcclosure(L, &methodWrapper!(T, Class), 1);
+	alias typeof(mixin("&Class.init." ~ member)) T;
+
+	// Delay vtable lookup until the right time
+	static ReturnType!T virtualWrapper(Class self, ParameterTypeTuple!T args)
+	{
+		return mixin("self." ~ member)(args);
+	}
+
+	lua_pushlightuserdata(L, &virtualWrapper);
+	lua_pushcclosure(L, &methodWrapper!(T, Class, true), 1);
 }
 
 /**
  * Currently this function allocates a reference in the registry that is never deleted,
-   one for each call... see below
+   one for each call... see code comments
  */
 T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
-{
-	alias ReturnType!T RetType;
-	enum hasReturnValue = !is(RetType == void);
-	
-	alias ParameterTypeTuple!T Args;
-	
+{	
 	auto func = new class
 	{
 		int lref;
@@ -164,7 +186,7 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 		}
 		
 		//Alright... how to fix this?
-		//The problem is that this object tends to be finalized after L is freed.
+		//The problem is that this object tends to be finalized after L is freed (by LuaState's destructor or otherwise).
 		//If you have a good solution to the problem of dangling references to a lua_State,
 		//please contact me :)
 		
@@ -178,6 +200,9 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 			lua_rawgeti(L, LUA_REGISTRYINDEX, lref);
 		}
 	};
+
+	alias ReturnType!T RetType;
+	alias ParameterTypeTuple!T Args;
 	
 	return delegate RetType(Args args)
 	{

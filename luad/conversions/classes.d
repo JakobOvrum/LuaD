@@ -12,6 +12,7 @@ import luad.stack;
 
 import core.memory;
 
+import std.traits;
 import std.string : toStringz;
 
 extern(C) private int classCleaner(lua_State* L)
@@ -42,7 +43,7 @@ private void pushMeta(T)(lua_State* L, T obj)
 		{
 			static if(__traits(getOverloads, T.init, member).length > 0)
 			{
-				pushMethod!T(L, mixin("&obj." ~ member));
+				pushMethod!(T, member)(L);
 				lua_setfield(L, -2, toStringz(member));
 			}
 		}
@@ -63,7 +64,7 @@ private void pushMeta(T)(lua_State* L, T obj)
 	lua_setfield(L, -2, "__metatable");
 }
 
-void pushClass(T)(lua_State* L, T obj) if (is(T == class))
+void pushClassInstance(T)(lua_State* L, T obj) if (is(T == class))
 {	
 	Object* ud = cast(Object*)lua_newuserdata(L, obj.sizeof);
 	*ud = obj;
@@ -74,7 +75,7 @@ void pushClass(T)(lua_State* L, T obj) if (is(T == class))
 	GC.addRoot(ud);
 }
 
-T getClass(T)(lua_State* L, int idx) if (is(T == class))
+T getClassInstance(T)(lua_State* L, int idx) if (is(T == class))
 {
 	if(lua_getmetatable(L, idx) == 0)
 	{
@@ -107,31 +108,49 @@ unittest
 	lua_State* L = luaL_newstate();
 	scope(success) lua_close(L);
 	
-	class A
+	static class A
 	{
-		public:
-		int a;
+		private:
 		string s;
+
+		public:
+		int n;
 		
-		this(int a, string s)
+		this(int n, string s)
 		{
-			this.a = a, this.s = s;
+			this.n = n;
+			this.s = s;
 		}
 		
 		string foo(){ return s; }
 		
-		int bar(int b)
+		int bar(int i)
 		{
-			return a += b;
+			return n += i;
 		}
 	}
+
+	static class B : A
+	{
+		this(int a, string s)
+		{
+			super(a, s);
+		}
+
+		override string foo() { return "B"; }
+	}
+
+	void addA(in char* name, A a)
+	{
+		pushValue(L, a);
+		lua_setglobal(L, name);
+	}
 	
-	auto o = new A(2, "foo");
-	pushClass(L, o);
-	lua_setglobal(L, "a");
+	auto a = new A(2, "foo");
+	addA("a", a);
 	
-	pushClass(L, o);
-	lua_setglobal(L, "b");
+	auto b = new B(2, "foo");
+	addA("b", b);
 	
 	pushValue(L, (A a)
 	{
@@ -145,5 +164,13 @@ unittest
 		assert(a:bar(2) == 4)
 		func(a)
 		assert(a:bar(2) == 8)
+
+		assert(a:foo() == "foo")
+
+		assert(b:bar(2) == 4)
+		func(b)
+		assert(b:bar(2) == 8)
+
+		assert(b:foo() == "B")
 	`);
 }

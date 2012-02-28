@@ -131,7 +131,7 @@ void pushValue(T)(lua_State* L, T value)
 		if(value is null)
 			lua_pushnil(L);
 		else
-			pushClass(L, value);
+			pushClassInstance(L, value);
 	}
 	
 	else
@@ -274,7 +274,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		return getFunction!T(L, idx);
 	
 	else static if(is(T : Object))
-		return getClass!T(L, idx);
+		return getClassInstance!T(L, idx);
 			
 	else
 	{
