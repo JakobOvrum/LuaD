@@ -51,10 +51,10 @@ private void pushMeta(T)(lua_State* L, T obj)
 	
 	lua_setfield(L, -2, "__index");
 	
-	pushValue(L, &obj.toString);
+	pushMethod!(T, "toString")(L);
 	lua_setfield(L, -2, "__tostring");
 	
-	pushValue(L, &obj.opEquals);
+	pushMethod!(T, "opEquals")(L);
 	lua_setfield(L, -2, "__eq");
 	
 	lua_pushcfunction(L, &classCleaner);
@@ -138,6 +138,8 @@ unittest
 		}
 
 		override string foo() { return "B"; }
+
+		override string toString() { return "B"; }
 	}
 
 	void addA(in char* name, A a)
@@ -151,6 +153,7 @@ unittest
 	
 	auto b = new B(2, "foo");
 	addA("b", b);
+	addA("otherb", b);
 	
 	pushValue(L, (A a)
 	{
@@ -172,5 +175,9 @@ unittest
 		assert(b:bar(2) == 8)
 
 		assert(b:foo() == "B")
+		assert(tostring(b) == "B")
+
+		assert(a ~= b)
+		assert(b == otherb)
 	`);
 }
