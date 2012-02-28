@@ -9,7 +9,7 @@ import std.traits;
 import luad.c.all;
 import luad.stack;
 
-void pushArray(T)(lua_State* L, T arr) if (isArray!T)
+void pushArray(T)(lua_State* L, ref T arr) if (isArray!T)
 {
 	assert(arr.length <= int.max, "lua_createtable only supports int.max many elements");
 	lua_createtable(L, cast(int) arr.length, 0);
@@ -35,6 +35,20 @@ T getArray(T)(lua_State* L, int idx) if (isArray!T)
 	}
 	
 	return arr;
+}
+
+void fillStaticArray(T)(lua_State* L, ref T arr) if(isStaticArray!T)
+{
+	foreach(i, ref elem; arr)
+	{
+		elem = getValue!(typeof(elem))(L, cast(int)(-arr.length + i));
+	}
+}
+
+void pushStaticArray(T)(lua_State* L, ref T arr) if(isStaticArray!T)
+{
+	foreach(elem; arr)
+		pushValue(L, elem);
 }
 
 version(unittest) import luad.testing;

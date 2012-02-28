@@ -381,7 +381,10 @@ template returnTypeSize(T)
 		
 	else static if(isTuple!T)
 		enum returnTypeSize = T.Types.length;
-		
+	
+	else static if(isStaticArray!T)
+		enum returnTypeSize = T.length;
+
 	else static if(is(T == void))
 		enum returnTypeSize = 0;
 		
@@ -391,7 +394,7 @@ template returnTypeSize(T)
 
 /**
  * Pop return values from stack. 
- * Defaults to popValue, but has special handling for LuaObject[], Tuple!(...), and void.
+ * Defaults to popValue, but has special handling for LuaObject[], Tuple!(...), static arrays and void.
  * Params:
  *    nret = number of return values
  * Returns:
@@ -408,7 +411,13 @@ T popReturnValues(T)(lua_State* L, size_t nret)
 			luaL_error(L, "expected %d return values, got %d", T.Types.length, nret);
 		
 		return popTuple!T(L);
-	}	
+	}
+	else static if(isStaticArray!T)
+	{
+		T ret;
+		fillStaticArray(L, ret);
+		return ret;
+	}
 	else static if(is(T == void))
 		return;
 		
@@ -423,7 +432,7 @@ T popReturnValues(T)(lua_State* L, size_t nret)
 
 /**
  * Push return values to the stack.
- * Defaults to pushValue, but has special handling for LuaObject[] and Tuple!(...).
+ * Defaults to pushValue, but has special handling for LuaObject[], Tuple!(...) and static arrays.
  */
 int pushReturnValues(T)(lua_State* L, T value)
 {
@@ -440,6 +449,11 @@ int pushReturnValues(T)(lua_State* L, T value)
 	{
 		pushTuple(L, value);
 		return T.Types.length;
+	}
+	else static if(isStaticArray!T)
+	{
+		pushStaticArray(L, value);
+		return value.length;
 	}
 	else
 	{

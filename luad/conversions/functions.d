@@ -3,7 +3,7 @@ Internal module for pushing and getting _functions and delegates.
 
 LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see $(LINKMODULE stack)).
 
-For multiple return values, return a Tuple (from std.typecons). For a variable number of return values, return LuaObject[] (for returning an array of LuaObject as a table, wrap it in LuaTable).
+For multiple return values, return a Tuple (from std.typecons) or a static array. For a variable number of return values, return LuaObject[] (for returning an array of LuaObject as a table, wrap it in LuaTable).
 
 As a special case for const(char)[] parameter types in _functions pushed to Lua, no copy of the string is made when called; take care not to escape such references, they are effectively scope parameters.
 When a copy is desired, use char[] or string, or dup or idup the string manually.
@@ -63,6 +63,11 @@ template StripHeadQual(T : T*)
 	alias T* StripHeadQual;
 }
 
+template StripHeadQual(T : T[N], size_t N)
+{
+	alias T[N] StripHeadQual;
+}
+
 template StripHeadQual(T)
 {
 	alias T StripHeadQual;
@@ -85,7 +90,7 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 	//the thrown exception, as it is now, everything but the error type and message is lost.
 	alias BindableReturnType!T RetType;
 	enum hasReturnValue = !is(RetType == void);
-	
+
 	static if(hasReturnValue)
 		RetType ret;
 
@@ -355,6 +360,7 @@ unittest
 // multiple return values
 unittest
 {
+	// tuple returns
 	auto nameInfo = ["foo"];
 	auto ageInfo = [42];
 		
@@ -374,6 +380,24 @@ unittest
 		local name, age = getInfo(0)
 		assert(name == "foo")
 		assert(age == 42)
+	`);
+
+	// static array returns
+	static string[2] getName()
+	{
+		string[2] ret;
+		ret[0] = "Foo";
+		ret[1] = "Bar";
+		return ret;
+	}
+
+	pushValue(L, &getName);
+	lua_setglobal(L, "getName");
+
+	unittest_lua(L, `
+		local first, last = getName()
+		assert(first == "Foo")
+		assert(last == "Bar")
 	`);
 }
 	

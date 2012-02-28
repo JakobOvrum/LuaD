@@ -96,6 +96,7 @@ struct LuaFunction
 
 version(unittest)
 {
+	import luad.testing;
 	import std.variant;
 	import std.typecons;
 }
@@ -138,6 +139,15 @@ unittest
 	auto result = multRet.call!(Tuple!(string, double))();
 	assert(result[0] == a);
 	assert(result[1] == b);
+
+	unittest_lua(L, `function getName() return "Foo", "Bar" end`);
+
+	lua_getglobal(L, "getName");
+	auto getName = popValue!LuaFunction(L);
+
+	string[2] arrayRet = getName.call!(string[2])();
+	assert(arrayRet[0] == "Foo");
+	assert(arrayRet[1] == "Bar");
 	
 	// setEnvironment
 	pushValue(L, ["test": [42]]);
