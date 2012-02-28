@@ -36,10 +36,10 @@ private void pushMeta(T)(lua_State* L, T obj)
 	
 	foreach(member; __traits(derivedMembers, T))
 	{
-		static if(member != "this" && member != "__ctor" && //do not handle yet
+		static if(member != "this" && member != "__ctor" && //do not handle
 			member != "Monitor" && member != "toHash" && //do not handle
-			member != "toString" && member != "opEquals" && //do not handle yet
-			member != "opCmp") //do not handle yet (TODO: handle later)
+			member != "toString" && member != "opEquals" && //handle below
+			member != "opCmp") //handle below (TODO)
 		{
 			static if(__traits(getOverloads, T.init, member).length > 0)
 			{
@@ -150,6 +150,9 @@ unittest
 	
 	auto a = new A(2, "foo");
 	addA("a", a);
+
+	pushValue(L, a.toString());
+	lua_setglobal(L, "a_toString");
 	
 	auto b = new B(2, "foo");
 	addA("b", b);
@@ -169,6 +172,7 @@ unittest
 		assert(a:bar(2) == 8)
 
 		assert(a:foo() == "foo")
+		assert(tostring(a) == a_toString)
 
 		assert(b:bar(2) == 4)
 		func(b)
