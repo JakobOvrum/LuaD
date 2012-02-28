@@ -555,7 +555,16 @@ unittest
 	assert(lua_isboolean(L, -1) && (popValue!bool(L) == true));
 	
 	assert(lua_gettop(L) == 0, "bad popValue semantics for primitives");
+
+	//void arrays
+	immutable void[] iarr = "foobar";
+	pushValue(L, iarr);
+	assert(lua_isstring(L, -1) && popValue!(typeof(iarr))(L) == "foobar");
 	
+	void[] arr ="baz".dup;
+	pushValue(L, arr);
+	assert(lua_isstring(L, -1) && popValue!(void[])(L) == "baz");
+
 	//popStack
 	extern(C) static int luacfunc(lua_State* L)
 	{
