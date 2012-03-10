@@ -321,7 +321,7 @@ T[] popStack(T = LuaObject)(lua_State* L, size_t n)
 		stack[i] = getValue!T(L, -n + i);
 	}
 
-	lua_pop(L, n);
+	lua_pop(L, cast(int)n);
 	return stack;
 }
 
