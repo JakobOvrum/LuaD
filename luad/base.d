@@ -71,11 +71,6 @@ struct LuaObject
 		lua_rawgeti(L, LUA_REGISTRYINDEX, r);
 	}
 	
-	lua_State* state() @property
-	{
-		return L;
-	}
-	
 	static void checkType(lua_State* L, int idx, int expectedType, const(char)* expectedName)
 	{
 		int t = lua_type(L, idx);
@@ -96,12 +91,18 @@ struct LuaObject
 	{
 		luaL_unref(L, LUA_REGISTRYINDEX, r);
 	}
+
+	/// The underlying lua_State pointer for interfacing with C.
+	lua_State* state() @property
+	{
+		return L;
+	}
 	
 	/**
 	 * Release this reference.
 	 *
 	 * This reference becomes a nil reference.
-	 * This is only required when you want to release the reference before the lifetime
+	 * This is only required when you want to _release the reference before the lifetime
 	 * of this LuaObject has ended.
 	 */
 	void release()
