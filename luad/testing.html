@@ -29,7 +29,7 @@ Module used internally by the unittest code.<br><br>
 <span class="currsymbol">unittest_lua</span>
 <script>explorer.outline.addDecl('unittest_lua');</script>
 
-(lua_State* <span class="funcparam">L</span>, string <span class="funcparam">code</span>, string <span class="funcparam">chunkName</span> = __FILE__, uint <span class="funcparam">chunkLocation</span> = __LINE__);
+(void** <span class="funcparam">L</span>, string <span class="funcparam">code</span>, string <span class="funcparam">chunkName</span> = __FILE__, uint <span class="funcparam">chunkLocation</span> = __LINE__);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -38,7 +38,7 @@ Module used internally by the unittest code.<br><br>
 <br><br>
 <b>Params:</b><br>
 <table><tr>
-<td nowrap valign="top" style="padding-right: 8px">lua_State* <span class="funcparam">L</span></td>
+<td nowrap valign="top" style="padding-right: 8px">void** <span class="funcparam">L</span></td>
 
 
 <td>Lua state to run in.</td></tr>
@@ -60,7 +60,7 @@ Module used internally by the unittest code.<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Wed Aug 17 19:00:20 2011
+			on Sat Mar 17 16:29:41 2012
 
 		</td></tr>
 	</table>

@@ -24,6 +24,52 @@
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">enum 
+<span class="currsymbol">LuaErrorHandler</span>
+<script>explorer.outline.addDecl('LuaErrorHandler');</script>
+
+;
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Specify error handling scheme for doString and doFile.<br><br>
+
+
+<script>explorer.outline.incSymbolLevel();</script>
+<dl>
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">
+<span class="currsymbol">None</span>
+<script>explorer.outline.addDecl('None');</script>
+
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>No extra error handler.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">
+<span class="currsymbol">Traceback</span>
+<script>explorer.outline.addDecl('Traceback');</script>
+
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Append a stack traceback to the error message.<br><br>
+
+</dd>
+</dl>
+<script>explorer.outline.decSymbolLevel();</script>
+
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">class 
 <span class="currsymbol">LuaState</span>
 <script>explorer.outline.addDecl('LuaState');</script>
@@ -57,7 +103,7 @@ openLibs<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">this(lua_State* <span class="funcparam">L</span>);
+<dt><span class="decl">this(void** <span class="funcparam">L</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -68,7 +114,7 @@ The new LuaState does not assume ownership of the state.
 <br><br>
 <b>Params:</b><br>
 <table><tr>
-<td nowrap valign="top" style="padding-right: 8px">lua_State* <span class="funcparam">L</span></td>
+<td nowrap valign="top" style="padding-right: 8px">void** <span class="funcparam">L</span></td>
 
 
 <td>state to wrap.</td></tr>
@@ -82,7 +128,7 @@ setPanicHandler<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">@property lua_State* 
+<dt><span class="decl">@property void** 
 <span class="currsymbol">state</span>
 <script>explorer.outline.addDecl('state');</script>
 
@@ -100,7 +146,7 @@ setPanicHandler<br><br>
 <span class="currsymbol">fromPointer</span>
 <script>explorer.outline.addDecl('fromPointer');</script>
 
-(lua_State* <span class="funcparam">L</span>);
+(void** <span class="funcparam">L</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -109,13 +155,13 @@ setPanicHandler<br><br>
 <br><br>
 <b>Params:</b><br>
 <table><tr>
-<td nowrap valign="top" style="padding-right: 8px">lua_State* <span class="funcparam">L</span></td>
+<td nowrap valign="top" style="padding-right: 8px">void** <span class="funcparam">L</span></td>
 
 
 <td>Lua state</td></tr>
 </table><br>
 <b>Returns:</b><br>
-LuaState for the given lua_State*.<br><br>
+LuaState for the given lua_State*, or <b>null</b> if a LuaState is not currently attached to the state<br><br>
 
 </dd>
 
@@ -166,7 +212,7 @@ LuaState for the given lua_State*.<br><br>
 <span class="currsymbol">setPanicHandler</span>
 <script>explorer.outline.addDecl('setPanicHandler');</script>
 
-(void function(LuaState, in const(char[])) <span class="funcparam">onPanic</span>);
+(void function(LuaState, const(char[])) <span class="funcparam">onPanic</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -175,7 +221,7 @@ LuaState for the given lua_State*.<br><br>
 <br><br>
 <b>Params:</b><br>
 <table><tr>
-<td nowrap valign="top" style="padding-right: 8px">void function(LuaState, in const(char[])) <span class="funcparam">onPanic</span></td>
+<td nowrap valign="top" style="padding-right: 8px">void function(LuaState, const(char[])) <span class="funcparam">onPanic</span></td>
 
 
 <td>new panic handler</td></tr>
@@ -248,7 +294,7 @@ Loaded code as a function.<br><br>
 <span class="currsymbol">doString</span>
 <script>explorer.outline.addDecl('doString');</script>
 
-(in char[] <span class="funcparam">code</span>);
+(in char[] <span class="funcparam">code</span>, LuaErrorHandler <span class="funcparam">handler</span> = (LuaErrorHandler).None);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -261,6 +307,11 @@ Loaded code as a function.<br><br>
 
 
 <td>code to run</td></tr>
+<tr>
+<td nowrap valign="top" style="padding-right: 8px">LuaErrorHandler <span class="funcparam">handler</span></td>
+
+
+<td>error handling scheme</td></tr>
 </table><br>
 <b>Returns:</b><br>
 Any code return values<br><br>
@@ -272,7 +323,7 @@ Any code return values<br><br>
 <span class="currsymbol">doFile</span>
 <script>explorer.outline.addDecl('doFile');</script>
 
-(in char[] <span class="funcparam">path</span>);
+(in char[] <span class="funcparam">path</span>, LuaErrorHandler <span class="funcparam">handler</span> = (LuaErrorHandler).None);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -285,6 +336,11 @@ Any code return values<br><br>
 
 
 <td>path to file</td></tr>
+<tr>
+<td nowrap valign="top" style="padding-right: 8px">LuaErrorHandler <span class="funcparam">handler</span></td>
+
+
+<td>error handling scheme</td></tr>
 </table><br>
 <b>Returns:</b><br>
 Any script return values<br><br>
@@ -371,6 +427,32 @@ A Lua reference to value<br><br>
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">LuaObject 
+<span class="currsymbol">registerType</span>
+<script>explorer.outline.addDecl('registerType');</script>
+
+(T)();
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Register a D class or struct with Lua.
+<br><br>
+This method exposes a type's constructors and static interface to Lua.
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">T</td>
+
+
+<td>class or struct to register</td></tr>
+</table><br>
+<b>Returns:</b><br>
+Reference to the registered type in Lua<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">T 
 <span class="currsymbol">get</span>
 <script>explorer.outline.addDecl('get');</script>
@@ -452,7 +534,7 @@ LuaTable.opIndexAssign<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Wed Aug 17 19:00:20 2011
+			on Sat Mar 17 16:29:41 2012
 
 		</td></tr>
 	</table>

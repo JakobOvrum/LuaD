@@ -49,7 +49,8 @@
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Underlying Lua reference.<br><br>
+<dd>Underlying Lua reference.
+ LuaDynamic does not sub-type LuaObject - qualify access to this reference explicitly.<br><br>
 
 </dd>
 
@@ -58,7 +59,7 @@
 <span class="currsymbol">opDispatch</span>
 <script>explorer.outline.addDecl('opDispatch');</script>
 
-(string name, Args...)(Args <span class="funcparam">args</span>);
+(string name, string file = __FILE__, uint line = __LINE__, Args...)(Args <span class="funcparam">args</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -66,7 +67,7 @@
 <dd>Perform a Lua method call on this object.
 <br><br>
 Performs a call similar to calling functions in Lua with the colon operator.
- The name string is looked up in this object and called. This object is prepended
+ The name string is looked up in this object and the result is called. This object is prepended
  to the arguments args.
 <br><br>
 <b>Params:</b><br>
@@ -86,11 +87,78 @@ All return values
 <br><br>
 <b>Examples:</b><br>
 <pre class="d_code"> <font color=blue>auto</font> luaString = lua.wrap!LuaDynamic(<font color=red>"test"</font>);
- <font color=blue>auto</font> results = luaString.gsub(<font color=red>"t"</font>, <font color=red>"f"</font>);
- <font color=blue>assert</font>(results[0] == <font color=red>"fesf"</font>);
+ <font color=blue>auto</font> results = luaString.gsub(<font color=red>"t"</font>, <font color=red>"f"</font>); <font color=green>// opDispatch
+</font> <font color=blue>assert</font>(results[0] == <font color=red>"fesf"</font>);
  <font color=blue>assert</font>(results[1] == 2); <font color=green>// two instances of 't' replaced
 </font></pre>
 <br><br>
+<b>Note:</b><br>
+To call a member named "object", instantiate this function template explicitly.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">LuaDynamic[] 
+<span class="currsymbol">opCall</span>
+<script>explorer.outline.addDecl('opCall');</script>
+
+(Args...)(Args <span class="funcparam">args</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Call this object.
+ This object must either be a function, or have a metatable providing the __call metamethod.
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">args</td>
+
+
+<td>arguments for the call</td></tr>
+</table><br>
+<b>Returns:</b><br>
+Array of return values, or a <b>null</b> array if there were no return values<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">LuaDynamic 
+<span class="currsymbol">opIndex</span>
+<script>explorer.outline.addDecl('opIndex');</script>
+
+(T)(auto ref T <span class="funcparam">key</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Index this object.
+ This object must either be a table, or have a metatable providing the __index metamethod.
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">key</td>
+
+
+<td>key to lookup</td></tr>
+</table><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">bool 
+<span class="currsymbol">opEquals</span>
+<script>explorer.outline.addDecl('opEquals');</script>
+
+(T)(auto ref T <span class="funcparam">other</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Compare the referenced object to another value with Lua's equality semantics.
+ If the other value is not a Lua reference wrapper, it will go through the
+ regular D to Lua conversion process first.
+ To check for nil, compare against the special constant "nil".<br><br>
 
 </dd>
 </dl>
@@ -108,7 +176,7 @@ All return values
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Wed Aug 17 19:00:20 2011
+			on Sat Mar 17 16:29:41 2012
 
 		</td></tr>
 	</table>

@@ -33,6 +33,7 @@ The conversion rules are as follows, where conversion goes both ways:
 		<dd>string, const(char)[], char[]</dd>
 		<dd>const(char)*</dd>
 		<dd>char</dd>
+		<dd>immutable(void)[], const(void)[], void[] (binary data)</dd>
 	</dt>
 	<dt>table
 		<dd><a href="/LuaD/luad/conversions/assocarrays.html">associative arrays</a></dd>
@@ -104,12 +105,11 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 </dd>
 
 <script>explorer.outline.writeEnabled = true;</script>
-<dt><span class="decl">int 
+<dt><span class="decl">template 
 <span class="currsymbol">luaTypeOf</span>
 <script>explorer.outline.addDecl('luaTypeOf');</script>
 
-(T)();
-</span></dt>
+(T)</span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
@@ -179,12 +179,12 @@ getValue<br><br>
 <span class="currsymbol">popStack</span>
 <script>explorer.outline.addDecl('popStack');</script>
 
-(T = LuaObject)(lua_State* <span class="funcparam">L</span>);
+(T = LuaObject)(lua_State* <span class="funcparam">L</span>, size_t <span class="funcparam">n</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
-<dd>Get all objects on a stack, then clear the stack.
+<dd>Pop a number of elements from the stack.
 <br><br>
 <b>Params:</b><br>
 <table><tr>
@@ -196,10 +196,15 @@ getValue<br><br>
 <td nowrap valign="top" style="padding-right: 8px">L</td>
 
 
-<td>stack to dump</td></tr>
+<td>stack to pop from</td></tr>
+<tr>
+<td nowrap valign="top" style="padding-right: 8px">n</td>
+
+
+<td>number of elements to pop</td></tr>
 </table><br>
 <b>Returns:</b><br>
-array of objects<br><br>
+array of popped elements, or a <b>null</b> array if n = 0<br><br>
 
 </dd>
 
@@ -235,13 +240,23 @@ array of objects<br><br>
 <span class="currsymbol">popReturnValues</span>
 <script>explorer.outline.addDecl('popReturnValues');</script>
 
-(T)(lua_State* <span class="funcparam">L</span>);
+(T)(lua_State* <span class="funcparam">L</span>, size_t <span class="funcparam">nret</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
 
 <dd>Pop return values from stack.
- Defaults to popValue, but has special handling for LuaObject[], Tuple!(...), and void.<br><br>
+ Defaults to popValue, but has special handling for LuaObject[], Tuple!(...), static arrays and void.
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">nret</td>
+
+
+<td>number of return values</td></tr>
+</table><br>
+<b>Returns:</b><br>
+Return value, collection of return values, or nothing<br><br>
 
 </dd>
 
@@ -256,7 +271,7 @@ array of objects<br><br>
 
 
 <dd>Push return values to the stack.
- Defaults to pushValue, but has special handling for LuaObject[] and Tuple!(...).<br><br>
+ Defaults to pushValue, but has special handling for LuaObject[], Tuple!(...) and static arrays.<br><br>
 
 </dd>
 
@@ -287,6 +302,49 @@ array of objects<br><br>
 <dd>Pushes all the values in a Tuple to the stack.<br><br>
 
 </dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">T 
+<span class="currsymbol">callWithRet</span>
+<script>explorer.outline.addDecl('callWithRet');</script>
+
+(T)(lua_State* <span class="funcparam">L</span>, int <span class="funcparam">nargs</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Call a Lua function and handle its return values.
+<br><br>
+<b>Params:</b><br>
+<table><tr>
+<td nowrap valign="top" style="padding-right: 8px">T</td>
+
+
+<td>type of return value or container of return values</td></tr>
+<tr>
+<td nowrap valign="top" style="padding-right: 8px">nargs</td>
+
+
+<td>number of arguments</td></tr>
+</table><br>
+<b>Returns:</b><br>
+Zero, one or all return values as T, taking into account void, LuaObject[] and Tuple returns<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">void 
+<span class="currsymbol">printStack</span>
+<script>explorer.outline.addDecl('printStack');</script>
+
+(void** <span class="funcparam">L</span>);
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Print the Lua stack to stdout.<br><br>
+
+</dd>
 </dl>
 <script>explorer.outline.decSymbolLevel();</script>
 
@@ -297,7 +355,7 @@ array of objects<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Wed Aug 17 19:03:38 2011
+			on Sat Mar 17 16:29:41 2012
 
 		</td></tr>
 	</table>

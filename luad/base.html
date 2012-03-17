@@ -184,6 +184,24 @@ Useful for clearing keys in a table:
 <script>explorer.outline.incSymbolLevel();</script>
 <dl>
 <script>explorer.outline.writeEnabled = true;</script>
+<dt><span class="decl">void 
+<span class="currsymbol">release</span>
+<script>explorer.outline.addDecl('release');</script>
+
+();
+</span></dt>
+<script>explorer.outline.writeEnabled = false;</script>
+
+
+<dd>Release this reference.
+<br><br>
+This reference becomes a nil reference.
+ This is only required when you want to release the reference before the lifetime
+ of this LuaObject has ended.<br><br>
+
+</dd>
+
+<script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">@property LuaType 
 <span class="currsymbol">type</span>
 <script>explorer.outline.addDecl('type');</script>
@@ -270,10 +288,10 @@ String representation of referenced object<br><br>
 
 <script>explorer.outline.writeEnabled = true;</script>
 <dt><span class="decl">bool 
-<span class="currsymbol">equals</span>
-<script>explorer.outline.addDecl('equals');</script>
+<span class="currsymbol">opEquals</span>
+<script>explorer.outline.addDecl('opEquals');</script>
 
-(ref LuaObject <span class="funcparam">o</span>);
+(T : LuaObject)(ref T <span class="funcparam">o</span>);
 </span></dt>
 <script>explorer.outline.writeEnabled = false;</script>
 
@@ -297,7 +315,7 @@ String representation of referenced object<br><br>
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Wed Aug 17 19:00:20 2011
+			on Sat Mar 17 16:29:41 2012
 
 		</td></tr>
 	</table>

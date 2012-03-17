@@ -206,7 +206,7 @@ t[k] = value, where t is the table for the second-to-last parameter in args,
 
 <br><br>
 <b>Examples:</b><br>
-<pre class="d_code">	lua[<font color=red>"string"</font>, <font color=red>"empty"</font>] = (<font color=blue>const</font>(<font color=blue>char</font>)[] s){ <font color=blue>return</font> s.length == 0; };
+<pre class="d_code">	lua[<font color=red>"string"</font>, <font color=red>"empty"</font>] = (<font color=blue>in</font> <font color=blue>char</font>[] s){ <font color=blue>return</font> s.length == 0; };
 	lua.doString(<font color=red>`assert(string.empty(""))`</font>);
 </pre>
 <br><br>
@@ -343,7 +343,7 @@ A reference to the metatable for this table. The reference is nil if this table 
 		<tr><td id="docfooter">
 			Page was generated with
 			<img src="/LuaD/candydoc/img/candydoc.gif" style="vertical-align:middle; position:relative; top:-1px">
-			on Wed Aug 17 19:00:20 2011
+			on Sat Mar 17 16:29:41 2012
 
 		</td></tr>
 	</table>
