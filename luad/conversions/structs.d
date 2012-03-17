@@ -24,7 +24,7 @@ void pushStruct(T)(lua_State* L, ref T value) if (is(T == struct))
 	
 	foreach(field; __traits(allMembers, T))
 	{
-		static if(!isInternal!(field) &&
+		static if(!isInternal!field &&
 		          field != "this" &&
 		          field != "opAssign")
 		{

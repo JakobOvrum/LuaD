@@ -112,7 +112,7 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 		return 0;
 }
 
-// TODO: right now, virtual functions on specialized classes can be called on base classes, not safe!
+// TODO: right now, virtual functions on specialized classes can be called with base classes as 'self', not safe!
 extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 {
 	alias ParameterTypeTuple!T Args;

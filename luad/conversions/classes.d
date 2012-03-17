@@ -9,6 +9,7 @@ import luad.conversions.functions;
 
 import luad.c.all;
 import luad.stack;
+import luad.base;
 
 import core.memory;
 
@@ -23,7 +24,7 @@ extern(C) private int classCleaner(lua_State* L)
 
 private void pushMeta(T)(lua_State* L, T obj)
 {
-	if(luaL_newmetatable(L, toStringz(T.mangleof)) == 0)
+	if(luaL_newmetatable(L, T.mangleof.ptr) == 0)
 		return;
 	
 	pushValue(L, T.stringof);
@@ -36,12 +37,13 @@ private void pushMeta(T)(lua_State* L, T obj)
 	
 	foreach(member; __traits(derivedMembers, T))
 	{
-		static if(member != "this" && member != "__ctor" && //do not handle
+		static if(__traits(compiles, __traits(getOverloads, T.init, member)) && //ignore non-public fields
+			member != "this" && member != "__ctor" && //do not handle
 			member != "Monitor" && member != "toHash" && //do not handle
 			member != "toString" && member != "opEquals" && //handle below
 			member != "opCmp") //handle below
 		{
-			static if(__traits(getOverloads, T.init, member).length > 0)
+			static if(__traits(getOverloads, T.init, member).length > 0 && !__traits(isStaticFunction, mixin("T." ~ member)))
 			{
 				pushMethod!(T, member)(L);
 				lua_setfield(L, -2, toStringz(member));
@@ -103,6 +105,79 @@ T getClassInstance(T)(lua_State* L, int idx) if (is(T == class))
 	
 	Object obj = *cast(Object*)lua_touserdata(L, idx);
 	return cast(T)obj;
+}
+
+template hasCtor(T)
+{
+	enum hasCtor = __traits(compiles, __traits(getOverloads, T.init, "__ctor"));
+}
+
+// TODO: exclude private members (I smell DMD bugs...)
+template isStaticMember(T, string member)
+{
+	static if(__traits(compiles, mixin("&T." ~ member)))
+	{
+		static if(is(typeof(mixin("&T.init." ~ member)) == delegate))
+			enum isStaticMember = __traits(isStaticFunction, mixin("T." ~ member));
+		else
+			enum isStaticMember = true;
+	}
+	else
+		enum isStaticMember = false;
+}
+
+// For use as __call
+void pushCallMetaConstructor(T)(lua_State* L)
+{
+	alias typeof(__traits(getOverloads, T.init, "__ctor")) Ctor;
+	
+	static T ctor(LuaObject self, ParameterTypeTuple!Ctor args)
+	{
+		return new T(args);
+	}
+
+	pushFunction(L, &ctor);
+}
+
+// TODO: Private static fields are mysteriously pushed without error...
+// TODO: __index should be a function querying the static fields directly
+void pushStaticTypeInterface(T)(lua_State* L)
+{
+	lua_newtable(L);
+
+	enum metaName = T.mangleof ~ "_static";
+	if(luaL_newmetatable(L, metaName.ptr) == 0)
+	{
+		lua_setmetatable(L, -2);
+		return;
+	}
+	
+	static if(hasCtor!T)
+	{
+		pushCallMetaConstructor!T(L);
+		lua_setfield(L, -2, "__call");
+	}
+
+	lua_newtable(L);
+
+	foreach(member; __traits(derivedMembers, T))
+	{
+		static if(isStaticMember!(T, member))
+		{
+			enum isFunction = is(typeof(mixin("T." ~ member)) == function);
+
+			static if(isFunction)
+				pushValue(L, mixin("&T." ~ member));
+			else
+				pushValue(L, mixin("T." ~ member));
+
+			lua_setfield(L, -2, member.ptr);
+		}
+	}
+
+	lua_setfield(L, -2, "__index");
+
+	lua_setmetatable(L, -2);
 }
 
 version(unittest) import luad.testing;

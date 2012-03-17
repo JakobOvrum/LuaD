@@ -104,7 +104,7 @@ void pushValue(T)(lua_State* L, T value)
 	else static if(is(T : const(char)[]))
 		lua_pushlstring(L, value.ptr, value.length);
 
-	else static if(isSomeVoidArray!T)
+	else static if(isVoidArray!T)
 		lua_pushlstring(L, cast(const(char)*)value.ptr, value.length);
 	
 	else static if(is(T : const(char)*))
@@ -137,14 +137,17 @@ void pushValue(T)(lua_State* L, T value)
 		else
 			pushClassInstance(L, value);
 	}
-	
 	else
 		static assert(false, "Unsupported type `" ~ T.stringof ~ "` in stack push operation");
 }
 
-template isSomeVoidArray(T)
+template isVoidArray(T)
 {
-	enum isSomeVoidArray = is(T == void[]) || is(T == const(void)[]) || is(T == const(void[])) || is(T : immutable(void)[]);
+	enum isVoidArray = is(T == void[]) ||
+	                   is(T == const(void)[]) ||
+	                   is(T == const(void[])) ||
+	                   is(T == immutable(void)[]) ||
+	                   is(T == immutable(void[]));
 }
 
 /**
@@ -159,7 +162,7 @@ template luaTypeOf(T)
 	else static if(is(T == Nil))
 		enum luaTypeOf = LUA_TNIL;
 	
-	else static if(is(T : const(char)[]) || is(T : const(char)*) || is(T == char) || isSomeVoidArray!T)
+	else static if(is(T : const(char)[]) || is(T : const(char)*) || is(T == char) || isVoidArray!T)
 		enum luaTypeOf = LUA_TSTRING;
 		
 	else static if(is(T : lua_Integer) || is(T : lua_Number))
@@ -251,7 +254,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	else static if(is(T : lua_Number))
 		return cast(T)lua_tonumber(L, idx);
 	
-	else static if(is(T : const(char)[]) || isSomeVoidArray!T)
+	else static if(is(T : const(char)[]) || isVoidArray!T)
 	{
 		size_t len;
 		const(char)* str = lua_tolstring(L, idx, &len);
@@ -318,7 +321,7 @@ T[] popStack(T = LuaObject)(lua_State* L, size_t n)
 	auto stack = new T[n];
 	foreach(i; 0 .. n)
 	{
-		stack[i] = getValue!T(L, -n + i);
+		stack[i] = getValue!T(L, cast(int)(-n + i));
 	}
 
 	lua_pop(L, cast(int)n);

@@ -18,7 +18,7 @@ LuaD is a bridge between the D and Lua programming languages.
 Unlike many other libraries built on the Lua C API, LuaD doesn't expose the Lua stack - instead,
 it has wrappers for references to Lua objects, and supports seamlessly and directly converting any D type into a Lua type and vice versa. This makes it very easy to use and encourages a much less error-prone style of programming, as well as boosting productivity by a substantial order. Due to D's powerful generic programming capabilities, performance remains the same as the equivalent using the C API.
 
-LuaD also includes bindings for the Lua C API. To use it, import the module `luad.c.all` or selectively import the modules in the `luad.c` package. The usage is identical to that of working with the Lua C API. Documentation for the C API can be found [here](http://www.lua.org/manual/5.1/manual.html).
+LuaD also includes bindings for the Lua C API. To use it, import the module `luad.c.all` or selectively import the modules in the `luad.c` package. Usage is identical to that of working with the Lua C API. Documentation for the C API can be found [here](http://www.lua.org/manual/5.1/manual.html).
 
 (LuaD currently supports Lua version 5.1)
 

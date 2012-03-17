@@ -4,6 +4,7 @@ import std.string : toStringz;
 
 import luad.c.all;
 import luad.stack;
+import luad.conversions.classes;
 
 import luad.base, luad.table, luad.lfunction, luad.dynamic, luad.error;
 
@@ -308,6 +309,21 @@ public:
 		pushValue(L, value);
 		return popValue!T(L);
 	}
+
+	/**
+	 * Register a D class or struct with Lua.
+	 *
+	 * This method exposes a type's constructors and static interface to Lua.
+	 * Params:
+	 *    T = class or struct to register
+	 * Returns:
+	 *    Reference to the registered type in Lua
+	 */
+	LuaObject registerType(T)()
+	{
+		pushStaticTypeInterface!T(L);
+		return popValue!LuaObject(L);
+	}
 	
 	/**
 	 * Same as calling globals._get with the same arguments.
@@ -354,11 +370,12 @@ version(unittest)
 {
 	import luad.testing;
 	import std.string : splitLines;
+	private LuaState lua;
 }
 
 unittest
 {
-	auto lua = new LuaState;
+	lua = new LuaState;
 	assert(LuaState.fromPointer(lua.L) == lua);
 	
 	lua.openLibs();
@@ -399,15 +416,58 @@ unittest
 	assert(results[0].type == LuaType.Number);
 	assert(results[1].type == LuaType.String);
 	assert(results[2].type == LuaType.Number);
-	
+}
+
+unittest
+{
+	static class Test
+	{
+		private:
+		static int priv;
+		static void priv_fun() {}
+
+		public:
+		static int pub = 123;
+
+		static string foo() { return "bar"; }
+		
+		this(int i)
+		{
+			_bar = i;
+		}
+
+		int bar(){ return _bar; }
+		int _bar;
+	}
+
+	lua["Test"] = lua.registerType!Test();
+
+	unittest_lua(lua.state, `
+		assert(type(Test) == "table")
+		-- TODO: private members are currently pushed too...
+		--assert(Test.priv == nil)
+		--assert(Test.priv_fun == nil)
+		assert(Test._foo == nil)
+		assert(Test._bar == nil)
+
+		local test = Test(42)
+		assert(test:bar() == 42)
+
+		assert(Test.pub == 123)
+		assert(Test.foo() == "bar")
+	`);
+}
+
+unittest
+{
 	// setPanicHandler, keep this test last
 	static void panic(LuaState lua, in char[] error)
 	{
 		throw new Exception("hijacked error!");
 	}
-	
+
 	lua.setPanicHandler(&panic);
-	
+
 	try
 	{
 		lua.doString(`error("test")`);

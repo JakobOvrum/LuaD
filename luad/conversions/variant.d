@@ -53,7 +53,6 @@ bool isAllowedType(T)(lua_State* L, int idx) {
 	return false;
 }
 
-// Urgh...
 template isVariant(T)
 {
 	enum isVariant = is(typeof(isVariantImpl(T.init)));
@@ -64,7 +63,7 @@ template isVariant(T)
 		);
 }
 
-private void isVariantImpl(size_t max, AllowedTypes...)(VariantN!(max, AllowedTypes) v){}
+private void isVariantImpl(size_t max, AllowedTypes...)(const VariantN!(max, AllowedTypes) v){}
 
 version(unittest) import luad.testing;
 
@@ -118,8 +117,9 @@ unittest
 	unittest_lua(L, `
 		for key, expected in pairs{i = 1, n = 2.3, s = "hello"} do 
 			local value = struct[key]
-			assert(value == expected, 
-	("bad table pair: '%s' = '%s' (expected '%s')"):format(key, value, expected)
+			assert(
+				value == expected,
+				("bad table pair: '%s' = '%s' (expected '%s')"):format(key, value, expected)
 			)
 		end
 	`);
