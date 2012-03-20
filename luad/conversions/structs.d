@@ -11,6 +11,7 @@ module luad.conversions.structs;
 import luad.c.all;
 
 import luad.stack;
+import luad.base;
 
 private template isInternal(string field)
 {
@@ -58,7 +59,11 @@ void fillStruct(T)(lua_State* L, int idx, ref T s) if(is(T == struct))
 			static if(__traits(getOverloads, T, field).length == 0)
 			{
 				lua_getfield(L, idx, field.ptr);
-				mixin("s." ~ field ~ " = popValue!(typeof(s." ~ field ~ "))(L);");
+				if(lua_type(L, -1) != LuaType.Nil) {
+					mixin("s." ~ field ~
+					  " = popValue!(typeof(s." ~ field ~ "))(L);");
+				} else
+					lua_pop(L, 1);
 			}
 		}
 	}
