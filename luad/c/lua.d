@@ -160,11 +160,11 @@ lua_CFunction  lua_atpanic(lua_State *L, lua_CFunction panicf);
 ** basic stack manipulation
 */
 //C	 LUA_API int   (lua_gettop) (lua_State *L);
-int  lua_gettop(lua_State *L);
+int  lua_gettop(lua_State *L) nothrow;
 //C	 LUA_API void  (lua_settop) (lua_State *L, int idx);
-void  lua_settop(lua_State *L, int idx);
+void  lua_settop(lua_State *L, int idx) nothrow;
 //C	 LUA_API void  (lua_pushvalue) (lua_State *L, int idx);
-void  lua_pushvalue(lua_State *L, int idx);
+void  lua_pushvalue(lua_State *L, int idx) nothrow;
 //C	 LUA_API void  (lua_remove) (lua_State *L, int idx);
 void  lua_remove(lua_State *L, int idx);
 //C	 LUA_API void  (lua_insert) (lua_State *L, int idx);
@@ -191,9 +191,9 @@ int  lua_iscfunction(lua_State *L, int idx);
 //C	 LUA_API int			 (lua_isuserdata) (lua_State *L, int idx);
 int  lua_isuserdata(lua_State *L, int idx);
 //C	 LUA_API int			 (lua_type) (lua_State *L, int idx);
-int  lua_type(lua_State *L, int idx);
+int  lua_type(lua_State *L, int idx) nothrow;
 //C	 LUA_API const char	 *(lua_typename) (lua_State *L, int tp);
-char * lua_typename(lua_State *L, int tp);
+char * lua_typename(lua_State *L, int tp) nothrow;
 
 //C	 LUA_API int			(lua_equal) (lua_State *L, int idx1, int idx2);
 bool  lua_equal(lua_State *L, int idx1, int idx2);
@@ -267,7 +267,7 @@ void  lua_getfield(lua_State *L, int idx, const(char)* k);
 //C	 LUA_API void  (lua_rawget) (lua_State *L, int idx);
 void  lua_rawget(lua_State *L, int idx);
 //C	 LUA_API void  (lua_rawgeti) (lua_State *L, int idx, int n);
-void  lua_rawgeti(lua_State *L, int idx, int n);
+void  lua_rawgeti(lua_State *L, int idx, int n) nothrow;
 //C	 LUA_API void  (lua_createtable) (lua_State *L, int narr, int nrec);
 void  lua_createtable(lua_State *L, int narr, int nrec);
 //C	 LUA_API void *(lua_newuserdata) (lua_State *L, size_t sz);
@@ -374,7 +374,7 @@ void  lua_setallocf(lua_State *L, lua_Alloc f, void *ud);
 */
 
 //C	 #define lua_pop(L,n)		lua_settop(L, -(n)-1)
-void lua_pop(lua_State* L, int n) { lua_settop(L, -(n)-1); }
+void lua_pop(lua_State* L, int n) nothrow { lua_settop(L, -(n)-1); }
 
 //C	 #define lua_newtable(L)		lua_createtable(L, 0, 0)
 void lua_newtable(lua_State* L) { lua_createtable(L, 0, 0); }

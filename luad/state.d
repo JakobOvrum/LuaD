@@ -95,7 +95,7 @@ public:
 	}
 	
 	/// The underlying lua_State pointer for interfacing with C.
-	@property lua_State* state()
+	@property lua_State* state() nothrow pure @safe
 	{
 		return L;
 	}
@@ -107,7 +107,7 @@ public:
 	 * Returns:
 	 *	 LuaState for the given lua_State*, or null if a LuaState is not currently attached to the state
 	 */
-	static LuaState fromPointer(lua_State* L)
+	static LuaState fromPointer(lua_State* L) @trusted
 	{
 		lua_getfield(L, LUA_REGISTRYINDEX, "__dstate");
 		auto lua = cast(LuaState)lua_touserdata(L, -1);
@@ -116,20 +116,20 @@ public:
 	}
 	
 	/// Open the standard library.
-	void openLibs()
+	void openLibs() @trusted
 	{
 		luaL_openlibs(L);
 		traceback = _G.get!LuaFunction("debug", "traceback");
 	}
 	
 	/// The global table for this instance.
-	@property LuaTable globals()
+	@property LuaTable globals() nothrow pure @safe
 	{
 		return _G;
 	}
 	
 	/// The _registry table for this instance.
-	@property LuaTable registry()
+	@property LuaTable registry() nothrow pure @safe
 	{
 		return _R;
 	}
@@ -151,7 +151,7 @@ public:
 	lua.setPanicHandler(&panic);
 	 * ----------------------
 	 */
-	void setPanicHandler(void function(LuaState, in char[]) onPanic)
+	void setPanicHandler(void function(LuaState, in char[]) onPanic) @trusted
 	{
 		extern(C) static int panic(lua_State* L)
 		{
@@ -207,7 +207,7 @@ public:
 	 * Returns:
 	 *   Loaded _code as a function.
 	 */
-	LuaFunction loadString(in char[] code)
+	LuaFunction loadString(in char[] code) @trusted
 	{
 		if(luaL_loadstring(L, toStringz(code)) != 0)
 			lua_error(L);
@@ -222,7 +222,7 @@ public:
 	 * Returns:
 	 *   Loaded code as a function.
 	 */
-	LuaFunction loadFile(in char[] path)
+	LuaFunction loadFile(in char[] path) @trusted
 	{
 		if(luaL_loadfile(L, toStringz(path)) != 1)
 			lua_error(L);
@@ -238,7 +238,7 @@ public:
 	 * Returns:
 	 *	 Any _code return values
 	 */
-	LuaObject[] doString(in char[] code, LuaErrorHandler handler = LuaErrorHandler.None)
+	LuaObject[] doString(in char[] code, LuaErrorHandler handler = LuaErrorHandler.None) @trusted
 	{
 		auto top = lua_gettop(L);
 
@@ -257,7 +257,7 @@ public:
 	 * Returns:
 	 *	 Any script return values
 	 */
-	LuaObject[] doFile(in char[] path, LuaErrorHandler handler = LuaErrorHandler.None)
+	LuaObject[] doFile(in char[] path, LuaErrorHandler handler = LuaErrorHandler.None) @trusted
 	{
 		auto top = lua_gettop(L);
 
@@ -273,7 +273,7 @@ public:
 	 * Returns:
 	 *	 The new table
 	 */
-	LuaTable newTable()
+	LuaTable newTable() @trusted
 	{
 		return newTable(0, 0);
 	}
@@ -286,7 +286,7 @@ public:
 	 * Returns:
 	 *	 The new table
 	 */
-	LuaTable newTable(uint narr, uint nrec)
+	LuaTable newTable(uint narr, uint nrec) @trusted
 	{
 		lua_createtable(L, narr, nrec);
 		return popValue!LuaTable(L);
@@ -304,7 +304,7 @@ public:
 	 * Returns:
 	 *	 A Lua reference to value
 	 */
-	T wrap(T = LuaObject, U)(U value) if(is(T : LuaObject) || is(T == LuaDynamic))
+	T wrap(T = LuaObject, U)(U value) @trusted if(is(T : LuaObject) || is(T == LuaDynamic))
 	{
 		pushValue(L, value);
 		return popValue!T(L);
@@ -319,7 +319,7 @@ public:
 	 * Returns:
 	 *    Reference to the registered type in Lua
 	 */
-	LuaObject registerType(T)()
+	LuaObject registerType(T)() @trusted
 	{
 		pushStaticTypeInterface!T(L);
 		return popValue!LuaObject(L);

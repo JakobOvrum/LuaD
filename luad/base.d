@@ -66,7 +66,7 @@ struct LuaObject
 		r = luaL_ref(L, LUA_REGISTRYINDEX);
 	}
 	
-	void push()
+	void push() nothrow
 	{
 		lua_rawgeti(L, LUA_REGISTRYINDEX, r);
 	}
@@ -81,19 +81,19 @@ struct LuaObject
 	}
 	
 	public:
-	this(this)
+	@trusted this(this)
 	{
 		push();
 		r = luaL_ref(L, LUA_REGISTRYINDEX);
 	}
 	
-	~this()
+	@trusted nothrow ~this()
 	{
 		luaL_unref(L, LUA_REGISTRYINDEX, r);
 	}
 
 	/// The underlying lua_State pointer for interfacing with C.
-	lua_State* state() @property
+	lua_State* state() pure nothrow @safe @property
 	{
 		return L;
 	}
@@ -105,7 +105,7 @@ struct LuaObject
 	 * This is only required when you want to _release the reference before the lifetime
 	 * of this LuaObject has ended.
 	 */
-	void release()
+	void release() pure nothrow @safe
 	{
 		r = LUA_REFNIL;
 		L = null;
@@ -116,26 +116,28 @@ struct LuaObject
 	 * See_Also:
 	 *	 LuaType
 	 */
-	@property LuaType type()
+	@property LuaType type() @trusted nothrow
 	{
 		push();
-		scope(success) lua_pop(state, 1);
-		return cast(LuaType)lua_type(state, -1);
+		auto result = cast(LuaType)lua_type(state, -1);
+		lua_pop(state, 1);
+		return result;
 	}
 	
 	/**
 	 * Type name of referenced object.
 	 */
-	@property string typeName()
+	@property string typeName() @trusted /+ nothrow +/
 	{
 		push();
-		scope(success) lua_pop(state, 1);
-		const(char)* name = luaL_typename(state, -1);
-		return name[0.. strlen(name)].idup;
+		const(char)* cname = luaL_typename(state, -1);
+		auto name = cname[0.. strlen(cname)].idup;
+		lua_pop(state, 1);
+		return name;
 	}
 	
 	/// Boolean whether or not the referenced object is nil.
-	@property bool isNil()
+	@property bool isNil() pure nothrow @safe
 	{
 		return r == LUA_REFNIL;
 	}
@@ -148,14 +150,16 @@ struct LuaObject
 	 * Returns:
 	 * String representation of referenced object
 	 */
-	string toString()
+	string toString() @trusted
 	{
 		push();
-		scope(success) lua_pop(state, 1);
 		
 		size_t len;
-		const(char)* str = luaL_tolstring(state, -1, &len);
-		return str[0 .. len].idup;
+		const(char)* cstr = luaL_tolstring(state, -1, &len);
+		auto str = cstr[0 .. len].idup;
+
+		lua_pop(state, 1);
+		return str;
 	}
 	
 	/**
@@ -181,7 +185,7 @@ struct LuaObject
 	 * Compare this object to another with Lua's equality semantics.
 	 * Also returns false if the two objects are in different Lua states. 
 	 */
-	bool opEquals(T : LuaObject)(ref T o)
+	bool opEquals(T : LuaObject)(ref T o) @trusted
 	{
 		if(o.state != this.state)
 			return false;

@@ -108,7 +108,7 @@ int  luaL_checkoption(lua_State *L, int narg, const(char)* def, const(char*)* ls
 //C	 LUALIB_API int (luaL_ref) (lua_State *L, int t);
 int  luaL_ref(lua_State *L, int t);
 //C	 LUALIB_API void (luaL_unref) (lua_State *L, int t, int ref);
-void  luaL_unref(lua_State *L, int t, int _ref);
+void  luaL_unref(lua_State *L, int t, int _ref) nothrow;
 
 //C	 LUALIB_API int (luaL_loadfile) (lua_State *L, const char *filename);
 	int  luaL_loadfile(lua_State *L, const(char)* filename);
@@ -155,7 +155,7 @@ long luaL_checklong(lua_State* L, int n) { return cast(long)luaL_checkinteger(L,
 long luaL_optlong(lua_State* L, int n, int d) { return cast(long)luaL_optinteger(L, n, d); }
 
 //C	 #define luaL_typename(L,i)	lua_typename(L, lua_type(L,(i)))
-const(char)* luaL_typename(lua_State* L, int i) { return lua_typename(L, lua_type(L, i)); }
+const(char)* luaL_typename(lua_State* L, int i) nothrow { return lua_typename(L, lua_type(L, i)); }
 
 //C	 #define luaL_dofile(L, fn) 	(luaL_loadfile(L, fn) || lua_pcall(L, 0, LUA_MULTRET, 0))
 int luaL_dofile(lua_State* L, const(char)* fn) { return luaL_loadfile(L, fn) || lua_pcall(L, 0, LUA_MULTRET, 0); }

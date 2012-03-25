@@ -34,7 +34,7 @@ struct LuaTable
 	execute(`echo hello, world!`);
 	 * ----------------------
 	 */
-	T get(T, U...)(U args)
+	T get(T, U...)(U args) @trusted
 	{
 		this.push();
 		
@@ -66,7 +66,7 @@ struct LuaTable
 	 });
 	 --------------------
 	 */
-	bool readString(T)(T key, scope void delegate(in char[] str) dg)
+	bool readString(T)(T key, scope void delegate(in char[] str) dg) @trusted
 	{
 		this.push();
 		scope(exit) lua_pop(this.state, 1);
@@ -106,7 +106,7 @@ struct LuaTable
 	 *	 key = key to _set
 	 *	 value = value of key
 	 */
-	void set(T, U)(T key, U value)
+	void set(T, U)(T key, U value) @trusted
 	{
 		this.push();
 		scope(success) lua_pop(this.state, 1);
@@ -131,7 +131,7 @@ struct LuaTable
 	lua.doString(`assert(string.empty(""))`);
 	 * ----------------------
 	 */
-	void opIndexAssign(T, U...)(T value, U args)
+	void opIndexAssign(T, U...)(T value, U args) @trusted
 	{
 		this.push();
 		scope(success) lua_pop(this.state, 1);
@@ -163,7 +163,7 @@ struct LuaTable
 	 * Returns:
 	 *	 Newly created struct
 	 */
-	T toStruct(T)() if (is(T == struct))
+	T toStruct(T)() @trusted if (is(T == struct))
 	{
 		push();
 		return popValue!T(this.state);
@@ -174,7 +174,7 @@ struct LuaTable
 	 * Params:
 	 *	 s = struct to fill
 	 */
-	void copyTo(T)(ref T s) if (is(T == struct))
+	void copyTo(T)(ref T s) @trusted if (is(T == struct))
 	{
 		push();
 		fillStruct(this.state, -1, s);
@@ -186,7 +186,7 @@ struct LuaTable
 	 * Params:
 	 *	 meta = new metatable
  	 */
-	void setMetaTable(ref LuaTable meta)
+	void setMetaTable(ref LuaTable meta) @trusted
 	in{ assert(this.state == meta.state); }
 	body
 	{
@@ -201,7 +201,7 @@ struct LuaTable
 	 * Returns:
 	 *	 A reference to the metatable for this table. The reference is nil if this table has no metatable.
 	 */
-	LuaTable getMetaTable()
+	LuaTable getMetaTable() @trusted
 	{
 		this.push();
 		scope(success) lua_pop(this.state, 1);
@@ -212,7 +212,7 @@ struct LuaTable
 	/**
 	 * Iterate over the values in this table.
 	 */
-	int opApply(T)(int delegate(ref T value) dg)
+	int opApply(T)(int delegate(ref T value) dg) @trusted
 	{
 		this.push();
 		lua_pushnil(this.state);
@@ -233,7 +233,7 @@ struct LuaTable
 	/**
 	 * Iterate over the key-value pairs in this table.
 	 */
-	int opApply(T, U)(int delegate(ref U key, ref T value) dg)
+	int opApply(T, U)(int delegate(ref U key, ref T value) dg) @trusted
 	{
 		this.push();
 		lua_pushnil(this.state);
