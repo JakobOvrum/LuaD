@@ -86,4 +86,4 @@ A tutorial can be found on the project's Wiki.
 
 License
 ============================================
-LuaD is licensed under the terms of the MIT license (see the [LICENSE file](http://github.com/JakobOvrum/LuaD/blob/master//LICENSE) for details).
+LuaD is licensed under the terms of the MIT license (see the [LICENSE file](http://github.com/JakobOvrum/LuaD/blob/master//LICENSE.txt) for details).
