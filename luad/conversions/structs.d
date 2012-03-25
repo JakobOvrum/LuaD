@@ -118,4 +118,21 @@ unittest
 	assert(s.s == "hello");
 	
 	lua_pop(L, 1);
+
+	struct S2
+	{
+		string a, b;
+	}
+
+	unittest_lua(L, `
+		incompleteStruct = {a = "foo"}
+	`);
+
+	lua_getglobal(L, "incompleteStruct");
+	S2 s2 = getStruct!S2(L, -1);
+
+	assert(s2.a == "foo");
+	assert(s2.b == null);
+
+	lua_pop(L, 1);
 }
