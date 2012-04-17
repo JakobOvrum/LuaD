@@ -92,6 +92,31 @@ struct LuaFunction
 		lua_setfenv(this.state, -2);
 		lua_pop(this.state, 1);
 	}
+
+	/**
+	 * Dump this function as a binary chunk of Lua bytecode to the specified
+	 * writer delegate.  Multiple chunks may be produced to dump a single
+	 * function.
+	 *
+	 * Params:
+	 *    writer = delegate to forward writing calls to
+	 *  
+	 *  If the delegate returns false for any of the chunks,
+	 *  the dump process ends, and the writer won't be called again.
+	 */
+	bool dump(bool delegate(const(void)[]) writer)
+	{
+		extern(C) static int luaCWriter(lua_State *L, const void *p, size_t sz, void *ud)
+		{
+			auto writer = *cast(bool delegate(const(void)[]) *) ud;
+			return writer(p[0..sz]) ? 0 : 1;
+		}
+
+		this.push();
+		auto ret = lua_dump(this.state, &luaCWriter, &writer);
+		lua_pop(this.state, 1);
+		return ret == 0;
+	}
 }
 
 version(unittest)
