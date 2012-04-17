@@ -99,7 +99,7 @@ struct LuaFunction
 	 * function.
 	 *
 	 * Params:
-	 *    writer = delegate to foward writing calls to
+	 *    writer = delegate to forward writing calls to
 	 *  
 	 *  If the delegate returns false for any of the chunks,
 	 *  the dump process ends, and the writer won't be called again.
@@ -109,7 +109,7 @@ struct LuaFunction
 		extern(C) static int luaCWriter(lua_State *L, const void *p, size_t sz, void *ud)
 		{
 			auto writer = *cast(bool delegate(const(void)[]) *) ud;
-			return writer(cast(void[])p[0..sz]) ? 0 : 1;
+			return writer(p[0..sz]) ? 0 : 1;
 		}
 
 		this.push();
