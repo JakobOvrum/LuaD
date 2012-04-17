@@ -26,14 +26,19 @@ else
 	DFLAGS += -debug -gc
 endif
 
-all: bin/hello bin/phonebook
+all: bin/hello bin/phonebook dump/dump
 
 clean:
 	rm -f bin/hello bin/hello.o
 	rm -f bin/phonebook bin/phonebook.o
+	rm -f dump/dump dump/dump.o
 
 bin/hello: hello/hello.d
 	dmd $(DFLAGS) -of$@ hello/hello.d
 
 bin/phonebook: phonebook/phonebook.d
 	dmd $(DFLAGS) -of$@ phonebook/phonebook.d 
+
+dump/dump: dump/dump.d
+	dmd $(DFLAGS) -of$@ dump/dump.d
+
