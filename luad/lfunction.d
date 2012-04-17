@@ -104,7 +104,7 @@ struct LuaFunction
 	 *  If the delegate returns false for any of the chunks,
 	 *  the dump process ends, and the writer won't be called again.
 	 */
-	void dump(bool delegate(const(void)[]) writer)
+	bool dump(bool delegate(const(void)[]) writer)
 	{
 		extern(C) static int luaCWriter(lua_State *L, const void *p, size_t sz, void *ud)
 		{
@@ -113,7 +113,7 @@ struct LuaFunction
 		}
 
 		this.push();
-		lua_dump(this.state, &luaCWriter, cast(void*) &writer);
+		return lua_dump(this.state, &luaCWriter, cast(void*) &writer) == 0;
 	}
 }
 
