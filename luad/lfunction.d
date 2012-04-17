@@ -6,8 +6,6 @@ import luad.stack;
 
 import luad.c.all;
 
-alias bool delegate(void[]) LuaWriter;
-
 /// Represents a Lua function.
 struct LuaFunction
 {
@@ -83,7 +81,7 @@ struct LuaFunction
 	 * auto env = lua.wrap(["foo": "test"]);
 	 * func.setEnvironment(env);
 	 * assert(func.call!string() == "test");
-	 * --------)----------
+	 * -------------------
 	 */
 	void setEnvironment(ref LuaTable env)
 	in { assert(this.state == env.state); }
@@ -95,31 +93,28 @@ struct LuaFunction
 		lua_pop(this.state, 1);
 	}
 
-    /**
-     * Dump this function as a binary chunk of Lua bytecode to the nominated
-     * writer delegate
-     *
-     * Params:
-     *    writer = delegate to foward writing calls to
-     */
-    void dump( LuaWriter writer )
-    {
-        //can't seem to pass through a point to the LuaWriter itself, 
-        //so supplying a Holder struct 
-        struct Holder { LuaWriter writer; }
-        Holder holder;
-        holder.writer = writer;
+	/**
+	 * Dump this function as a binary chunk of Lua bytecode to the specified
+	 * writer delegate.  Multiple chunks may be produced to dump a single
+	 * function.
+	 *
+	 * Params:
+	 *    writer = delegate to foward writing calls to
+	 *  
+	 *  If the delegate returns false for any of the chunks,
+	 *  the dump process ends, and the writer won't be called again.
+	 */
+	void dump(bool delegate(const(void)[]) writer)
+	{
+		extern(C) static int luaCWriter(lua_State *L, const void *p, size_t sz, void *ud)
+		{
+			auto writer = *cast(bool delegate(const(void)[]) *) ud;
+			return writer(cast(void[])p[0..sz]) ? 0 : 1;
+		}
 
-        extern(C) static int luaCWriter(lua_State *L, void *p, size_t sz, void *ud)
-        {
-            //ud is always a struct Holder
-            auto h = cast(Holder *) ud;
-            return h.writer(cast(void[])p[0..sz]) ? 0 : 1;
-        }
-
-        this.push();
-        lua_dump(this.state, &luaCWriter, cast(void*) &holder);
-    }
+		this.push();
+		lua_dump(this.state, &luaCWriter, cast(void*) &writer);
+	}
 }
 
 version(unittest)
@@ -177,12 +172,6 @@ unittest
 	assert(arrayRet[0] == "Foo");
 	assert(arrayRet[1] == "Bar");
 	
-//    unittest_lua(L, `function testDump() return "ok" end` );
-//	lua_getglobal(L, "testDump");
-//	auto testDump = popValue!LuaFunction(L);
-//    string[1] dumpRet = testDump.call!(string[1])();
-//    assert(dumpRet[0] == "ok");
-
 	// setEnvironment
 	pushValue(L, ["test": [42]]);
 	auto env = popValue!LuaTable(L);
@@ -192,5 +181,4 @@ unittest
 	
 	multRet.setEnvironment(env);
 	assert(multRet.call!int() == 42);
-
 }

@@ -81,7 +81,7 @@ alias int function(lua_State *L) lua_CFunction;
 alias char * function(lua_State *L, void *ud, size_t *sz)lua_Reader;
 
 //C	 typedef int (*lua_Writer) (lua_State *L, const void* p, size_t sz, void* ud);
-alias int  function(lua_State *L, void *p, size_t sz, void *ud)lua_Writer;
+alias int  function(lua_State *L, const void *p, size_t sz, void *ud)lua_Writer;
 
 
 /*
