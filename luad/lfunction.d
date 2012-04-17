@@ -113,7 +113,9 @@ struct LuaFunction
 		}
 
 		this.push();
-		return lua_dump(this.state, &luaCWriter, cast(void*) &writer) == 0;
+		auto ret = lua_dump(this.state, &luaCWriter, &writer);
+		lua_pop(this.state, 1);
+		return ret == 0;
 	}
 }
 
