@@ -104,11 +104,13 @@ struct LuaFunction
 	 *  If the delegate returns false for any of the chunks,
 	 *  the dump process ends, and the writer won't be called again.
 	 */
-	bool dump(bool delegate(const(void)[]) writer)
+	bool dump(scope bool delegate(in void[]) writer)
 	{
-		extern(C) static int luaCWriter(lua_State *L, const void *p, size_t sz, void *ud)
+		alias typeof(writer) LuaWriter;
+
+		extern(C) static int luaCWriter(lua_State* L, const void* p, size_t sz, void* ud)
 		{
-			auto writer = *cast(bool delegate(const(void)[]) *) ud;
+			auto writer = *cast(LuaWriter*)ud;
 			return writer(p[0..sz]) ? 0 : 1;
 		}
 
