@@ -60,10 +60,8 @@ struct LuaTable
 	 *    true if the value for key was a string and passed to dg, false otherwise
 	 * Examples:
 	 --------------------
-	 t[2] = "two";
-	 t.readString(2, (in char[] str) {
-		assert(str == "two");
-	 });
+	t[2] = "two";
+	t.readString(2, str => assert(str == "two"));
 	 --------------------
 	 */
 	bool readString(T)(T key, scope void delegate(in char[] str) dg) @trusted
