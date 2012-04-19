@@ -1,6 +1,6 @@
 <DProject>
  <ProjectGuid>{398E951F-4212-4D4B-9545-F76AC1D8EEC9}</ProjectGuid>
- <Config name="Debug">
+ <Config name="Debug" platform="Win32">
   <obj>0</obj>
   <link>0</link>
   <lib>0</lib>
@@ -35,11 +35,14 @@
   <preservePaths>0</preservePaths>
   <warnings>0</warnings>
   <infowarnings>0</infowarnings>
+  <checkProperty>0</checkProperty>
+  <genStackFrame>0</genStackFrame>
   <pic>0</pic>
   <cov>0</cov>
   <nofloat>0</nofloat>
   <Dversion>2</Dversion>
   <ignoreUnsupportedPragmas>0</ignoreUnsupportedPragmas>
+  <compiler>0</compiler>
   <otherDMD>0</otherDMD>
   <program>$(DMDInstallDir)windows\bin\dmd.exe</program>
   <imppath>..\..\</imppath>
@@ -78,7 +81,7 @@
   <libpaths />
   <deffile />
   <resfile />
-  <exefile>$(OutDir)\phonebook.exe</exefile>
+  <exefile>$(OutDir)\$(ProjectName).exe</exefile>
   <additionalOptions />
   <preBuildCommand />
   <postBuildCommand />
@@ -88,9 +91,11 @@
   <debugattach>0</debugattach>
   <debugremote />
   <debugEngine>0</debugEngine>
+  <debugStdOutToOutputWindow>0</debugStdOutToOutputWindow>
+  <pauseAfterRunning>0</pauseAfterRunning>
   <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep;</filesToClean>
  </Config>
- <Config name="Release">
+ <Config name="Release" platform="Win32">
   <obj>0</obj>
   <link>0</link>
   <lib>0</lib>
@@ -125,11 +130,14 @@
   <preservePaths>0</preservePaths>
   <warnings>0</warnings>
   <infowarnings>0</infowarnings>
+  <checkProperty>0</checkProperty>
+  <genStackFrame>0</genStackFrame>
   <pic>0</pic>
   <cov>0</cov>
   <nofloat>0</nofloat>
   <Dversion>2</Dversion>
   <ignoreUnsupportedPragmas>0</ignoreUnsupportedPragmas>
+  <compiler>0</compiler>
   <otherDMD>0</otherDMD>
   <program>$(DMDInstallDir)windows\bin\dmd.exe</program>
   <imppath>..\..\</imppath>
@@ -168,7 +176,7 @@
   <libpaths />
   <deffile />
   <resfile />
-  <exefile>$(OutDir)\hello.exe</exefile>
+  <exefile>$(OutDir)\$(ProjectName).exe</exefile>
   <additionalOptions />
   <preBuildCommand />
   <postBuildCommand />
@@ -178,6 +186,8 @@
   <debugattach>0</debugattach>
   <debugremote />
   <debugEngine>0</debugEngine>
+  <debugStdOutToOutputWindow>0</debugStdOutToOutputWindow>
+  <pauseAfterRunning>0</pauseAfterRunning>
   <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep;*.lua</filesToClean>
  </Config>
  <Folder name="phonebook">

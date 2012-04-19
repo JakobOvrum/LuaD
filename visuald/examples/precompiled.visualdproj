@@ -1,5 +1,5 @@
 <DProject>
- <ProjectGuid>{E094FB21-6C60-418A-9D9F-329A6680AA62}</ProjectGuid>
+ <ProjectGuid>{C9061568-1441-4D8C-8011-6EBCCC2B64D4}</ProjectGuid>
  <Config name="Debug" platform="Win32">
   <obj>0</obj>
   <link>0</link>
@@ -87,13 +87,13 @@
   <postBuildCommand />
   <debugtarget>$(TARGETPATH)</debugtarget>
   <debugarguments />
-  <debugworkingdir />
+  <debugworkingdir>$(OutDir)</debugworkingdir>
   <debugattach>0</debugattach>
   <debugremote />
   <debugEngine>0</debugEngine>
   <debugStdOutToOutputWindow>0</debugStdOutToOutputWindow>
   <pauseAfterRunning>0</pauseAfterRunning>
-  <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep</filesToClean>
+  <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep;</filesToClean>
  </Config>
  <Config name="Release" platform="Win32">
   <obj>0</obj>
@@ -176,7 +176,7 @@
   <libpaths />
   <deffile />
   <resfile />
-  <exefile>$(OutDir)\hello.exe</exefile>
+  <exefile>$(OutDir)\$(ProjectName).exe</exefile>
   <additionalOptions />
   <preBuildCommand />
   <postBuildCommand />
@@ -188,9 +188,9 @@
   <debugEngine>0</debugEngine>
   <debugStdOutToOutputWindow>0</debugStdOutToOutputWindow>
   <pauseAfterRunning>0</pauseAfterRunning>
-  <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep</filesToClean>
+  <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep;*.lua</filesToClean>
  </Config>
- <Folder name="hello">
-  <File path="..\..\example\hello\hello.d" />
+ <Folder name="precompiled">
+  <File path="..\..\example\precompiled\precompiled.d" />
  </Folder>
 </DProject>
