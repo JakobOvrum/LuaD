@@ -32,10 +32,6 @@ Current progress noted in parentheses:
  * Provide access to the entire underlying Lua C API (_Yes_)
  * Support Lua 5.2 (_Not yet_)
 
-Support for D1 *might* be added later, once the codebase is more stable.
-A hypothetical D1 version would lack some of LuaD's current features, like automatic class conversions.
-Support for Tango would be in a D1 version. Also, if Tango is ported to D2, LuaD will support it.
-
 Directory Structure
 ============================================
 
@@ -55,7 +51,7 @@ The `example` directory is a work-in-progress collection of examples, it's a bit
 
 Makefiles as well as VisualD project files are included for both the library and the examples.
 
-If you find any bugs, please report them to the Github issue tracker.
+*Please report bugs and issues to the [Github issue tracker](https://github.com/JakobOvrum/LuaD/issues). Thanks!*
 
 Build with Make
 ============================================
