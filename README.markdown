@@ -51,7 +51,7 @@ The `example` directory is a work-in-progress collection of examples, it's a bit
 
 Makefiles as well as VisualD project files are included for both the library and the examples.
 
-*Please report bugs and issues to the [Github issue tracker](https://github.com/JakobOvrum/LuaD/issues). Thanks!*
+**Please report bugs and issues to the [Github issue tracker](https://github.com/JakobOvrum/LuaD/issues). Thanks!**
 
 Build with Make
 ============================================
