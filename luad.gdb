@@ -32,6 +32,8 @@ define hook-stop
 
         echo \n:::::::::: THREAD BACKTRACES ::::::::::\n
         thread apply all backtrace full
+
+        quit 1
     end
 
     quit
