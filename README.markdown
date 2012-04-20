@@ -84,6 +84,13 @@ You can find automatically generated documentation on the [gh-pages branch](http
 --------------------------------------------
 A tutorial can be found on the project's Wiki.
 
+64 bit Auto-Tester
+============================================
+An auto-tester running 64-bit Linux can be found at:
+
+http://ci.lycus.org/view/LuaD/
+
+
 License
 ============================================
 LuaD is licensed under the terms of the MIT license (see the [LICENSE file](http://github.com/JakobOvrum/LuaD/blob/master//LICENSE.txt) for details).
