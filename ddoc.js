@@ -77,8 +77,6 @@ var populateModuleList = function(modlist) {
 	treeNodes.children('a').click(function() {
 		$(this).parent().children('ul').toggle();
 	});
-	
-	treeNodes.children('ul').hide();
 };
 
 var populateSymbolList = function(symbols) {
