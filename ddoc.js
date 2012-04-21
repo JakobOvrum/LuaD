@@ -82,7 +82,13 @@ var populateModuleList = function(modlist) {
 };
 
 var populateSymbolList = function(symbols) {
+	if(symbols.length == 0) { // Do not show the symbol list header on pages with no symbols.
+		return;
+	}
+	
 	var symbolHeader = $('#symbol-list');
+	
+	symbolHeader.removeClass('hidden');
 	
 	var prev = symbolHeader;
 	for(var i = 0; i < symbols.length; i++) {
@@ -117,7 +123,12 @@ var gatherSymbols = function() {
 };
 
 var setupGotoSymbolForm = function(symbols) {
+	if(symbols.length == 0) { // Do not show the goto-symbol form on pages with no symbols.
+		return;
+	}
+	
 	var form = $('#gotosymbol');
+	
 	var input = form.find('input');
 	
 	form.submit(function(event) {
@@ -130,6 +141,8 @@ var setupGotoSymbolForm = function(symbols) {
 	input.typeahead({
 		'source': symbols
 	});
+	
+	form.removeClass('hidden');
 };
 
 $(document).ready(function() {
