@@ -74,27 +74,27 @@
 
   <body>
 	<div class="navbar navbar-fixed-top">
-	  <div class="navbar-inner">
-		<div class="container-fluid">
-		  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-		  </a>
-		  <a class="brand" href="index.html">LuaD</a>
-		  <div class="nav-collapse">
-			<ul class="nav">
-			  <li class="active"><a href="index.html">Reference</a></li>
-			  <li><p class="navbar-text">View source on <a href="http://github.com/JakobOvrum/LuaD">Github</a></p></li>
-			</ul>
-
-			<form id="gotosymbol" class="navbar-search pull-left">
-				<input type="text" class="search-query" placeholder="Goto symbol in luad.state" data-provide="typeahead" data-items="4">
-			</form>
-
-		  </div><!--/.nav-collapse -->
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="index.html">LuaD</a>
+				<div class="nav-collapse">
+					<ul class="nav">
+						<li class="active"><a href="index.html">Reference</a></li>
+					</ul>
+					
+					<form id="gotosymbol" class="navbar-search pull-left hidden">
+						<input type="text" class="search-query" placeholder="Goto symbol in luad.state" data-provide="typeahead" data-items="4">
+					</form>
+					
+					<p class="navbar-text pull-right">View source on <a href="http://github.com/JakobOvrum/LuaD">Github</a></p>
+				</div><!--/.nav-collapse -->
+			</div>
 		</div>
-	  </div>
 	</div>
 
 	<div class="container-fluid">
@@ -103,7 +103,7 @@
 		  <div class="well sidebar-nav">
 			<ul class="nav nav-list">
 			  <li id="module-list" class="nav-header">Modules<li>
-			  <li id="symbol-list" class="nav-header">luad.state</li>
+			  <li id="symbol-list" class="nav-header hidden">luad.state</li>
 			</ul>
 		  </div><!--/.well -->
 		</div><!--/span-->
