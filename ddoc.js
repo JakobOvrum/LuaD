@@ -84,10 +84,12 @@ var populateModuleList = function(modlist) {
 var populateSymbolList = function(symbols) {
 	var symbolHeader = $('#symbol-list');
 	
+	var prev = symbolHeader;
 	for(var i = 0; i < symbols.length; i++) {
 		var symbol = symbols[i];
-		var elem = '<li><a href="#' + symbol + '">' + symbol + '</a></li>';
-		$(elem).insertAfter(symbolHeader);
+		var elem = $('<li><a href="#' + symbol + '">' + symbol + '</a></li>');
+		elem.insertAfter(prev);
+		prev = elem;
 	}
 };
 

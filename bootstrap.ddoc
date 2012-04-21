@@ -138,9 +138,7 @@ DDOC = <!DOCTYPE html>
   </body>
 </html>
 
-
-
-DDOC_DECL = <hr><div class="row-fluid"><h2>$0</h2></div>
+DDOC_DECL = <hr><div class="row-fluid"><h3>$0</h3></div>
 
 DDOC_SUMMARY = <div class="summary">$0</div>
 
@@ -160,18 +158,23 @@ DDOC_STANDARDS  = $(STDSECTION Standards, $0)
 DDOC_THROWS     = $(STDSECTION Throws, $0)
 DDOC_VERSION    = $(STDSECTION Version, $0)
 
+OFFSETMEMBERS = <div class="offset1">$0</div>
+DDOC_STRUCT_MEMBERS= $(OFFSETMEMBERS $0)
+DDOC_CLASS_MEMBERS= $(OFFSETMEMBERS $0)
+DDOC_TEMPLATE_MEMBERS= $(OFFSETMEMBERS $0)
+DDOC_ENUM_MEMBERS= $(OFFSETMEMBERS $0)
 
 DDOC_DECL_DD = <div class="decldd">$0</div>
 
 DDOC_PARAMS = $(SECTION Parameters, <table class="table table-condensed table-bordered">$0</table>)
 DDOC_PARAM_ROW	= <tr>$0</tr>
-DDOC_PARAM_ID	= <td>$0</td>
+DDOC_PARAM_ID	= <td class="span2">$0</td>
 DDOC_PARAM_DESC = <td>$0</td>
 
 
 DDOC_KEYWORD = $(BLUE $0)
 
-D_STRING = <span style="color:orange;">$0</span>
+D_STRING = <span style="color:red;">$0</span>
 D_PARAM = $(B $0)
 D_COMMENT = <span style="color:gray;">$0</span>
 
