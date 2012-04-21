@@ -142,7 +142,7 @@ See <a href="stack.html">luad.stack</a> for the full list of possible type conve
 	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
 	lua.openLibs();
 
-	lua.doString(<span style="color:orange;">`print("Hello, world!")`</span>);
+	lua.doString(<span style="color:red;">`print("Hello, world!")`</span>);
 }
 </pre>
 Another "Hello, world"
@@ -155,8 +155,8 @@ Another "Hello, world"
 
 	<span style="color:gray;">//LuaState also works as an alias for the global table
 </span>
-	<font color=blue>auto</font> print = lua.get!LuaFunction(<span style="color:orange;">"print"</span>);
-	print(<span style="color:orange;">"Hello, world!"</span>);
+	<font color=blue>auto</font> print = lua.get!LuaFunction(<span style="color:red;">"print"</span>);
+	print(<span style="color:red;">"Hello, world!"</span>);
 }
 </pre>
 Simple function example
@@ -173,8 +173,8 @@ Simple function example
 <font color=blue>void</font> main()
 {
     <font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
-    lua[<span style="color:orange;">"printTimes"</span>] = &amp;printTimes;
-    lua.doString(<span style="color:orange;">`
+    lua[<span style="color:red;">"printTimes"</span>] = &amp;printTimes;
+    lua.doString(<span style="color:red;">`
         printTimes(3, "hello, world!")
     `</span>);
 }
@@ -188,7 +188,7 @@ Configuration file
 	<font color=blue>double</font> Version;
 }
 
-string configFile = <span style="color:orange;">`
+string configFile = <span style="color:red;">`
 Name = "foo"
 Version = 1.23
 `</span>;
@@ -200,7 +200,7 @@ Version = 1.23
 	lua.doString(configFile);
 	<font color=blue>auto</font> config = lua.globals.toStruct!Config();
 
-	<font color=blue>assert</font>(config.Name == <span style="color:orange;">"foo"</span>);
+	<font color=blue>assert</font>(config.Name == <span style="color:red;">"foo"</span>);
 	<font color=blue>assert</font>(config.Version == 1.23);
 }
 </pre>
@@ -242,6 +242,4 @@ Version = 1.23
 	
   </body>
 </html>
-
-
 
