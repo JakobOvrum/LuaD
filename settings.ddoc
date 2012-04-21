@@ -1,0 +1,12 @@
+PROJECTNAME = LuaD
+INDEX = index.html
+LINKPREFIX = .
+REPOSRCDIR = http://github.com/JakobOvrum/LuaD
+REPOSRCTEXT = View source on <a href="$(REPOSRCDIR)">Github</a>
+ROOT = ./
+LOGOSRC = ../logo.png
+LOGOALT = $(PROJECTNAME)
+LOGOLINK = $(INDEX)
+FAVICON = ../favicon.png
+COPYRIGHT = Jakob Ovrum
+STARTYEAR = 2010
