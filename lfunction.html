@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+	<head>
 	<meta charset="utf-8">
 	<title>luad.lfunction - LuaD documentation</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,20 +10,20 @@
 	<!-- styles -->
 	<link href="assets/css/bootstrap.css" rel="stylesheet">
 	<style type="text/css">
-	  body {
+		body {
 		padding-top: 60px;
 		padding-bottom: 40px;
-	  }
-	  .sidebar-nav {
+		}
+		.sidebar-nav {
 		padding: 9px 0;
-	  }
+		}
 	</style>
 	<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="ddoc.css" rel="stylesheet">
 
 	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
-	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 
 	<!-- fav and touch icons -->
@@ -70,9 +70,9 @@
 
 		];
 	</script>
-  </head>
+	</head>
 
-  <body>
+	<body>
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container-fluid">
@@ -98,14 +98,14 @@
 	</div>
 
 	<div class="container-fluid">
-	  <div class="row-fluid">
+		<div class="row-fluid">
 		<div class="span2">
-		  <div class="well sidebar-nav">
+			<div class="well sidebar-nav">
 			<ul class="nav nav-list">
-			  <li id="module-list" class="nav-header">Modules<li>
-			  <li id="symbol-list" class="nav-header hidden">luad.lfunction</li>
+				<li id="module-list" class="nav-header">Modules<li>
+				<li id="symbol-list" class="nav-header hidden">luad.lfunction</li>
 			</ul>
-		  </div><!--/.well -->
+			</div><!--/.well -->
 		</div><!--/span-->
 		
 		<div class="span10">
@@ -126,6 +126,110 @@
 
 
 <div class="offset1"><hr><div class="row-fluid"><h3>LuaObject <a class="psymbol anchor" name="object" href="#object">object</a>;
+</h3></div>
+
+<div class="decldd"><div class="summary">LuaFunction sub-types LuaObject through this reference.</div>
+
+
+</div>
+
+<hr><div class="row-fluid"><h3>LuaObject[] <a class="psymbol anchor" name="opCall" href="#opCall">opCall</a>(U...)(U <i>args</i>);
+</h3></div>
+
+<div class="decldd"><div class="summary">Same as call!(LuaObject[])(args);
+</div>
+
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span style="color:red;">`function f(...) return ... end`</span>);
+	<font color=blue>auto</font> f = lua.get!LuaFunction(<span style="color:red;">"f"</span>);
+
+	LuaObject[] ret = f(1.2, <span style="color:red;">"hello!"</span>, <font color=blue>true</font>);
+
+	<font color=blue>assert</font>(ret[0].to!<font color=blue>double</font>() == 1.2);
+	<font color=blue>assert</font>(ret[1].to!string() == <span style="color:red;">"hello!"</span>);
+	<font color=blue>assert</font>(ret[2].to!<font color=blue>bool</font>());
+</pre>
+</div>
+
+</div>
+
+<hr><div class="row-fluid"><h3>T <a class="psymbol anchor" name="call" href="#call">call</a>(T = void, U...)(U <i>args</i>);
+</h3></div>
+
+<div class="decldd"><div class="summary">Call this function.
+</div>
+
+<h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
+<td>expected return type.</td>
+
+</tr>
+<tr><td class="span2">args</td>
+<td>list of arguments.</td>
+
+</tr>
+</table></div>
+<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Return value of type T, or nothing if T was unspecified.
+   For multiple return values, use a Tuple (from std.typecons).
+	 Additionally, a value of LuaObject[] for T will result
+	 all return values being collected and returned in a LuaObject[].
+</div>
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span style="color:red;">`function ask(question) return 42 end`</span>);
+	<font color=blue>auto</font> ask = lua.get!LuaFunction(<span style="color:red;">"ask"</span>);
+
+	<font color=blue>auto</font> answer = ask.<u>call</u>!<font color=blue>int</font>(<span style="color:red;">"What's the answer to life, the universe and everything?"</span>);
+	<font color=blue>assert</font>(answer == 42);
+</pre>
+</div>
+
+</div>
+
+<hr><div class="row-fluid"><h3>void <a class="psymbol anchor" name="setEnvironment" href="#setEnvironment">setEnvironment</a>(ref LuaTable <i>env</i>);
+</h3></div>
+
+<div class="decldd"><div class="summary">Set a new environment for this function.
+</div>
+
+<div class="description">The environment of a function is the table used for looking up non-local (global) variables.
+</div>
+<h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">LuaTable <i>env</i></td>
+<td>new environment</td>
+
+</tr>
+</table></div>
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code"> lua[<span style="color:red;">"foo"</span>] = <span style="color:red;">"bar"</span>;
+ <font color=blue>auto</font> func = lua.loadString(<span style="color:red;">`return foo`</span>);
+ <font color=blue>assert</font>(func.call!string() == <span style="color:red;">"bar"</span>);
+
+ <font color=blue>auto</font> <b>env</b> = lua.wrap([<span style="color:red;">"foo"</span>: <span style="color:red;">"test"</span>]);
+ func.<u>setEnvironment</u>(<b>env</b>);
+ <font color=blue>assert</font>(func.call!string() == <span style="color:red;">"test"</span>);
+</pre>
+</div>
+
+</div>
+
+<hr><div class="row-fluid"><h3>bool <a class="psymbol anchor" name="dump" href="#dump">dump</a>(scope bool delegate(const(void[])) <i>writer</i>);
+</h3></div>
+
+<div class="decldd"><div class="summary">Dump this function as a binary chunk of Lua bytecode to the specified
+ <i>writer</i> delegate.  Multiple chunks may be produced to <a class="psymbol anchor" name="dump" href="#dump">dump</a> a single
+ function.
+</div>
+
+<h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">bool delegate(const(void[])) <i>writer</i></td>
+<td>delegate to forward writing calls to
+<br><br>
+
+  If the delegate returns <font color=blue>false</font>
+ for any of the chunks,
+  the <a class="psymbol anchor" name="dump" href="#dump">dump</a> process ends, and the <i>writer</i> won't be called again.</td>
+
+</tr>
+</table></div>
+
+</div>
+
+</div>
+DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObject <a class="psymbol anchor" name="object" href="#object">object</a>;
 </h3></div>
 
 <div class="decldd"><div class="summary">LuaFunction sub-types LuaObject through this reference.</div>
@@ -266,6 +370,6 @@
 	================================================== -->
 	<script src="ddoc.js"></script>
 	
-  </body>
+	</body>
 </html>
 

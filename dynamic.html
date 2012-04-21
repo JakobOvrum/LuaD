@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+	<head>
 	<meta charset="utf-8">
 	<title>luad.dynamic - LuaD documentation</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,20 +10,20 @@
 	<!-- styles -->
 	<link href="assets/css/bootstrap.css" rel="stylesheet">
 	<style type="text/css">
-	  body {
+		body {
 		padding-top: 60px;
 		padding-bottom: 40px;
-	  }
-	  .sidebar-nav {
+		}
+		.sidebar-nav {
 		padding: 9px 0;
-	  }
+		}
 	</style>
 	<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="ddoc.css" rel="stylesheet">
 
 	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
-	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 
 	<!-- fav and touch icons -->
@@ -70,9 +70,9 @@
 
 		];
 	</script>
-  </head>
+	</head>
 
-  <body>
+	<body>
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container-fluid">
@@ -98,14 +98,14 @@
 	</div>
 
 	<div class="container-fluid">
-	  <div class="row-fluid">
+		<div class="row-fluid">
 		<div class="span2">
-		  <div class="well sidebar-nav">
+			<div class="well sidebar-nav">
 			<ul class="nav nav-list">
-			  <li id="module-list" class="nav-header">Modules<li>
-			  <li id="symbol-list" class="nav-header hidden">luad.dynamic</li>
+				<li id="module-list" class="nav-header">Modules<li>
+				<li id="symbol-list" class="nav-header hidden">luad.dynamic</li>
 			</ul>
-		  </div><!--/.well -->
+			</div><!--/.well -->
 		</div><!--/span-->
 		
 		<div class="span10">
@@ -127,6 +127,93 @@
 
 
 <div class="offset1"><hr><div class="row-fluid"><h3>LuaObject <a class="psymbol anchor" name="object" href="#object">object</a>;
+</h3></div>
+
+<div class="decldd"><div class="summary">Underlying Lua reference.
+ LuaDynamic does not sub-type LuaObject - qualify access to this reference explicitly.</div>
+
+
+</div>
+
+<hr><div class="row-fluid"><h3>LuaDynamic[] <a class="psymbol anchor" name="opDispatch" href="#opDispatch">opDispatch</a>(string name, string file = __FILE__, uint line = __LINE__, Args...)(Args <i>args</i>);
+</h3></div>
+
+<div class="decldd"><div class="summary">Perform a Lua method call on this object.
+</div>
+
+<div class="description">Performs a call similar to calling functions in Lua with the colon operator.
+ The name string is looked up in this object and the result is called. This object is prepended
+ to the arguments args.
+</div>
+<h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">name</td>
+<td>name of method</td>
+
+</tr>
+<tr><td class="span2">args</td>
+<td>additional arguments</td>
+
+</tr>
+</table></div>
+<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; All return values
+</div>
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code"> <font color=blue>auto</font> luaString = lua.wrap!LuaDynamic(<span style="color:red;">"test"</span>);
+ <font color=blue>auto</font> results = luaString.gsub(<span style="color:red;">"t"</span>, <span style="color:red;">"f"</span>); <span style="color:gray;">// opDispatch
+</span>
+ <font color=blue>assert</font>(results[0] == <span style="color:red;">"fesf"</span>);
+ <font color=blue>assert</font>(results[1] == 2); <span style="color:gray;">// two instances of 't' replaced
+</span>
+</pre>
+</div>
+<b>Note:</b><br>
+To call a member named "object", instantiate this function template explicitly.<br><br>
+
+</div>
+
+<hr><div class="row-fluid"><h3>LuaDynamic[] <a class="psymbol anchor" name="opCall" href="#opCall">opCall</a>(Args...)(Args <i>args</i>);
+</h3></div>
+
+<div class="decldd"><div class="summary">Call this object.
+ This object must either be a function, or have a metatable providing the __call metamethod.
+</div>
+
+<h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">args</td>
+<td>arguments for the call</td>
+
+</tr>
+</table></div>
+<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Array of return values, or a <font color=blue>null</font>
+ array if there were no return values</div>
+
+</div>
+
+<hr><div class="row-fluid"><h3>LuaDynamic <a class="psymbol anchor" name="opIndex" href="#opIndex">opIndex</a>(T)(auto ref T <i>key</i>);
+</h3></div>
+
+<div class="decldd"><div class="summary">Index this object.
+ This object must either be a table, or have a metatable providing the __index metamethod.
+</div>
+
+<h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">key</td>
+<td>key to lookup</td>
+
+</tr>
+</table></div>
+
+</div>
+
+<hr><div class="row-fluid"><h3>bool <a class="psymbol anchor" name="opEquals" href="#opEquals">opEquals</a>(T)(auto ref T <i>other</i>);
+</h3></div>
+
+<div class="decldd"><div class="summary">Compare the referenced object to another value with Lua's equality semantics.
+ If the other value is not a Lua reference wrapper, it will go through the
+ regular D to Lua conversion process first.
+ To check for nil, compare against the special constant "nil".</div>
+
+
+</div>
+
+</div>
+DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObject <a class="psymbol anchor" name="object" href="#object">object</a>;
 </h3></div>
 
 <div class="decldd"><div class="summary">Underlying Lua reference.
@@ -250,6 +337,6 @@ To call a member named "object", instantiate this function template explicitly.<
 	================================================== -->
 	<script src="ddoc.js"></script>
 	
-  </body>
+	</body>
 </html>
 
