@@ -34,13 +34,13 @@ var qualifiedModuleNameToUrl = function(modName) {
 
 var treePackageNode = function(name) {
 	return '<li class="module-tree-node dropdown">' +
-	       '<a href="#"><i class="icon-th-list" style="margin-top:4px;"></i> ' + name + '<b class="caret"></b></a>' +
+	       '<a href="#"><i class="icon-th-list"></i> ' + name + '<b class="caret"></b></a>' +
 		   '<ul></ul></li>';
 };
 
 var treeModuleNode = function(name, url) {
 	return '<li>' +
-	       '<a href="' + url + '"><i class="icon-th" style="margin-top:4px;"></i> ' + name + '</a>' +
+	       '<a href="' + url + '"><i class="icon-th"></i> ' + name + '</a>' +
 		   '</li>';
 };
 
@@ -64,7 +64,7 @@ var populateModuleList = function(modlist) {
 				parentList.append(elem);
 				
 				if(member.qualifiedName == Title) {
-					elem.find('a').append(' <i style="margin-top:4px;" class="icon-asterisk"></i>');
+					elem.find('a').append(' <i class="icon-asterisk"></i>');
 				}
 			}
 		}
