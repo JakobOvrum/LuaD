@@ -4,8 +4,9 @@ import std.stdio;
 import std.file;
 import std.string;
 import std.process;
+import std.regex;
 
-string[] allSources = [
+immutable allSources = [
 	"all.d",
 	"state.d",
 	"error.d",
@@ -24,13 +25,16 @@ string[] allSources = [
 	"c/all.d"
 ];
 
+immutable subPackages = [
+	"c",
+	"conversions"
+];
+
+immutable docDir = "luad";
+
 int main(string[] args)
 {
-	string[] sources;
-	if(args.length > 1)
-		sources = args[1..$];
-	else
-		sources = allSources;
+	auto sources = (args.length > 1)? args[1 .. $] : allSources;
 
 	auto sourcePath = environment.get("LUAD_PATH");
 	if(sourcePath is null)
@@ -44,7 +48,7 @@ int main(string[] args)
 		return 1;
 	}
 	
-	auto cmdLine = format(`dmd -c -op -o- -Dd"_dochack_" -I"%s" candydoc/candy.ddoc candydoc/modules.ddoc index.d`, sourcePath);
+	auto cmdLine = format(`dmd -c -op -o- -Dd"%s" -I"%s" bootstrap.ddoc settings.ddoc modules.ddoc index.d`, docDir, sourcePath);
 	foreach(source; sources)
 	{
 		if(source != "index.d")
@@ -55,7 +59,23 @@ int main(string[] args)
 	if(result != 0)
 		return result;
 	
-	scope(exit) rmdirRecurse("_dochack_");
-	copy("_dochack_/index.html", "index.html");
+	// flatten output
+	auto r = regex(`^([^/]+)/(.+)\.d$`);
+	foreach(source; allSources)
+	{
+		if(auto m = match(source, r))
+		{
+			auto pkg = m.captures[1];
+			auto mod = m.captures[2];
+			
+			auto generatedPath = format("%s/%s/%s.html", docDir, pkg, mod);
+			auto flattenedPath = format("%s/%s_%s.html", docDir, pkg, mod);
+			copy(generatedPath, flattenedPath);
+		}
+	}
+	
+	foreach(subPackage; subPackages)
+		rmdirRecurse(format("%s/%s", docDir, subPackage));
+	
 	return 0;
 }
