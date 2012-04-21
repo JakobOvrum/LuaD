@@ -99,9 +99,9 @@ var updateBreadcrumb = function(qualifiedName) {
 		var part = parts[i];
 		
 		if(i == parts.length - 1) {
-			breadcrumb.append('<li class="active">' + part + '</li>');
+			breadcrumb.append('<li class="active"><h2>' + part + '</h2></li>');
 		} else {
-			breadcrumb.append('<li>' + part + '<span class="divider">/</span></li>');
+			breadcrumb.append('<li><h2>' + part + '<span class="divider">/</span></h2></li>');
 		}
 	}
 };
