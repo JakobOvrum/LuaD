@@ -80,6 +80,8 @@ int main(string[] args)
 		}
 	}
 	
+	copy(format("%s/index.html", docDir), "index.html");
+	
 	rmdirRecurse(docDir);
 	
 	return 0;
