@@ -1,10 +1,11 @@
 #!/usr/bin/env rdmd
 
-import std.stdio;
 import std.file;
-import std.string;
+import std.path;
 import std.process;
 import std.regex;
+import std.stdio;
+import std.string;
 
 immutable allSources = [
 	"all.d",
@@ -69,13 +70,17 @@ int main(string[] args)
 			auto mod = m.captures[2];
 			
 			auto generatedPath = format("%s/%s/%s.html", docDir, pkg, mod);
-			auto flattenedPath = format("%s/%s_%s.html", docDir, pkg, mod);
+			auto flattenedPath = format("%s_%s.html", pkg, mod);
 			copy(generatedPath, flattenedPath);
+		}
+		else
+		{
+			auto name = stripExtension(source);
+			copy(format("%s/%s.html", docDir, name), format("%s.html", name)); 
 		}
 	}
 	
-	foreach(subPackage; subPackages)
-		rmdirRecurse(format("%s/%s", docDir, subPackage));
+	rmdirRecurse(docDir);
 	
 	return 0;
 }
