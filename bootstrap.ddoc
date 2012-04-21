@@ -1,10 +1,10 @@
 SECTION     = <h3 class="section">$1</h3> <div class="section">$2</div>
 SSECTION    = <div class="ssection">$(B $1): $2</div>
 STDSECTION  = <div class="stdsection">$(B $1):<br/> &nbsp; &nbsp; &nbsp; $2</div>
-WEB 		= <a href="http://$1" title="$2">$2</a>
+WEB         = <a href="http://$1" title="$2">$2</a>
 
-WARNING 	= <div class="warning"><strong>Warning:</strong> $0</div>
-CRITICAL 	= <div class="critical"><strong>Critical:</strong> $0</div>
+WARNING     = <div class="warning"><strong>Warning:</strong> $0</div>
+CRITICAL    = <div class="critical"><strong>Critical:</strong> $0</div>
 
 LINKTO = <a href="#$0">$0</a>
 
@@ -15,7 +15,7 @@ MODULE = "$1",
 
 DDOC = <!DOCTYPE html>
 <html lang="en">
-  <head>
+	<head>
 	<meta charset="utf-8">
 	<title>$(TITLE) - $(PROJECTNAME) documentation</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,20 +25,20 @@ DDOC = <!DOCTYPE html>
 	<!-- styles -->
 	<link href="assets/css/bootstrap.css" rel="stylesheet">
 	<style type="text/css">
-	  body {
+		body {
 		padding-top: 60px;
 		padding-bottom: 40px;
-	  }
-	  .sidebar-nav {
+		}
+		.sidebar-nav {
 		padding: 9px 0;
-	  }
+		}
 	</style>
 	<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="ddoc.css" rel="stylesheet">
 
 	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
-	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 
 	<!-- fav and touch icons -->
@@ -55,9 +55,9 @@ DDOC = <!DOCTYPE html>
 			$(MODULES)
 		];
 	</script>
-  </head>
+	</head>
 
-  <body>
+	<body>
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container-fluid">
@@ -83,14 +83,14 @@ DDOC = <!DOCTYPE html>
 	</div>
 
 	<div class="container-fluid">
-	  <div class="row-fluid">
+		<div class="row-fluid">
 		<div class="span2">
-		  <div class="well sidebar-nav">
+			<div class="well sidebar-nav">
 			<ul class="nav nav-list">
-			  <li id="module-list" class="nav-header">Modules<li>
-			  <li id="symbol-list" class="nav-header hidden">$(TITLE)</li>
+				<li id="module-list" class="nav-header">Modules<li>
+				<li id="symbol-list" class="nav-header hidden">$(TITLE)</li>
 			</ul>
-		  </div><!--/.well -->
+			</div><!--/.well -->
 		</div><!--/span-->
 		
 		<div class="span10">
@@ -135,7 +135,7 @@ DDOC = <!DOCTYPE html>
 	================================================== -->
 	<script src="ddoc.js"></script>
 	
-  </body>
+	</body>
 </html>
 
 DDOC_DECL = <hr><div class="row-fluid"><h3>$0</h3></div>
@@ -143,32 +143,32 @@ DDOC_DECL = <hr><div class="row-fluid"><h3>$0</h3></div>
 DDOC_SUMMARY = <div class="summary">$0</div>
 
 DDOC_DESCRIPTION = <div class="description">$0</div>
-DDOC_BUGS 	    = $(STDSECTION Known bugs, $0)
-DDOC_COPYRIGHT  = $(STDSECTION Copyright, $0)
-DDOC_AUTHORS    = $(STDSECTION Authors, $0)
-DDOC_DATE       = $(STDSECTION Date, $0)
-DDOC_DEPRECATED = $(STDSECTION Deprecated, $0)
-DDOC_EXAMPLES   = <h3 class="section">Examples</h3> <div class="section examples">$0</div>
-DDOC_EXAMPLE    = <h3 class="section">Examples</h3> <div class="section examples">$0</div>
-DDOC_HISTORY    = $(STDSECTION History, $0)
-DDOC_LICENSE    = $(SSECTION License, $0)
-DDOC_RETURNS    = $(STDSECTION Returns, $0)
-DDOC_SEE_ALSO   = $(STDSECTION See also, $0)
-DDOC_STANDARDS  = $(STDSECTION Standards, $0)
-DDOC_THROWS     = $(STDSECTION Throws, $0)
-DDOC_VERSION    = $(STDSECTION Version, $0)
+DDOC_BUGS        = $(STDSECTION Known bugs, $0)
+DDOC_COPYRIGHT   = $(STDSECTION Copyright, $0)
+DDOC_AUTHORS     = $(STDSECTION Authors, $0)
+DDOC_DATE        = $(STDSECTION Date, $0)
+DDOC_DEPRECATED  = $(STDSECTION Deprecated, $0)
+DDOC_EXAMPLES    = <h3 class="section">Examples</h3> <div class="section examples">$0</div>
+DDOC_EXAMPLE     = <h3 class="section">Examples</h3> <div class="section examples">$0</div>
+DDOC_HISTORY     = $(STDSECTION History, $0)
+DDOC_LICENSE     = $(SSECTION License, $0)
+DDOC_RETURNS     = $(STDSECTION Returns, $0)
+DDOC_SEE_ALSO    = $(STDSECTION See also, $0)
+DDOC_STANDARDS   = $(STDSECTION Standards, $0)
+DDOC_THROWS	     = $(STDSECTION Throws, $0)
+DDOC_VERSION     = $(STDSECTION Version, $0)
 
 OFFSETMEMBERS = <div class="offset1">$0</div>
-DDOC_STRUCT_MEMBERS= $(OFFSETMEMBERS $0)
-DDOC_CLASS_MEMBERS= $(OFFSETMEMBERS $0)
-DDOC_TEMPLATE_MEMBERS= $(OFFSETMEMBERS $0)
-DDOC_ENUM_MEMBERS= $(OFFSETMEMBERS $0)
+DDOC_STRUCT_MEMBERS = $(OFFSETMEMBERS $0)
+DDOC_CLASS_MEMBER S= $(OFFSETMEMBERS $0)
+DDOC_TEMPLATE_MEMBERS = $(OFFSETMEMBERS $0)
+DDOC_ENUM_MEMBERS = $(OFFSETMEMBERS $0)
 
 DDOC_DECL_DD = <div class="decldd">$0</div>
 
 DDOC_PARAMS = $(SECTION Parameters, <table class="table table-condensed table-bordered">$0</table>)
-DDOC_PARAM_ROW	= <tr>$0</tr>
-DDOC_PARAM_ID	= <td class="span2">$0</td>
+DDOC_PARAM_ROW  = <tr>$0</tr>
+DDOC_PARAM_ID   = <td class="span2">$0</td>
 DDOC_PARAM_DESC = <td>$0</td>
 
 
