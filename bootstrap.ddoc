@@ -84,34 +84,35 @@ DDOC = <!DOCTYPE html>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
-		<div class="span2">
-			<div class="well sidebar-nav">
-			<ul class="nav nav-list">
-				<li id="module-list" class="nav-header">Modules<li>
-				<li id="symbol-list" class="nav-header hidden">$(TITLE)</li>
-			</ul>
-			</div><!--/.well -->
-		</div><!--/span-->
-		
-		<div class="span10">
-			<div class="row-fluid">
-				<div class="span11">
-					<ul id="module-breadcrumb" class="breadcrumb"></ul>
+			<div class="span2">
+				<div class="well sidebar-nav">
+				<ul class="nav nav-list">
+					<li id="module-list" class="nav-header">Modules<li>
+					<li id="symbol-list" class="nav-header hidden">$(TITLE)</li>
+				</ul>
+				</div><!--/.well -->
+			</div><!--/span-->
+			
+			<div class="span10">
+				<div class="row-fluid">
+					<div class="span11">
+						<ul id="module-breadcrumb" class="breadcrumb"></ul>
+					</div>
+					<div class="span1 offset11">
+						<a href="$(LOGOLINK)"><img src="$(LOGOSRC)" alt="$(LOGOALT)"/></a>
+					</div>
 				</div>
-				<div class="span1 offset11">
-					<a href="$(LOGOLINK)"><img src="$(LOGOSRC)" alt="$(LOGOALT)"/></a>
-				</div>
+				$(BODY)
 			</div>
-			$(BODY)
+			
+			<hr>
+			
+			<div class="pull-right">
+				<footer>
+					<p>&copy; $(COPYRIGHT) $(STARTYEAR)-$(YEAR)</p>
+				</footer>
+			</div>
 		</div>
-		<hr>
-		
-		<div class="pull-right">
-			<footer>
-				<p>&copy; $(COPYRIGHT) $(STARTYEAR)-$(YEAR)</p>
-			</footer>
-		</div>
-		
 	</div><!--/.fluid-container-->
 
 	<!-- Bootstrap javascript
@@ -160,7 +161,7 @@ DDOC_VERSION     = $(STDSECTION Version, $0)
 
 OFFSETMEMBERS = <div class="offset1">$0</div>
 DDOC_STRUCT_MEMBERS = $(OFFSETMEMBERS $0)
-DDOC_CLASS_MEMBER S= $(OFFSETMEMBERS $0)
+DDOC_CLASS_MEMBERS= $(OFFSETMEMBERS $0)
 DDOC_TEMPLATE_MEMBERS = $(OFFSETMEMBERS $0)
 DDOC_ENUM_MEMBERS = $(OFFSETMEMBERS $0)
 
