@@ -9,3 +9,15 @@
 .hidden {
 	display: none;
 }
+
+.d_keyword {
+	color: blue;
+}
+
+.d_string {
+	color: red;
+}
+
+.d_comment {
+	color: gray;
+}
