@@ -151,8 +151,8 @@
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; t[k] where t is the table for the second-to-last parameter, and k is the last parameter
 
 </div>
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> execute = lua.<u>get</u>!LuaFunction(<span style="color:red;">"os"</span>, <span style="color:red;">"execute"</span>);
-	execute(<span style="color:red;">`echo hello, world!`</span>);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> execute = lua.<u>get</u>!LuaFunction(<span class="d_string">"os"</span>, <span class="d_string">"execute"</span>);
+	execute(<span class="d_string">`echo hello, world!`</span>);
 </pre>
 </div>
 
@@ -175,12 +175,12 @@
 
 </tr>
 </table></div>
-<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; <font color=blue>true</font>
- if the value for key was a string and passed to dg, <font color=blue>false</font>
+<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; <span class="d_keyword">true</span>
+ if the value for key was a string and passed to dg, <span class="d_keyword">false</span>
  otherwise
 </div>
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	t[2] = <span style="color:red;">"two"</span>;
-	t.<u>readString</u>(2, str =&gt; <font color=blue>assert</font>(str == <span style="color:red;">"two"</span>));
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	t[2] = <span class="d_string">"two"</span>;
+	t.<u>readString</u>(2, str =&gt; <font color=blue>assert</font>(str == <span class="d_string">"two"</span>));
 </pre>
 </div>
 
@@ -192,8 +192,8 @@
 <div class="decldd"><div class="summary">Same as calling get!LuaObject with the same arguments.
 </div>
 
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> luapath = lua[<span style="color:red;">"package"</span>, <span style="color:red;">"path"</span>];
-	writefln(<span style="color:red;">"LUA_PATH:\n%s"</span>, luapath);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> luapath = lua[<span class="d_string">"package"</span>, <span class="d_string">"path"</span>];
+	writefln(<span class="d_string">"LUA_PATH:\n%s"</span>, luapath);
 </pre>
 </div>
 <div class="stdsection"><b>See also</b>:<br/> &nbsp; &nbsp; &nbsp; get</div>
@@ -237,8 +237,8 @@
 	 and k is the last parameter in args
 
 </div>
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua[<span style="color:red;">"string"</span>, <span style="color:red;">"empty"</span>] = (<font color=blue>in</font> <font color=blue>char</font>[] s){ <font color=blue>return</font> s.length == 0; };
-	lua.doString(<span style="color:red;">`assert(string.empty(""))`</span>);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua[<span class="d_string">"string"</span>, <span class="d_string">"empty"</span>] = (<font color=blue>in</font> <font color=blue>char</font>[] s){ <font color=blue>return</font> s.length == 0; };
+	lua.doString(<span class="d_string">`assert(string.empty(""))`</span>);
 </pre>
 </div>
 
@@ -343,8 +343,8 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; t[k] where t is the table for the second-to-last parameter, and k is the last parameter
 
 </div>
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> execute = lua.<u>get</u>!LuaFunction(<span style="color:red;">"os"</span>, <span style="color:red;">"execute"</span>);
-	execute(<span style="color:red;">`echo hello, world!`</span>);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> execute = lua.<u>get</u>!LuaFunction(<span class="d_string">"os"</span>, <span class="d_string">"execute"</span>);
+	execute(<span class="d_string">`echo hello, world!`</span>);
 </pre>
 </div>
 
@@ -367,12 +367,12 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 
 </tr>
 </table></div>
-<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; <font color=blue>true</font>
- if the value for key was a string and passed to dg, <font color=blue>false</font>
+<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; <span class="d_keyword">true</span>
+ if the value for key was a string and passed to dg, <span class="d_keyword">false</span>
  otherwise
 </div>
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	t[2] = <span style="color:red;">"two"</span>;
-	t.<u>readString</u>(2, str =&gt; <font color=blue>assert</font>(str == <span style="color:red;">"two"</span>));
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	t[2] = <span class="d_string">"two"</span>;
+	t.<u>readString</u>(2, str =&gt; <font color=blue>assert</font>(str == <span class="d_string">"two"</span>));
 </pre>
 </div>
 
@@ -384,8 +384,8 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 <div class="decldd"><div class="summary">Same as calling get!LuaObject with the same arguments.
 </div>
 
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> luapath = lua[<span style="color:red;">"package"</span>, <span style="color:red;">"path"</span>];
-	writefln(<span style="color:red;">"LUA_PATH:\n%s"</span>, luapath);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> luapath = lua[<span class="d_string">"package"</span>, <span class="d_string">"path"</span>];
+	writefln(<span class="d_string">"LUA_PATH:\n%s"</span>, luapath);
 </pre>
 </div>
 <div class="stdsection"><b>See also</b>:<br/> &nbsp; &nbsp; &nbsp; get</div>
@@ -429,8 +429,8 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 	 and k is the last parameter in args
 
 </div>
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua[<span style="color:red;">"string"</span>, <span style="color:red;">"empty"</span>] = (<font color=blue>in</font> <font color=blue>char</font>[] s){ <font color=blue>return</font> s.length == 0; };
-	lua.doString(<span style="color:red;">`assert(string.empty(""))`</span>);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua[<span class="d_string">"string"</span>, <span class="d_string">"empty"</span>] = (<font color=blue>in</font> <font color=blue>char</font>[] s){ <font color=blue>return</font> s.length == 0; };
+	lua.doString(<span class="d_string">`assert(string.empty(""))`</span>);
 </pre>
 </div>
 

@@ -139,13 +139,13 @@
 <div class="decldd"><div class="summary">Same as call!(LuaObject[])(args);
 </div>
 
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span style="color:red;">`function f(...) return ... end`</span>);
-	<font color=blue>auto</font> f = lua.get!LuaFunction(<span style="color:red;">"f"</span>);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span class="d_string">`function f(...) return ... end`</span>);
+	<font color=blue>auto</font> f = lua.get!LuaFunction(<span class="d_string">"f"</span>);
 
-	LuaObject[] ret = f(1.2, <span style="color:red;">"hello!"</span>, <font color=blue>true</font>);
+	LuaObject[] ret = f(1.2, <span class="d_string">"hello!"</span>, <font color=blue>true</font>);
 
 	<font color=blue>assert</font>(ret[0].to!<font color=blue>double</font>() == 1.2);
-	<font color=blue>assert</font>(ret[1].to!string() == <span style="color:red;">"hello!"</span>);
+	<font color=blue>assert</font>(ret[1].to!string() == <span class="d_string">"hello!"</span>);
 	<font color=blue>assert</font>(ret[2].to!<font color=blue>bool</font>());
 </pre>
 </div>
@@ -172,10 +172,10 @@
 	 Additionally, a value of LuaObject[] for T will result
 	 all return values being collected and returned in a LuaObject[].
 </div>
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span style="color:red;">`function ask(question) return 42 end`</span>);
-	<font color=blue>auto</font> ask = lua.get!LuaFunction(<span style="color:red;">"ask"</span>);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span class="d_string">`function ask(question) return 42 end`</span>);
+	<font color=blue>auto</font> ask = lua.get!LuaFunction(<span class="d_string">"ask"</span>);
 
-	<font color=blue>auto</font> answer = ask.<u>call</u>!<font color=blue>int</font>(<span style="color:red;">"What's the answer to life, the universe and everything?"</span>);
+	<font color=blue>auto</font> answer = ask.<u>call</u>!<font color=blue>int</font>(<span class="d_string">"What's the answer to life, the universe and everything?"</span>);
 	<font color=blue>assert</font>(answer == 42);
 </pre>
 </div>
@@ -195,13 +195,13 @@
 
 </tr>
 </table></div>
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code"> lua[<span style="color:red;">"foo"</span>] = <span style="color:red;">"bar"</span>;
- <font color=blue>auto</font> func = lua.loadString(<span style="color:red;">`return foo`</span>);
- <font color=blue>assert</font>(func.call!string() == <span style="color:red;">"bar"</span>);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code"> lua[<span class="d_string">"foo"</span>] = <span class="d_string">"bar"</span>;
+ <font color=blue>auto</font> func = lua.loadString(<span class="d_string">`return foo`</span>);
+ <font color=blue>assert</font>(func.call!string() == <span class="d_string">"bar"</span>);
 
- <font color=blue>auto</font> <b>env</b> = lua.wrap([<span style="color:red;">"foo"</span>: <span style="color:red;">"test"</span>]);
+ <font color=blue>auto</font> <b>env</b> = lua.wrap([<span class="d_string">"foo"</span>: <span class="d_string">"test"</span>]);
  func.<u>setEnvironment</u>(<b>env</b>);
- <font color=blue>assert</font>(func.call!string() == <span style="color:red;">"test"</span>);
+ <font color=blue>assert</font>(func.call!string() == <span class="d_string">"test"</span>);
 </pre>
 </div>
 
@@ -219,7 +219,7 @@
 <td>delegate to forward writing calls to
 <br><br>
 
-  If the delegate returns <font color=blue>false</font>
+  If the delegate returns <span class="d_keyword">false</span>
  for any of the chunks,
   the <a class="psymbol anchor" name="dump" href="#dump">dump</a> process ends, and the <i>writer</i> won't be called again.</td>
 
@@ -243,13 +243,13 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 <div class="decldd"><div class="summary">Same as call!(LuaObject[])(args);
 </div>
 
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span style="color:red;">`function f(...) return ... end`</span>);
-	<font color=blue>auto</font> f = lua.get!LuaFunction(<span style="color:red;">"f"</span>);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span class="d_string">`function f(...) return ... end`</span>);
+	<font color=blue>auto</font> f = lua.get!LuaFunction(<span class="d_string">"f"</span>);
 
-	LuaObject[] ret = f(1.2, <span style="color:red;">"hello!"</span>, <font color=blue>true</font>);
+	LuaObject[] ret = f(1.2, <span class="d_string">"hello!"</span>, <font color=blue>true</font>);
 
 	<font color=blue>assert</font>(ret[0].to!<font color=blue>double</font>() == 1.2);
-	<font color=blue>assert</font>(ret[1].to!string() == <span style="color:red;">"hello!"</span>);
+	<font color=blue>assert</font>(ret[1].to!string() == <span class="d_string">"hello!"</span>);
 	<font color=blue>assert</font>(ret[2].to!<font color=blue>bool</font>());
 </pre>
 </div>
@@ -276,10 +276,10 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 	 Additionally, a value of LuaObject[] for T will result
 	 all return values being collected and returned in a LuaObject[].
 </div>
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span style="color:red;">`function ask(question) return 42 end`</span>);
-	<font color=blue>auto</font> ask = lua.get!LuaFunction(<span style="color:red;">"ask"</span>);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span class="d_string">`function ask(question) return 42 end`</span>);
+	<font color=blue>auto</font> ask = lua.get!LuaFunction(<span class="d_string">"ask"</span>);
 
-	<font color=blue>auto</font> answer = ask.<u>call</u>!<font color=blue>int</font>(<span style="color:red;">"What's the answer to life, the universe and everything?"</span>);
+	<font color=blue>auto</font> answer = ask.<u>call</u>!<font color=blue>int</font>(<span class="d_string">"What's the answer to life, the universe and everything?"</span>);
 	<font color=blue>assert</font>(answer == 42);
 </pre>
 </div>
@@ -299,13 +299,13 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 
 </tr>
 </table></div>
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code"> lua[<span style="color:red;">"foo"</span>] = <span style="color:red;">"bar"</span>;
- <font color=blue>auto</font> func = lua.loadString(<span style="color:red;">`return foo`</span>);
- <font color=blue>assert</font>(func.call!string() == <span style="color:red;">"bar"</span>);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code"> lua[<span class="d_string">"foo"</span>] = <span class="d_string">"bar"</span>;
+ <font color=blue>auto</font> func = lua.loadString(<span class="d_string">`return foo`</span>);
+ <font color=blue>assert</font>(func.call!string() == <span class="d_string">"bar"</span>);
 
- <font color=blue>auto</font> <b>env</b> = lua.wrap([<span style="color:red;">"foo"</span>: <span style="color:red;">"test"</span>]);
+ <font color=blue>auto</font> <b>env</b> = lua.wrap([<span class="d_string">"foo"</span>: <span class="d_string">"test"</span>]);
  func.<u>setEnvironment</u>(<b>env</b>);
- <font color=blue>assert</font>(func.call!string() == <span style="color:red;">"test"</span>);
+ <font color=blue>assert</font>(func.call!string() == <span class="d_string">"test"</span>);
 </pre>
 </div>
 
@@ -323,7 +323,7 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 <td>delegate to forward writing calls to
 <br><br>
 
-  If the delegate returns <font color=blue>false</font>
+  If the delegate returns <span class="d_keyword">false</span>
  for any of the chunks,
   the <a class="psymbol anchor" name="dump" href="#dump">dump</a> process ends, and the <i>writer</i> won't be called again.</td>
 

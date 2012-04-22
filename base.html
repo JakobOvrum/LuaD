@@ -185,11 +185,11 @@
 </div>
 
 <h3 class="section">Examples</h3> <div class="section examples">Useful for clearing keys in a table:
-<pre class="d_code">	lua[<span style="color:red;">"n"</span>] = 1.23;
-	<font color=blue>assert</font>(lua.get!<font color=blue>double</font>(<span style="color:red;">"n"</span>) == 1.23);
+<pre class="d_code">	lua[<span class="d_string">"n"</span>] = 1.23;
+	<font color=blue>assert</font>(lua.get!<font color=blue>double</font>(<span class="d_string">"n"</span>) == 1.23);
 
-	lua[<span style="color:red;">"n"</span>] = <u>nil</u>;
-	<font color=blue>assert</font>(lua[<span style="color:red;">"n"</span>].type == LuaType.Nil);
+	lua[<span class="d_string">"n"</span>] = <u>nil</u>;
+	<font color=blue>assert</font>(lua[<span class="d_string">"n"</span>].type == LuaType.Nil);
 </pre>
 </div>
 
@@ -269,8 +269,8 @@
 <div class="decldd"><div class="summary">Attempt to convert the referenced object to any D type.
 </div>
 
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> results = lua.doString(<span style="color:red;">`return "hello!"`</span>);
-	<font color=blue>assert</font>(results[0].<u>to</u>!string() == <span style="color:red;">"hello!"</span>);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> results = lua.doString(<span class="d_string">`return "hello!"`</span>);
+	<font color=blue>assert</font>(results[0].<u>to</u>!string() == <span class="d_string">"hello!"</span>);
 </pre>
 </div>
 
@@ -280,7 +280,7 @@
 </h3></div>
 
 <div class="decldd"><div class="summary">Compare this object to another with Lua's equality semantics.
- Also returns <font color=blue>false</font>
+ Also returns <span class="d_keyword">false</span>
  if the two objects are in different Lua states.</div>
 
 
@@ -352,8 +352,8 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>pure no
 <div class="decldd"><div class="summary">Attempt to convert the referenced object to any D type.
 </div>
 
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> results = lua.doString(<span style="color:red;">`return "hello!"`</span>);
-	<font color=blue>assert</font>(results[0].<u>to</u>!string() == <span style="color:red;">"hello!"</span>);
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> results = lua.doString(<span class="d_string">`return "hello!"`</span>);
+	<font color=blue>assert</font>(results[0].<u>to</u>!string() == <span class="d_string">"hello!"</span>);
 </pre>
 </div>
 
@@ -363,7 +363,7 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>pure no
 </h3></div>
 
 <div class="decldd"><div class="summary">Compare this object to another with Lua's equality semantics.
- Also returns <font color=blue>false</font>
+ Also returns <span class="d_keyword">false</span>
  if the two objects are in different Lua states.</div>
 
 

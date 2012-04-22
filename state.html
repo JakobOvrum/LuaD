@@ -203,7 +203,7 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 
 </tr>
 </table></div>
-<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; LuaState for the given lua_State*, or <font color=blue>null</font>
+<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; LuaState for the given lua_State*, or <span class="d_keyword">null</span>
  if a LuaState is not currently attached to the state</div>
 
 </div>
@@ -243,7 +243,7 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 
 </tr>
 </table></div>
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> L = luaL_newstate(); <span style="color:gray;">// found in luad.c.all
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> L = luaL_newstate(); <span class="d_comment">// found in luad.c.all
 </span>
 	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState(L);
 

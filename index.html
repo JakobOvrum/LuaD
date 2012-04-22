@@ -142,7 +142,7 @@ See <a href="stack.html">luad.stack</a> for the full list of possible type conve
 	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
 	lua.openLibs();
 
-	lua.doString(<span style="color:red;">`print("Hello, world!")`</span>);
+	lua.doString(<span class="d_string">`print("Hello, world!")`</span>);
 }
 </pre>
 Another "Hello, world"
@@ -153,10 +153,10 @@ Another "Hello, world"
 	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
 	lua.openLibs();
 
-	<span style="color:gray;">//LuaState also works as an alias for the global table
+	<span class="d_comment">//LuaState also works as an alias for the global table
 </span>
-	<font color=blue>auto</font> print = lua.get!LuaFunction(<span style="color:red;">"print"</span>);
-	print(<span style="color:red;">"Hello, world!"</span>);
+	<font color=blue>auto</font> print = lua.get!LuaFunction(<span class="d_string">"print"</span>);
+	print(<span class="d_string">"Hello, world!"</span>);
 }
 </pre>
 Simple function example
@@ -173,8 +173,8 @@ Simple function example
 <font color=blue>void</font> main()
 {
     <font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
-    lua[<span style="color:red;">"printTimes"</span>] = &amp;printTimes;
-    lua.doString(<span style="color:red;">`
+    lua[<span class="d_string">"printTimes"</span>] = &amp;printTimes;
+    lua.doString(<span class="d_string">`
         printTimes(3, "hello, world!")
     `</span>);
 }
@@ -188,7 +188,7 @@ Configuration file
 	<font color=blue>double</font> Version;
 }
 
-string configFile = <span style="color:red;">`
+string configFile = <span class="d_string">`
 Name = "foo"
 Version = 1.23
 `</span>;
@@ -200,7 +200,7 @@ Version = 1.23
 	lua.doString(configFile);
 	<font color=blue>auto</font> config = lua.globals.toStruct!Config();
 
-	<font color=blue>assert</font>(config.Name == <span style="color:red;">"foo"</span>);
+	<font color=blue>assert</font>(config.Name == <span class="d_string">"foo"</span>);
 	<font color=blue>assert</font>(config.Version == 1.23);
 }
 </pre>
