@@ -140,13 +140,13 @@
 </div>
 
 <h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span class="d_string">`function f(...) return ... end`</span>);
-	<font color=blue>auto</font> f = lua.get!LuaFunction(<span class="d_string">"f"</span>);
+	<span class="d_keyword">auto</span> f = lua.get!LuaFunction(<span class="d_string">"f"</span>);
 
-	LuaObject[] ret = f(1.2, <span class="d_string">"hello!"</span>, <font color=blue>true</font>);
+	LuaObject[] ret = f(1.2, <span class="d_string">"hello!"</span>, <span class="d_keyword">true</span>);
 
-	<font color=blue>assert</font>(ret[0].to!<font color=blue>double</font>() == 1.2);
-	<font color=blue>assert</font>(ret[1].to!string() == <span class="d_string">"hello!"</span>);
-	<font color=blue>assert</font>(ret[2].to!<font color=blue>bool</font>());
+	<span class="d_keyword">assert</span>(ret[0].to!<span class="d_keyword">double</span>() == 1.2);
+	<span class="d_keyword">assert</span>(ret[1].to!string() == <span class="d_string">"hello!"</span>);
+	<span class="d_keyword">assert</span>(ret[2].to!<span class="d_keyword">bool</span>());
 </pre>
 </div>
 
@@ -160,11 +160,9 @@
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
 <td>expected return type.</td>
-
 </tr>
 <tr><td class="span2">args</td>
 <td>list of arguments.</td>
-
 </tr>
 </table></div>
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Return value of type T, or nothing if T was unspecified.
@@ -173,10 +171,10 @@
 	 all return values being collected and returned in a LuaObject[].
 </div>
 <h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span class="d_string">`function ask(question) return 42 end`</span>);
-	<font color=blue>auto</font> ask = lua.get!LuaFunction(<span class="d_string">"ask"</span>);
+	<span class="d_keyword">auto</span> ask = lua.get!LuaFunction(<span class="d_string">"ask"</span>);
 
-	<font color=blue>auto</font> answer = ask.<u>call</u>!<font color=blue>int</font>(<span class="d_string">"What's the answer to life, the universe and everything?"</span>);
-	<font color=blue>assert</font>(answer == 42);
+	<span class="d_keyword">auto</span> answer = ask.<u>call</u>!<span class="d_keyword">int</span>(<span class="d_string">"What's the answer to life, the universe and everything?"</span>);
+	<span class="d_keyword">assert</span>(answer == 42);
 </pre>
 </div>
 
@@ -192,16 +190,15 @@
 </div>
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">LuaTable <i>env</i></td>
 <td>new environment</td>
-
 </tr>
 </table></div>
 <h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code"> lua[<span class="d_string">"foo"</span>] = <span class="d_string">"bar"</span>;
- <font color=blue>auto</font> func = lua.loadString(<span class="d_string">`return foo`</span>);
- <font color=blue>assert</font>(func.call!string() == <span class="d_string">"bar"</span>);
+ <span class="d_keyword">auto</span> func = lua.loadString(<span class="d_string">`return foo`</span>);
+ <span class="d_keyword">assert</span>(func.call!string() == <span class="d_string">"bar"</span>);
 
- <font color=blue>auto</font> <b>env</b> = lua.wrap([<span class="d_string">"foo"</span>: <span class="d_string">"test"</span>]);
+ <span class="d_keyword">auto</span> <b>env</b> = lua.wrap([<span class="d_string">"foo"</span>: <span class="d_string">"test"</span>]);
  func.<u>setEnvironment</u>(<b>env</b>);
- <font color=blue>assert</font>(func.call!string() == <span class="d_string">"test"</span>);
+ <span class="d_keyword">assert</span>(func.call!string() == <span class="d_string">"test"</span>);
 </pre>
 </div>
 
@@ -219,10 +216,8 @@
 <td>delegate to forward writing calls to
 <br><br>
 
-  If the delegate returns <span class="d_keyword">false</span>
- for any of the chunks,
+  If the delegate returns <span class="d_keyword">false</span> for any of the chunks,
   the <a class="psymbol anchor" name="dump" href="#dump">dump</a> process ends, and the <i>writer</i> won't be called again.</td>
-
 </tr>
 </table></div>
 
@@ -244,13 +239,13 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 </div>
 
 <h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span class="d_string">`function f(...) return ... end`</span>);
-	<font color=blue>auto</font> f = lua.get!LuaFunction(<span class="d_string">"f"</span>);
+	<span class="d_keyword">auto</span> f = lua.get!LuaFunction(<span class="d_string">"f"</span>);
 
-	LuaObject[] ret = f(1.2, <span class="d_string">"hello!"</span>, <font color=blue>true</font>);
+	LuaObject[] ret = f(1.2, <span class="d_string">"hello!"</span>, <span class="d_keyword">true</span>);
 
-	<font color=blue>assert</font>(ret[0].to!<font color=blue>double</font>() == 1.2);
-	<font color=blue>assert</font>(ret[1].to!string() == <span class="d_string">"hello!"</span>);
-	<font color=blue>assert</font>(ret[2].to!<font color=blue>bool</font>());
+	<span class="d_keyword">assert</span>(ret[0].to!<span class="d_keyword">double</span>() == 1.2);
+	<span class="d_keyword">assert</span>(ret[1].to!string() == <span class="d_string">"hello!"</span>);
+	<span class="d_keyword">assert</span>(ret[2].to!<span class="d_keyword">bool</span>());
 </pre>
 </div>
 
@@ -264,11 +259,9 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
 <td>expected return type.</td>
-
 </tr>
 <tr><td class="span2">args</td>
 <td>list of arguments.</td>
-
 </tr>
 </table></div>
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Return value of type T, or nothing if T was unspecified.
@@ -277,10 +270,10 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 	 all return values being collected and returned in a LuaObject[].
 </div>
 <h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	lua.doString(<span class="d_string">`function ask(question) return 42 end`</span>);
-	<font color=blue>auto</font> ask = lua.get!LuaFunction(<span class="d_string">"ask"</span>);
+	<span class="d_keyword">auto</span> ask = lua.get!LuaFunction(<span class="d_string">"ask"</span>);
 
-	<font color=blue>auto</font> answer = ask.<u>call</u>!<font color=blue>int</font>(<span class="d_string">"What's the answer to life, the universe and everything?"</span>);
-	<font color=blue>assert</font>(answer == 42);
+	<span class="d_keyword">auto</span> answer = ask.<u>call</u>!<span class="d_keyword">int</span>(<span class="d_string">"What's the answer to life, the universe and everything?"</span>);
+	<span class="d_keyword">assert</span>(answer == 42);
 </pre>
 </div>
 
@@ -296,16 +289,15 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 </div>
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">LuaTable <i>env</i></td>
 <td>new environment</td>
-
 </tr>
 </table></div>
 <h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code"> lua[<span class="d_string">"foo"</span>] = <span class="d_string">"bar"</span>;
- <font color=blue>auto</font> func = lua.loadString(<span class="d_string">`return foo`</span>);
- <font color=blue>assert</font>(func.call!string() == <span class="d_string">"bar"</span>);
+ <span class="d_keyword">auto</span> func = lua.loadString(<span class="d_string">`return foo`</span>);
+ <span class="d_keyword">assert</span>(func.call!string() == <span class="d_string">"bar"</span>);
 
- <font color=blue>auto</font> <b>env</b> = lua.wrap([<span class="d_string">"foo"</span>: <span class="d_string">"test"</span>]);
+ <span class="d_keyword">auto</span> <b>env</b> = lua.wrap([<span class="d_string">"foo"</span>: <span class="d_string">"test"</span>]);
  func.<u>setEnvironment</u>(<b>env</b>);
- <font color=blue>assert</font>(func.call!string() == <span class="d_string">"test"</span>);
+ <span class="d_keyword">assert</span>(func.call!string() == <span class="d_string">"test"</span>);
 </pre>
 </div>
 
@@ -323,10 +315,8 @@ DDOC_CLASS_MEMBER S= <div class="offset1"><hr><div class="row-fluid"><h3>LuaObje
 <td>delegate to forward writing calls to
 <br><br>
 
-  If the delegate returns <span class="d_keyword">false</span>
- for any of the chunks,
+  If the delegate returns <span class="d_keyword">false</span> for any of the chunks,
   the <a class="psymbol anchor" name="dump" href="#dump">dump</a> process ends, and the <i>writer</i> won't be called again.</td>
-
 </tr>
 </table></div>
 

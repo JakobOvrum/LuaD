@@ -174,7 +174,6 @@
 </div>
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">void** <i>L</i></td>
 <td>state to wrap.</td>
-
 </tr>
 </table></div>
 <b>Note:</b><br>
@@ -200,11 +199,9 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">void** <i>L</i></td>
 <td>Lua state</td>
-
 </tr>
 </table></div>
-<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; LuaState for the given lua_State*, or <span class="d_keyword">null</span>
- if a LuaState is not currently attached to the state</div>
+<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; LuaState for the given lua_State*, or <span class="d_keyword">null</span> if a LuaState is not currently attached to the state</div>
 
 </div>
 
@@ -240,16 +237,15 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">void function(LuaState, const(char[])) <i>onPanic</i></td>
 <td>new panic handler</td>
-
 </tr>
 </table></div>
-<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<font color=blue>auto</font> L = luaL_newstate(); <span class="d_comment">// found in luad.c.all
+<h3 class="section">Examples</h3> <div class="section examples"><pre class="d_code">	<span class="d_keyword">auto</span> L = luaL_newstate(); <span class="d_comment">// found in luad.c.all
 </span>
-	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState(L);
+	<span class="d_keyword">auto</span> lua = <span class="d_keyword">new</span> LuaState(L);
 
-	<font color=blue>static</font> <font color=blue>void</font> panic(LuaState lua, <font color=blue>in</font> <font color=blue>char</font>[] error)
+	<span class="d_keyword">static</span> <span class="d_keyword">void</span> panic(LuaState lua, <span class="d_keyword">in</span> <span class="d_keyword">char</span>[] error)
 	{
-		<font color=blue>throw</font> <font color=blue>new</font> LuaErrorException(error.idup);
+		<span class="d_keyword">throw</span> <span class="d_keyword">new</span> LuaErrorException(error.idup);
 	}
 
 	lua.<u>setPanicHandler</u>(&amp;panic);
@@ -266,7 +262,6 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>code</i></td>
 <td>code to compile</td>
-
 </tr>
 </table></div>
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Loaded code as a function.</div>
@@ -281,7 +276,6 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>path</i></td>
 <td>path to file</td>
-
 </tr>
 </table></div>
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Loaded code as a function.</div>
@@ -296,11 +290,9 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>code</i></td>
 <td>code to run</td>
-
 </tr>
 <tr><td class="span2">LuaErrorHandler <i>handler</i></td>
 <td>error handling scheme</td>
-
 </tr>
 </table></div>
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Any code return values</div>
@@ -315,11 +307,9 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>path</i></td>
 <td>path to file</td>
-
 </tr>
 <tr><td class="span2">LuaErrorHandler <i>handler</i></td>
 <td>error handling scheme</td>
-
 </tr>
 </table></div>
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Any script return values</div>
@@ -344,11 +334,9 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">uint <i>narr</i></td>
 <td>number of pre-allocated array slots</td>
-
 </tr>
 <tr><td class="span2">uint <i>nrec</i></td>
 <td>number of pre-allocated non-array slots</td>
-
 </tr>
 </table></div>
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; The new table</div>
@@ -367,11 +355,9 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
 <td>type of reference. Must be LuaObject, LuaTable, LuaFunction or LuaDynamic.
    Defaults to LuaObject.</td>
-
 </tr>
 <tr><td class="span2">value</td>
 <td>D value to wrap</td>
-
 </tr>
 </table></div>
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; A Lua reference to value</div>
@@ -388,7 +374,6 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 </div>
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
 <td>class or struct to register</td>
-
 </tr>
 </table></div>
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Reference to the registered type in Lua</div>

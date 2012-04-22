@@ -153,8 +153,7 @@
 	</dt>
 	<dt>nil
 		<dd>the special identifier nil</dd>
-		<dd><span class="d_keyword">null</span>
- class references</dd>
+		<dd><span class="d_keyword">null</span> class references</dd>
 	</dt>
 	<dt>any of the above
 		<dd><a href="base.html">LuaObject</a>
@@ -187,11 +186,9 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">L</td>
 <td>stack to push to</td>
-
 </tr>
 <tr><td class="span2">value</td>
 <td>value to push</td>
-
 </tr>
 </table></div>
 
@@ -214,19 +211,15 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
 <td>type of value</td>
-
 </tr>
 <tr><td class="span2">typeMismatchHandler</td>
 <td>function called to produce an error in case of an invalid conversion.</td>
-
 </tr>
 <tr><td class="span2">L</td>
 <td>stack to get from</td>
-
 </tr>
 <tr><td class="span2">idx</td>
 <td>value stack index</td>
-
 </tr>
 </table></div>
 
@@ -250,19 +243,15 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
 <td>wrapper type to use</td>
-
 </tr>
 <tr><td class="span2">L</td>
 <td>stack to pop from</td>
-
 </tr>
 <tr><td class="span2">n</td>
 <td>number of elements to pop</td>
-
 </tr>
 </table></div>
-<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; array of popped elements, or a <span class="d_keyword">null</span>
- array if n = 0</div>
+<div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; array of popped elements, or a <span class="d_keyword">null</span> array if n = 0</div>
 
 </div>
 
@@ -290,7 +279,6 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">nret</td>
 <td>number of return values</td>
-
 </tr>
 </table></div>
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Return value, collection of return values, or nothing</div>
@@ -330,11 +318,9 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 <h3 class="section">Parameters</h3> <div class="section"><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
 <td>type of return value or container of return values</td>
-
 </tr>
 <tr><td class="span2">nargs</td>
 <td>number of arguments</td>
-
 </tr>
 </table></div>
 <div class="stdsection"><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Zero, one or all return values as T, taking into account void, LuaObject[] and Tuple returns</div>

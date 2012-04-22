@@ -171,9 +171,8 @@ DDOC_PARAM_ROW  = <tr>$0</tr>
 DDOC_PARAM_ID   = <td class="span2">$0</td>
 DDOC_PARAM_DESC = <td>$0</td>
 
-
 DDOC_KEYWORD = <span class="d_keyword">$0</span>
-
+D_KEYWORD = $(DDOC_KEYWORD $0)
 D_STRING = <span class="d_string">$0</span>
 D_PARAM = $(B $0)
 D_COMMENT = <span class="d_comment">$0</span>

@@ -135,44 +135,44 @@ See <a href="stack.html">luad.stack</a> for the full list of possible type conve
 
 </div>
 <h3 class="section">Examples</h3> <div class="section examples">"Hello, world"
-<pre class="d_code"><font color=blue>import</font> luad.all;
+<pre class="d_code"><span class="d_keyword">import</span> luad.all;
 
-<font color=blue>void</font> main()
+<span class="d_keyword">void</span> main()
 {
-	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
+	<span class="d_keyword">auto</span> lua = <span class="d_keyword">new</span> LuaState;
 	lua.openLibs();
 
 	lua.doString(<span class="d_string">`print("Hello, world!")`</span>);
 }
 </pre>
 Another "Hello, world"
-<pre class="d_code"><font color=blue>import</font> luad.all;
+<pre class="d_code"><span class="d_keyword">import</span> luad.all;
 
-<font color=blue>void</font> main()
+<span class="d_keyword">void</span> main()
 {
-	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
+	<span class="d_keyword">auto</span> lua = <span class="d_keyword">new</span> LuaState;
 	lua.openLibs();
 
 	<span class="d_comment">//LuaState also works as an alias for the global table
 </span>
-	<font color=blue>auto</font> print = lua.get!LuaFunction(<span class="d_string">"print"</span>);
+	<span class="d_keyword">auto</span> print = lua.get!LuaFunction(<span class="d_string">"print"</span>);
 	print(<span class="d_string">"Hello, world!"</span>);
 }
 </pre>
 Simple function example
-<pre class="d_code"><font color=blue>import</font> luad.all;
-<font color=blue>import</font> std.stdio;
+<pre class="d_code"><span class="d_keyword">import</span> luad.all;
+<span class="d_keyword">import</span> std.stdio;
 
-<font color=blue>int</font> printTimes(<font color=blue>int</font> times, <font color=blue>const</font>(<font color=blue>char</font>)[] message)
+<span class="d_keyword">int</span> printTimes(<span class="d_keyword">int</span> times, <span class="d_keyword">const</span>(<span class="d_keyword">char</span>)[] message)
 {
-    <font color=blue>for</font>(<font color=blue>int</font> i = 0; i &lt;= times; i++)
+    <span class="d_keyword">for</span>(<span class="d_keyword">int</span> i = 0; i &lt;= times; i++)
         writeln(message);
-    <font color=blue>return</font> times;
+    <span class="d_keyword">return</span> times;
 }
 
-<font color=blue>void</font> main()
+<span class="d_keyword">void</span> main()
 {
-    <font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
+    <span class="d_keyword">auto</span> lua = <span class="d_keyword">new</span> LuaState;
     lua[<span class="d_string">"printTimes"</span>] = &amp;printTimes;
     lua.doString(<span class="d_string">`
         printTimes(3, "hello, world!")
@@ -180,12 +180,12 @@ Simple function example
 }
 </pre>
 Configuration file
-<pre class="d_code"><font color=blue>import</font> luad.all;
+<pre class="d_code"><span class="d_keyword">import</span> luad.all;
 
-<font color=blue>struct</font> Config
+<span class="d_keyword">struct</span> Config
 {
 	string Name;
-	<font color=blue>double</font> Version;
+	<span class="d_keyword">double</span> Version;
 }
 
 string configFile = <span class="d_string">`
@@ -193,15 +193,15 @@ Name = "foo"
 Version = 1.23
 `</span>;
 
-<font color=blue>void</font> main()
+<span class="d_keyword">void</span> main()
 {
-	<font color=blue>auto</font> lua = <font color=blue>new</font> LuaState;
+	<span class="d_keyword">auto</span> lua = <span class="d_keyword">new</span> LuaState;
 
 	lua.doString(configFile);
-	<font color=blue>auto</font> config = lua.globals.toStruct!Config();
+	<span class="d_keyword">auto</span> config = lua.globals.toStruct!Config();
 
-	<font color=blue>assert</font>(config.Name == <span class="d_string">"foo"</span>);
-	<font color=blue>assert</font>(config.Version == 1.23);
+	<span class="d_keyword">assert</span>(config.Name == <span class="d_string">"foo"</span>);
+	<span class="d_keyword">assert</span>(config.Version == 1.23);
 }
 </pre>
 </div>
