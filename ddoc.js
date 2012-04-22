@@ -1,3 +1,7 @@
+/**
+ * Build a table representing the module hierarchy of the project
+ * given a linear list of modules.
+ */
 var buildModuleHierarchy = function(modlist) {
 	var root = {'members': {}};
 	
@@ -28,22 +32,35 @@ var buildModuleHierarchy = function(modlist) {
 	return root;
 };
 
+/**
+ * Build a path to the appropriate resource for a fully qualified module name.
+ */
 var qualifiedModuleNameToUrl = function(modName) {
-	return modName.slice(5).replace('.', '_') + '.html';
+	return modName.slice(modName.indexOf(".") + 1).replace('.', '_') + '.html';
 };
 
+/**
+ * Build a package node for the module tree given the name of the package.
+ */
 var treePackageNode = function(name) {
 	return '<li class="module-tree-node dropdown">' +
 	       '<a href="#"><i class="icon-th-list"></i> ' + name + '<b class="caret"></b></a>' +
 		   '<ul></ul></li>';
 };
 
+/**
+ * Build a module node for the module tree given the name of the module
+ * and a URL to the associated resource.
+ */
 var treeModuleNode = function(name, url) {
 	return '<li>' +
 	       '<a href="' + url + '"><i class="icon-th"></i> ' + name + '</a>' +
 		   '</li>';
 };
 
+/**
+ * Create the module tree in the sidebar.
+ */
 var populateModuleList = function(modlist) {
 	var listHeader = $('#module-list');
 	
@@ -79,6 +96,9 @@ var populateModuleList = function(modlist) {
 	});
 };
 
+/**
+ * Create the symbol list in the sidebar.
+ */
 var populateSymbolList = function(symbols) {
 	if(symbols.length == 0) { // Do not show the symbol list header on pages with no symbols.
 		return;
@@ -97,6 +117,10 @@ var populateSymbolList = function(symbols) {
 	}
 };
 
+/**
+ * Configure the breadcrumb component at the top of the page
+ * with the current module.
+ */
 var updateBreadcrumb = function(qualifiedName) {
 	var breadcrumb = $('#module-breadcrumb');
 	
@@ -120,6 +144,9 @@ var gatherSymbols = function() {
 	return list;
 };
 
+/**
+ * Configure the goto-symbol search form in the titlebar.
+ */
 var setupGotoSymbolForm = function(symbols) {
 	if(symbols.length == 0) { // Do not show the goto-symbol form on pages with no symbols.
 		return;
@@ -143,6 +170,7 @@ var setupGotoSymbolForm = function(symbols) {
 	form.removeClass('hidden');
 };
 
+// 'Title' and 'Modules' are created inline in the DDoc generated HTML page.
 $(document).ready(function() {
 	updateBreadcrumb(Title);
 	
