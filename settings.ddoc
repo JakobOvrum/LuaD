@@ -1,19 +1,17 @@
 PROJECTNAME = LuaD
-INDEX = index.html
-LINKPREFIX = .
-REPOSRCDIR = http://github.com/JakobOvrum/LuaD
-SRCPACKAGE = luad
-REPOSRCTEXT = View source on <a href="$(REPOSRCDIR)">Github</a>
+REFERENCETOP = index.html
+REPOSRCTREE = http://github.com/JakobOvrum/LuaD/tree/master
+TITLEBARTEXT = View source on <a href="https://github.com/JakobOvrum/LuaD#readme">Github</a>
 ROOT = ./
 LOGOSRC = logo.png
 LOGOALT = $(PROJECTNAME)
-LOGOLINK = $(INDEX)
+LOGOLINK = $(REFERENCETOP)
 FAVICON = favicon.png
 COPYRIGHT = Jakob Ovrum
 STARTYEAR = 2010
 
+SRCPACKAGE = luad
 LINKMODULE =$(LINK2 $0.html,$(SRCPACKAGE).$0)
 LINKMODULE2 =$(LINK2 $1.html,$2)
-
 LINKSUBMODULE =$(LINK2 $1_$2.html,$(SRCPACKAGE).$1.$2)
 LINKSUBMODULE2 =$(LINK2 $1_$2.html,$3)

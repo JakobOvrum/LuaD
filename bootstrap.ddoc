@@ -8,9 +8,6 @@ CRITICAL    = <div class="critical"><strong>Critical:</strong> $0</div>
 
 LINKTO = <a href="#$0">$0</a>
 
-LINK = $(LINKPREFIX)$0
-REPO = $(REPOSRCDIR)$0
-
 MODULE = "$1",
 
 DDOC = <!DOCTYPE html>
@@ -50,7 +47,7 @@ DDOC = <!DOCTYPE html>
 	<!-- Introduce DDoc settings required by JavaScript -->
 	<script type="text/javascript">
 		var Title = '$(TITLE)';
-		var ProjectName = '$(PROJECTNAME)';
+		var SourceRepository = '$(REPOSRCTREE)';
 		var Modules = [
 			$(MODULES)
 		];
@@ -66,17 +63,17 @@ DDOC = <!DOCTYPE html>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</a>
-				<a class="brand" href="$(INDEX)">$(PROJECTNAME)</a>
+				<a class="brand" href="$(REFERENCETOP)">$(PROJECTNAME)</a>
 				<div class="nav-collapse">
 					<ul class="nav">
-						<li class="active"><a href="$(INDEX)">Reference</a></li>
+						<li class="active"><a href="$(REFERENCETOP)">Reference</a></li>
 					</ul>
 					
 					<form id="gotosymbol" class="navbar-search pull-left hidden">
 						<input type="text" class="search-query" placeholder="Goto symbol in $(TITLE)" data-provide="typeahead" data-items="4">
 					</form>
 					
-					<p class="navbar-text pull-right">$(REPOSRCTEXT)</p>
+					<p class="navbar-text pull-right">$(TITLEBARTEXT)</p>
 				</div><!--/.nav-collapse -->
 			</div>
 		</div>

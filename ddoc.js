@@ -118,10 +118,17 @@ var populateSymbolList = function(symbols) {
 };
 
 /**
+ * Build a relative path for the given module name.
+ */
+ var moduleNameToPath = function(modName) {
+	return modName.replace(/\./g, '/') + '.d';
+ };
+
+/**
  * Configure the breadcrumb component at the top of the page
  * with the current module.
  */
-var updateBreadcrumb = function(qualifiedName) {
+var updateBreadcrumb = function(qualifiedName, sourceRepoUrl) {
 	var $breadcrumb = $('#module-breadcrumb');
 	
 	var parts = qualifiedName.split('.');
@@ -129,7 +136,8 @@ var updateBreadcrumb = function(qualifiedName) {
 		var part = parts[i];
 		
 		if(i == parts.length - 1) {
-			$breadcrumb.append('<li class="active"><h2>' + part + '</h2></li>');
+			var sourceUrl = sourceRepoUrl + '/' + moduleNameToPath(qualifiedName);
+			$breadcrumb.append('<li class="active"><h2>' + part + ' <a href="' + sourceUrl + '"><small>view source</small></a></h2></li>');
 		} else {
 			$breadcrumb.append('<li><h2>' + part + '<span class="divider">/</span></h2></li>');
 		}
@@ -169,9 +177,9 @@ var setupGotoSymbolForm = function(symbols) {
 	$form.removeClass('hidden');
 };
 
-// 'Title' and 'Modules' are created inline in the DDoc generated HTML page.
+// 'Title', 'SourceRepository', and 'Modules' are created inline in the DDoc generated HTML page.
 $(document).ready(function() {
-	updateBreadcrumb(Title);
+	updateBreadcrumb(Title, SourceRepository);
 	
 	populateModuleList(Modules);
 

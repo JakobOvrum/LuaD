@@ -85,5 +85,7 @@ void main()
 	assert(config.Version == 1.23);
 }
 ----------------------
+Macros:
+REPOSRCTREE = http://github.com/JakobOvrum/LuaD/tree/gh-pages
 +/
 module index;
