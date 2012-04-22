@@ -35,7 +35,7 @@
 	<!-- Introduce DDoc settings required by JavaScript -->
 	<script type="text/javascript">
 		var Title = 'luad.conversions.functions';
-		var ProjectName = 'LuaD';
+		var SourceRepository = 'http://github.com/JakobOvrum/LuaD/tree/master';
 		var Modules = [
 			
 	"luad.all",
@@ -91,7 +91,7 @@
 						<input type="text" class="search-query" placeholder="Goto symbol in luad.conversions.functions" data-provide="typeahead" data-items="4">
 					</form>
 					
-					<p class="navbar-text pull-right">View source on <a href="http://github.com/JakobOvrum/LuaD">Github</a></p>
+					<p class="navbar-text pull-right">View source on <a href="https://github.com/JakobOvrum/LuaD#readme">Github</a></p>
 				</div><!--/.nav-collapse -->
 			</div>
 		</div>
@@ -134,8 +134,7 @@ When a copy is desired, use char[] or string, or dup or idup the string manually
 If a function with the lua_CFunction signature is encountered, it is pushed directly with no inserted conversions or overhead.
 <br><br>
 
-Typesafe varargs is supported when pushing functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use <a href="lfunction.html">LuaFunction</a>
- instead).</div>
+Typesafe varargs is supported when pushing functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use <a href="lfunction.html">LuaFunction</a> instead).</div>
 
 <dl><hr><div class="row-fluid"><h3>T <a class="psymbol anchor" name="getFunction" href="#getFunction">getFunction</a>(T)(lua_State* <i>L</i>, int <i>idx</i>);
 </h3></div>
