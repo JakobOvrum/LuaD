@@ -62,7 +62,7 @@ var treeModuleNode = function(name, url) {
  * Create the module tree in the sidebar.
  */
 var populateModuleList = function(modlist) {
-	var listHeader = $('#module-list');
+	var $listHeader = $('#module-list');
 	
 	var root = buildModuleHierarchy(modlist);
 	
@@ -71,27 +71,27 @@ var populateModuleList = function(modlist) {
 			var member = node.members[name];
 			
 			if(member.type == 'package') {
-				var elem = $(treePackageNode(name));
-				parentList.append(elem);
-				arguments.callee(member, elem.find('ul'));
+				var $elem = $(treePackageNode(name));
+				parentList.append($elem);
+				arguments.callee(member, $elem.find('ul'));
 				
 			} else if(member.type == 'module') {
 				var url = qualifiedModuleNameToUrl(member.qualifiedName);
-				var elem = $(treeModuleNode(name, url));
-				parentList.append(elem);
+				var $elem = $(treeModuleNode(name, url));
+				parentList.append($elem);
 				
-				if(member.qualifiedName == Title) {
-					elem.find('a').append(' <i class="icon-asterisk"></i>');
+				if(member.qualifiedName == Title) { // Current module.
+					$elem.find('a').append(' <i class="icon-asterisk"></i>');
 				}
 			}
 		}
 	};
 	
-	traverser(root, listHeader);
+	traverser(root, $listHeader);
 	
-	var treeNodes = $('.module-tree-node');
+	var $treeNodes = $('.module-tree-node');
 	
-	treeNodes.children('a').click(function() {
+	$treeNodes.children('a').click(function() {
 		$(this).parent().children('ul').toggle();
 	});
 };
@@ -104,16 +104,16 @@ var populateSymbolList = function(symbols) {
 		return;
 	}
 	
-	var symbolHeader = $('#symbol-list');
+	var $symbolHeader = $('#symbol-list');
 	
-	symbolHeader.removeClass('hidden');
+	$symbolHeader.removeClass('hidden');
 	
-	var prev = symbolHeader;
+	var $prev = $symbolHeader;
 	for(var i = 0; i < symbols.length; i++) {
 		var symbol = symbols[i];
-		var elem = $('<li><a href="#' + symbol + '">' + symbol + '</a></li>');
-		elem.insertAfter(prev);
-		prev = elem;
+		var $elem = $('<li><a href="#' + symbol + '">' + symbol + '</a></li>');
+		$elem.insertAfter($prev);
+		$prev = $elem;
 	}
 };
 
@@ -122,23 +122,23 @@ var populateSymbolList = function(symbols) {
  * with the current module.
  */
 var updateBreadcrumb = function(qualifiedName) {
-	var breadcrumb = $('#module-breadcrumb');
+	var $breadcrumb = $('#module-breadcrumb');
 	
 	var parts = qualifiedName.split('.');
 	for(var i = 0; i < parts.length; i++) {
 		var part = parts[i];
 		
 		if(i == parts.length - 1) {
-			breadcrumb.append('<li class="active"><h2>' + part + '</h2></li>');
+			$breadcrumb.append('<li class="active"><h2>' + part + '</h2></li>');
 		} else {
-			breadcrumb.append('<li><h2>' + part + '<span class="divider">/</span></h2></li>');
+			$breadcrumb.append('<li><h2>' + part + '<span class="divider">/</span></h2></li>');
 		}
 	}
 };
 
 var gatherSymbols = function() {
 	var list = new Array();
-	$('.psymbol').each(function(index) {
+	$('.psymbol').each(function() {
 		list.push($(this).html());
 	});
 	return list;
@@ -152,22 +152,21 @@ var setupGotoSymbolForm = function(symbols) {
 		return;
 	}
 	
-	var form = $('#gotosymbol');
+	var $form = $('#gotosymbol');
+	var $input = $form.children('input');
 	
-	var input = form.find('input');
-	
-	form.submit(function(event) {
+	$form.submit(function(event) {
 		event.preventDefault();
-		window.location.hash = input.val();
-		input.val('');
-		input.blur();
+		window.location.hash = $input.val();
+		$input.val('');
+		$input.blur();
 	});
 	
-	input.typeahead({
+	$input.typeahead({
 		'source': symbols
 	});
 	
-	form.removeClass('hidden');
+	$form.removeClass('hidden');
 };
 
 // 'Title' and 'Modules' are created inline in the DDoc generated HTML page.
