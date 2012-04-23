@@ -1,7 +1,7 @@
 PROJECTNAME = LuaD
 REFERENCETOP = index.html
 REPOSRCTREE = http://github.com/JakobOvrum/LuaD/tree/master
-TITLEBARTEXT = View source on <a href="https://github.com/JakobOvrum/LuaD#readme">Github</a>
+TITLEBARTEXT = <a href="https://github.com/JakobOvrum/LuaD">Github Page</a>
 ROOT = ./
 LOGOSRC = logo.png
 LOGOALT = $(PROJECTNAME)
