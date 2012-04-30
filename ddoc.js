@@ -189,14 +189,14 @@ function populateSymbolList(tree) {
 	var $symbolHeader = $('#symbol-list');
 	$symbolHeader.removeClass('hidden');
 	
-	function expandableNode(name) {
-		return '<li class="dropdown">' +
-		       '<span><a href="#' + name + '">' + name + '</a><b class="caret tree-node-standalone"></b></span>' +
-		       '<ul class="custom-icon-list"></ul></li>';
+	function expandableNode(name, type) {
+		return '<li class="dropdown"><span>' +
+		       '<i class="ddoc-icon-' + type + '"></i><a href="#' + name + '">' + name + '</a>' +
+		       '</span><ul class="custom-icon-list"></ul></li>';
 	}
 	
-	function leafNode(name) {
-		return '<li><a href="#' + name + '">' + name + '</a></li>';
+	function leafNode(name, type) {
+		return '<li><span><i class="ddoc-icon-' + type + '"></i><a href="#' + name + '">' + name + '</a></span></li>';
 	}
 	
 	(function(parent, $parent) {
@@ -205,13 +205,18 @@ function populateSymbolList(tree) {
 			var isTree = typeof node.members !== 'undefined';
 			
 			if(isTree) {
-				var $node = $(expandableNode(node.name));
+				var $node = $(expandableNode(node.name, node.type));
 				$parent.append($node);
+				
+				if(node.members.length > 0) {
+					var $caret = $('<b class="caret tree-node-standalone"></b>');
+					$node.find('span').append($caret);
+				}
 				
 				var $list = $node.find('ul');
 				arguments.callee(node.members, $list);
 			} else {
-				var $node = $(leafNode(node.name));
+				var $node = $(leafNode(node.name, node.type));
 				$parent.append($node);
 			}
 		}
