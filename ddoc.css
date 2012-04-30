@@ -1,5 +1,13 @@
-﻿.anchor {
+﻿.symbol {
 	padding-top: 40px;
+}
+
+.highlighted-symbol {
+	background-color: rgba(255, 200, 0, 0.5);
+}
+
+.declaration-content {
+	margin: 6px 18px;
 }
 
 .tree-node, .tree-leaf {
@@ -24,10 +32,6 @@
 
 .d_comment {
 	color: gray;
-}
-
-.highlighted-symbol {
-	background-color: rgba(255, 200, 0, 0.5);
 }
 
 .ddoc-icon-variable { background-image: url('ddoc-icons/var.png'); }

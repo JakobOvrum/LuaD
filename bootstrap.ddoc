@@ -1,14 +1,11 @@
-SECTION     = <h3 class="section">$1</h3> <div class="section">$2</div>
-SSECTION    = <div class="ssection">$(B $1): $2</div>
-STDSECTION  = <div class="stdsection">$(B $1):<br/> &nbsp; &nbsp; &nbsp; $2</div>
+SECTION     = <b>$1</b> <div>$2</div>
+SSECTION    = <div>$(B $1): $2</div>
+STDSECTION  = <div>$(B $1):<br/> &nbsp; &nbsp; &nbsp; $2</div>
 WEB         = <a href="http://$1" title="$2">$2</a>
 
-WARNING     = <div class="warning"><strong>Warning:</strong> $0</div>
-CRITICAL    = <div class="critical"><strong>Critical:</strong> $0</div>
-
-LINKTO = <a href="#$0">$0</a>
-
 MODULE = "$1",
+WARNING     = <div><strong>Warning:</strong> $0</div>
+CRITICAL    = <div><strong>Critical:</strong> $0</div>
 
 DDOC = <!DOCTYPE html>
 <html lang="en">
@@ -143,16 +140,16 @@ DDOC = <!DOCTYPE html>
 
 DDOC_DECL = <hr><div class="row-fluid declaration"><h3>$0</h3></div>
 
-DDOC_SUMMARY = <div class="summary">$0</div>
+DDOC_SUMMARY = <p>$0</p>
 
-DDOC_DESCRIPTION = <div class="description">$0</div>
+DDOC_DESCRIPTION = <p>$0</p>
 DDOC_BUGS        = $(STDSECTION Known bugs, $0)
 DDOC_COPYRIGHT   = $(STDSECTION Copyright, $0)
 DDOC_AUTHORS     = $(STDSECTION Authors, $0)
 DDOC_DATE        = $(STDSECTION Date, $0)
 DDOC_DEPRECATED  = $(STDSECTION Deprecated, $0)
-DDOC_EXAMPLES    = <h3 class="section">Examples</h3> <div class="section examples">$0</div>
-DDOC_EXAMPLE     = <h3 class="section">Examples</h3> <div class="section examples">$0</div>
+DDOC_EXAMPLES    = $(STDSECTION Examples, $0)
+DDOC_EXAMPLE     = $(STDSECTION Examples, $0)
 DDOC_HISTORY     = $(STDSECTION History, $0)
 DDOC_LICENSE     = $(SSECTION License, $0)
 DDOC_RETURNS     = $(STDSECTION Returns, $0)
@@ -168,7 +165,7 @@ DDOC_CLASS_MEMBERS= $(OFFSETMEMBERS $0)
 DDOC_TEMPLATE_MEMBERS = $(OFFSETMEMBERS $0)
 DDOC_ENUM_MEMBERS = $(OFFSETMEMBERS $0)
 
-DDOC_DECL_DD = <div class="decldd">$0</div>
+DDOC_DECL_DD = <div class="declaration-content">$0</div>
 
 DDOC_PARAMS = $(SECTION Parameters, <table class="table table-condensed table-bordered">$0</table>)
 DDOC_PARAM_ROW  = <tr>$0</tr>
@@ -181,7 +178,7 @@ D_STRING = <span class="d_string">$0</span>
 D_PARAM = $(B $0)
 D_COMMENT = <span class="d_comment">$0</span>
 
-DDOC_PSYMBOL = <a class="psymbol anchor symbol-anchor" name="$0" href="#$0">$0</a>
+DDOC_PSYMBOL = <a class="symbol symbol-anchor" name="$0" href="#$0">$0</a>
 DDOC_SYMBOL = <s>$0</s>
 
 RPAREN = )

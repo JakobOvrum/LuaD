@@ -124,7 +124,7 @@ function buildSymbolTree() {
 			var $decl = $(this);
 			var text = $decl.text();
 			
-			var $symbol = $decl.find('.psymbol');
+			var $symbol = $decl.find('.symbol');
 			var symbol;
 			if($symbol.length == 0) { // Special member (e.g. constructor).
 				symbol = text.match(specialMemberRegex)[0];
@@ -142,7 +142,7 @@ function buildSymbolTree() {
 				};
 				
 				parentNode.push(subTree);
-				fillTree(subTree.members, $decl.next('.decldd').children('.member-list'));
+				fillTree(subTree.members, $decl.next('.declaration-content').children('.member-list'));
 			}
 			
 			function addLeaf(type) {
