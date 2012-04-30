@@ -238,6 +238,22 @@ function populateSymbolList(tree) {
 };
 
 /**
+ * Set the current symbol to highlight.
+ */
+function highlightSymbol(targetId) {
+	var escapedTargetId = targetId.replace(/\./g, '\\.');
+	var $target = $(escapedTargetId).parent();
+	
+	$target.addClass('highlighted-symbol');
+	
+	if(window.currentlyHighlightedSymbol) {
+		window.currentlyHighlightedSymbol.removeClass('highlighted-symbol');
+	}
+	
+	window.currentlyHighlightedSymbol = $target;
+}
+
+/**
  * Configure the goto-symbol search form in the titlebar.
  */
 function setupGotoSymbolForm(typeaheadData) {
@@ -246,7 +262,10 @@ function setupGotoSymbolForm(typeaheadData) {
 	
 	$form.submit(function(event) {
 		event.preventDefault();
+		
 		window.location.hash = $input.val();
+		highlightSymbol('#' + $input.val());
+		
 		$input.val('');
 		$input.blur();
 	});
@@ -272,19 +291,6 @@ $(document).ready(function() {
 	}
 	
 	// Setup symbol anchor highlighting.
-	function highlightSymbol(targetId) {
-		var escapedTargetId = targetId.replace(/\./g, '\\.');
-		var $target = $(escapedTargetId).parent();
-		
-		$target.addClass('highlighted-symbol');
-		
-		if(window.currentlyHighlightedSymbol) {
-			window.currentlyHighlightedSymbol.removeClass('highlighted-symbol');
-		}
-		
-		window.currentlyHighlightedSymbol = $target;
-	}
-	
 	$('.symbol-anchor').click(function() {
 		var targetId = $(this).attr('href');
 		highlightSymbol(targetId);
