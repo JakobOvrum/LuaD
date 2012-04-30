@@ -112,6 +112,7 @@ var structRegex = /^struct /;
 var classRegex = /^class /;
 var templateRegex = /^template /;
 var functionRegex = /\);\s*$/m;
+var specialMemberRegex = /^([^(]+)/;
 
 /**
  * Build a table out of all symbols declared in the current module.
@@ -123,7 +124,12 @@ function buildSymbolTree() {
 			var text = $decl.text();
 			
 			var $symbol = $decl.find('.psymbol');
-			var symbol = $symbol.html();
+			var symbol;
+			if($symbol.length == 0) { // Special member (e.g. constructor).
+				symbol = text.match(specialMemberRegex)[0];
+			} else {
+				symbol = $symbol.html();
+			}
 			
 			function fillSubTree(type) {
 				var subTree = {
