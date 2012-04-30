@@ -178,7 +178,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 	</dt>
 </dl></div>
 
-<hr><div class="row-fluid declaration"><h3>void <a class="psymbol anchor" name="pushValue" href="#pushValue">pushValue</a>(T)(lua_State* <i>L</i>, T <i>value</i>);
+<hr><div class="row-fluid declaration"><h3>void <a class="psymbol anchor symbol-anchor" name="pushValue" href="#pushValue">pushValue</a>(T)(lua_State* <i>L</i>, T <i>value</i>);
 </h3></div>
 
 <div class="decldd"><div class="summary">Push a value of any type to the stack.
@@ -194,7 +194,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 </div>
 
-<hr><div class="row-fluid declaration"><h3>template <a class="psymbol anchor" name="luaTypeOf" href="#luaTypeOf">luaTypeOf</a>(T)</h3></div>
+<hr><div class="row-fluid declaration"><h3>template <a class="psymbol anchor symbol-anchor" name="luaTypeOf" href="#luaTypeOf">luaTypeOf</a>(T)</h3></div>
 
 <div class="decldd"><div class="summary">Get the associated Lua type for T.
 </div>
@@ -203,7 +203,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 </div>
 
-<hr><div class="row-fluid declaration"><h3>T <a class="psymbol anchor" name="getValue" href="#getValue">getValue</a>(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* <i>L</i>, int <i>idx</i>);
+<hr><div class="row-fluid declaration"><h3>T <a class="psymbol anchor symbol-anchor" name="getValue" href="#getValue">getValue</a>(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* <i>L</i>, int <i>idx</i>);
 </h3></div>
 
 <div class="decldd"><div class="summary">Get a value of any type from the stack.
@@ -225,7 +225,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 </div>
 
-<hr><div class="row-fluid declaration"><h3>T <a class="psymbol anchor" name="popValue" href="#popValue">popValue</a>(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* <i>L</i>);
+<hr><div class="row-fluid declaration"><h3>T <a class="psymbol anchor symbol-anchor" name="popValue" href="#popValue">popValue</a>(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* <i>L</i>);
 </h3></div>
 
 <div class="decldd"><div class="summary">Same as calling getValue!(T, typeMismatchHandler)(L, -1), then popping one value from the stack.
@@ -235,7 +235,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 </div>
 
-<hr><div class="row-fluid declaration"><h3>T[] <a class="psymbol anchor" name="popStack" href="#popStack">popStack</a>(T = LuaObject)(lua_State* <i>L</i>, size_t <i>n</i>);
+<hr><div class="row-fluid declaration"><h3>T[] <a class="psymbol anchor symbol-anchor" name="popStack" href="#popStack">popStack</a>(T = LuaObject)(lua_State* <i>L</i>, size_t <i>n</i>);
 </h3></div>
 
 <div class="decldd"><div class="summary">Pop a number of elements from the stack.
@@ -255,7 +255,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 </div>
 
-<hr><div class="row-fluid declaration"><h3>auto <a class="psymbol anchor" name="getArgument" href="#getArgument">getArgument</a>(T, int narg)(lua_State* <i>L</i>, int <i>idx</i>);
+<hr><div class="row-fluid declaration"><h3>auto <a class="psymbol anchor symbol-anchor" name="getArgument" href="#getArgument">getArgument</a>(T, int narg)(lua_State* <i>L</i>, int <i>idx</i>);
 </h3></div>
 
 <div class="decldd"><div class="summary">Get a function argument from the stack.</div>
@@ -263,14 +263,14 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 </div>
 
-<hr><div class="row-fluid declaration"><h3>template <a class="psymbol anchor" name="returnTypeSize" href="#returnTypeSize">returnTypeSize</a>(T)</h3></div>
+<hr><div class="row-fluid declaration"><h3>template <a class="psymbol anchor symbol-anchor" name="returnTypeSize" href="#returnTypeSize">returnTypeSize</a>(T)</h3></div>
 
 <div class="decldd"><div class="summary">Used for getting a suitable nresults argument to lua_call or lua_pcall.</div>
 
 
 </div>
 
-<hr><div class="row-fluid declaration"><h3>T <a class="psymbol anchor" name="popReturnValues" href="#popReturnValues">popReturnValues</a>(T)(lua_State* <i>L</i>, size_t <i>nret</i>);
+<hr><div class="row-fluid declaration"><h3>T <a class="psymbol anchor symbol-anchor" name="popReturnValues" href="#popReturnValues">popReturnValues</a>(T)(lua_State* <i>L</i>, size_t <i>nret</i>);
 </h3></div>
 
 <div class="decldd"><div class="summary">Pop return values from stack.
@@ -285,7 +285,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 </div>
 
-<hr><div class="row-fluid declaration"><h3>int <a class="psymbol anchor" name="pushReturnValues" href="#pushReturnValues">pushReturnValues</a>(T)(lua_State* <i>L</i>, T <i>value</i>);
+<hr><div class="row-fluid declaration"><h3>int <a class="psymbol anchor symbol-anchor" name="pushReturnValues" href="#pushReturnValues">pushReturnValues</a>(T)(lua_State* <i>L</i>, T <i>value</i>);
 </h3></div>
 
 <div class="decldd"><div class="summary">Push return values to the stack.
@@ -294,7 +294,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 </div>
 
-<hr><div class="row-fluid declaration"><h3>T <a class="psymbol anchor" name="popTuple" href="#popTuple">popTuple</a>(T)(lua_State* <i>L</i>);
+<hr><div class="row-fluid declaration"><h3>T <a class="psymbol anchor symbol-anchor" name="popTuple" href="#popTuple">popTuple</a>(T)(lua_State* <i>L</i>);
 </h3></div>
 
 <div class="decldd"><div class="summary">Pops a Tuple from the values at the top of the stack.</div>
@@ -302,7 +302,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 </div>
 
-<hr><div class="row-fluid declaration"><h3>void <a class="psymbol anchor" name="pushTuple" href="#pushTuple">pushTuple</a>(T)(lua_State* <i>L</i>, ref T <i>tup</i>);
+<hr><div class="row-fluid declaration"><h3>void <a class="psymbol anchor symbol-anchor" name="pushTuple" href="#pushTuple">pushTuple</a>(T)(lua_State* <i>L</i>, ref T <i>tup</i>);
 </h3></div>
 
 <div class="decldd"><div class="summary">Pushes all the values in a Tuple to the stack.</div>
@@ -310,7 +310,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 </div>
 
-<hr><div class="row-fluid declaration"><h3>T <a class="psymbol anchor" name="callWithRet" href="#callWithRet">callWithRet</a>(T)(lua_State* <i>L</i>, int <i>nargs</i>);
+<hr><div class="row-fluid declaration"><h3>T <a class="psymbol anchor symbol-anchor" name="callWithRet" href="#callWithRet">callWithRet</a>(T)(lua_State* <i>L</i>, int <i>nargs</i>);
 </h3></div>
 
 <div class="decldd"><div class="summary">Call a Lua function and handle its return values.
@@ -327,7 +327,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 
 </div>
 
-<hr><div class="row-fluid declaration"><h3>void <a class="psymbol anchor" name="printStack" href="#printStack">printStack</a>(void** <i>L</i>);
+<hr><div class="row-fluid declaration"><h3>void <a class="psymbol anchor symbol-anchor" name="printStack" href="#printStack">printStack</a>(void** <i>L</i>);
 </h3></div>
 
 <div class="decldd"><div class="summary">Print the Lua stack to stdout.</div>

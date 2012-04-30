@@ -140,7 +140,7 @@ If a function with the lua_CFunction signature is encountered, it is pushed dire
 
 Typesafe varargs is supported when pushing functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use <a href="lfunction.html">LuaFunction</a> instead).</div>
 
-<hr><div class="row-fluid declaration"><h3>T <a class="psymbol anchor" name="getFunction" href="#getFunction">getFunction</a>(T)(lua_State* <i>L</i>, int <i>idx</i>);
+<hr><div class="row-fluid declaration"><h3>T <a class="psymbol anchor symbol-anchor" name="getFunction" href="#getFunction">getFunction</a>(T)(lua_State* <i>L</i>, int <i>idx</i>);
 </h3></div>
 
 <div class="decldd"><div class="summary">Currently this function allocates a reference in the registry that is never deleted,
