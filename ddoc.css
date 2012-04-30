@@ -28,6 +28,7 @@
 
 .ddoc-icon-variable { background-image: url('ddoc-icons/var.png'); }
 .ddoc-icon-function { background-image: url('ddoc-icons/func.png'); }
+.ddoc-icon-property { background-image: url('ddoc-icons/property.png'); }
 .ddoc-icon-struct { background-image: url('ddoc-icons/struct.png'); }
 .ddoc-icon-class { background-image: url('ddoc-icons/class.png'); }
 .ddoc-icon-enum { background-image: url('ddoc-icons/enum.png'); }

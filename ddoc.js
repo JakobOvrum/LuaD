@@ -112,6 +112,7 @@ var structRegex = /^struct /;
 var classRegex = /^class /;
 var templateRegex = /^template /;
 var functionRegex = /\);\s*$/m;
+var propertyRegex = /@property/m;
 var specialMemberRegex = /^([^(]+)/;
 
 /**
@@ -164,7 +165,11 @@ function buildSymbolTree() {
 			} else if(templateRegex.test(text)) {
 				fillSubTree('template');
 			} else if(functionRegex.test(text)) {
-				addLeaf('function');
+				if(propertyRegex.test(text)) {
+					addLeaf('property');
+				} else {
+					addLeaf('function');
+				}
 			} else {
 				addLeaf('variable');
 			}
