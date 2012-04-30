@@ -2,8 +2,12 @@
 	padding-top: 40px;
 }
 
-.module-tree-node {
+.tree-node, .tree-leaf {
 	text-transform: none;
+}
+
+.custom-icon-list {
+	list-style-type: none;
 }
 
 .hidden {

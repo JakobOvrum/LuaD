@@ -2,7 +2,7 @@
  * Build a table representing the module hierarchy of the project
  * given a linear list of modules.
  */
-var buildModuleHierarchy = function(modlist) {
+function buildModuleHierarchy(modlist) {
 	var root = {'members': {}};
 	
 	for (var i = 0; i < modlist.length; i++) {
@@ -35,33 +35,33 @@ var buildModuleHierarchy = function(modlist) {
 /**
  * Build a path to the appropriate resource for a fully qualified module name.
  */
-var qualifiedModuleNameToUrl = function(modName) {
+function qualifiedModuleNameToUrl(modName) {
 	return modName.slice(modName.indexOf(".") + 1).replace('.', '_') + '.html';
 };
 
 /**
  * Build a package node for the module tree given the name of the package.
  */
-var treePackageNode = function(name) {
-	return '<li class="module-tree-node dropdown">' +
-	       '<a href="#"><i class="icon-th-list"></i> ' + name + '<b class="caret"></b></a>' +
-		   '<ul></ul></li>';
+function treePackageNode(name) {
+	return '<li class="dropdown">' +
+	       '<a class="tree-node" href="javascript:;"><i class="icon-th-list"></i> ' + name + '<b class="caret"></b></a>' +
+		   '<ul class="custom-icon-list"></ul></li>';
 };
 
 /**
  * Build a module node for the module tree given the name of the module
  * and a URL to the associated resource.
  */
-var treeModuleNode = function(name, url) {
+function treeModuleNode(name, url) {
 	return '<li>' +
-	       '<a href="' + url + '"><i class="icon-th"></i> ' + name + '</a>' +
+	       '<a class="tree-leaf" href="' + url + '"><i class="icon-th"></i> ' + name + '</a>' +
 		   '</li>';
 };
 
 /**
  * Create the module tree in the sidebar.
  */
-var populateModuleList = function(modlist) {
+function populateModuleList(modlist) {
 	var $listHeader = $('#module-list');
 	
 	var root = buildModuleHierarchy(modlist);
@@ -88,47 +88,20 @@ var populateModuleList = function(modlist) {
 	};
 	
 	traverser(root, $listHeader);
-	
-	var $treeNodes = $('.module-tree-node');
-	
-	$treeNodes.children('a').click(function() {
-		$(this).parent().children('ul').toggle();
-	});
-};
-
-/**
- * Create the symbol list in the sidebar.
- */
-var populateSymbolList = function(symbols) {
-	if(symbols.length == 0) { // Do not show the symbol list header on pages with no symbols.
-		return;
-	}
-	
-	var $symbolHeader = $('#symbol-list');
-	
-	$symbolHeader.removeClass('hidden');
-	
-	var $prev = $symbolHeader;
-	for(var i = 0; i < symbols.length; i++) {
-		var symbol = symbols[i];
-		var $elem = $('<li><a href="#' + symbol + '">' + symbol + '</a></li>');
-		$elem.insertAfter($prev);
-		$prev = $elem;
-	}
 };
 
 /**
  * Build a relative path for the given module name.
  */
- var moduleNameToPath = function(modName) {
+function moduleNameToPath(modName) {
 	return modName.replace(/\./g, '/') + '.d';
- };
+};
 
 /**
  * Configure the breadcrumb component at the top of the page
  * with the current module.
  */
-var updateBreadcrumb = function(qualifiedName, sourceRepoUrl) {
+function updateBreadcrumb(qualifiedName, sourceRepoUrl) {
 	var $breadcrumb = $('#module-breadcrumb');
 	
 	var parts = qualifiedName.split('.');
@@ -144,19 +117,116 @@ var updateBreadcrumb = function(qualifiedName, sourceRepoUrl) {
 	}
 };
 
-var gatherSymbols = function() {
-	var list = new Array();
-	$('.psymbol').each(function() {
-		list.push($(this).html());
-	});
-	return list;
+var enumRegex = /^enum /;
+var structRegex = /^struct /;
+var classRegex = /^class /;
+var templateRegex = /^template /;
+var functionRegex = /\);\s*$/m;
+
+function buildSymbolTree() {
+	function fillTree(parentNode, $parent) {
+		$parent.children('.declaration').each(function() {
+			var $decl = $(this);
+			var text = $decl.text();
+			
+			var $symbol = $decl.find('.psymbol');
+			var symbol = $symbol.html();
+			
+			function fillSubTree(type) {
+				var subTree = {
+					'name': symbol,
+					'type': type,
+					'decl': text,
+					'members': new Array()
+				};
+				
+				parentNode.push(subTree);
+				fillTree(subTree.members, $decl.next('.decldd').children('.member-list'));
+			}
+			
+			function addLeaf(type) {
+				var leaf = {
+					'name': symbol,
+					'type': type,
+					'decl': text
+				};
+				
+				parentNode.push(leaf);
+			}
+			
+			if(enumRegex.test(text)) {
+				fillSubTree('enum');
+			} else if(structRegex.test(text)) {
+				fillSubTree('struct');
+			} else if(classRegex.test(text)) {
+				fillSubTree('class');
+			} else if(templateRegex.test(text)) {
+				fillSubTree('template');
+			} else if(functionRegex.test(text)) {
+				addLeaf('function');
+			} else {
+				addLeaf('variable');
+			}
+		});
+	}
+	
+	var $declRoot = $('#declaration-list');
+	var tree = new Array();
+	
+	fillTree(tree, $declRoot);
+	
+	return tree;
+}
+
+/**
+ * Create the symbol list in the sidebar.
+ */
+function populateSymbolList(tree) {
+	if(tree.length == 0) { // Do not show the symbol list header on pages with no symbols.
+		return;
+	}
+	
+	var $symbolHeader = $('#symbol-list');
+	$symbolHeader.removeClass('hidden');
+	
+	function expandableNode(name) {
+		return '<li class="dropdown">' +
+		       '<span><a href="#' + name + '">' + name + '</a><b class="caret tree-node-standalone"></b></span>' +
+		       '<ul class="custom-icon-list"></ul></li>';
+	}
+	
+	function leafNode(name) {
+		return '<li><a href="#' + name + '">' + name + '</a></li>';
+	}
+	
+	(function(parent, $parent) {
+		for(var i = 0; i < parent.length; i++) {
+			var node = parent[i];
+			var isTree = typeof node.members !== 'undefined';
+			
+			if(isTree) {
+				var $node = $(expandableNode(node.name));
+				$parent.append($node);
+				
+				var $list = $node.find('ul');
+				arguments.callee(node.members, $list);
+			} else {
+				var $node = $(leafNode(node.name));
+				$parent.append($node);
+			}
+		}
+	})(tree, $symbolHeader.parent());
 };
+
+function buildDeclArray(tree) {
+	return tree;
+}
 
 /**
  * Configure the goto-symbol search form in the titlebar.
  */
-var setupGotoSymbolForm = function(symbols) {
-	if(symbols.length == 0) { // Do not show the goto-symbol form on pages with no symbols.
+function setupGotoSymbolForm(symbolTree) {
+	if(symbolTree.length == 0) { // Do not show the goto-symbol form on pages with no symbols.
 		return;
 	}
 	
@@ -171,11 +241,11 @@ var setupGotoSymbolForm = function(symbols) {
 	});
 	
 	$input.typeahead({
-		'source': symbols
+		'source': buildDeclArray(symbolTree)
 	});
 	
 	$form.removeClass('hidden');
-};
+}
 
 // 'Title', 'SourceRepository', and 'Modules' are created inline in the DDoc generated HTML page.
 $(document).ready(function() {
@@ -183,7 +253,25 @@ $(document).ready(function() {
 	
 	populateModuleList(Modules);
 
-	var symbols = gatherSymbols();
-	setupGotoSymbolForm(symbols);
-	populateSymbolList(symbols);
+	//var symbols = gatherSymbols();
+	//setupGotoSymbolForm(symbols);
+	//populateSymbolList(symbols);
+	
+	var symbolTree = buildSymbolTree();
+	populateSymbolList(symbolTree);
+	//alert(JSON.stringify(symbolTree, null, 4));
+	
+	function treeNodeClick() {
+		$(this).parent().children('ul').toggle();
+	}
+	
+	function standaloneNodeClick() {
+		$(this).parent().parent().children('ul').toggle();
+	}
+	
+	var $treeNodes = $('.tree-node');
+	var $standaloneTreeNodes = $('.tree-node-standalone');
+	
+	$treeNodes.click(treeNodeClick);
+	$standaloneTreeNodes.click(standaloneNodeClick);
 });

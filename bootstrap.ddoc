@@ -99,7 +99,9 @@ DDOC = <!DOCTYPE html>
 						<a href="$(LOGOLINK)"><img src="$(LOGOSRC)" alt="$(LOGOALT)"/></a>
 					</div>
 				</div>
-				$(BODY)
+				<div id="declaration-list">
+					$(BODY)
+				</div>
 			</div>
 			
 			<hr>
@@ -136,7 +138,7 @@ DDOC = <!DOCTYPE html>
 	</body>
 </html>
 
-DDOC_DECL = <hr><div class="row-fluid"><h3>$0</h3></div>
+DDOC_DECL = <hr><div class="row-fluid declaration"><h3>$0</h3></div>
 
 DDOC_SUMMARY = <div class="summary">$0</div>
 
@@ -156,7 +158,8 @@ DDOC_STANDARDS   = $(STDSECTION Standards, $0)
 DDOC_THROWS	     = $(STDSECTION Throws, $0)
 DDOC_VERSION     = $(STDSECTION Version, $0)
 
-OFFSETMEMBERS = <div class="offset1">$0</div>
+DDOC_MEMBERS = $0
+OFFSETMEMBERS = <div class="offset1 member-list">$0</div>
 DDOC_STRUCT_MEMBERS = $(OFFSETMEMBERS $0)
 DDOC_CLASS_MEMBERS= $(OFFSETMEMBERS $0)
 DDOC_TEMPLATE_MEMBERS = $(OFFSETMEMBERS $0)
