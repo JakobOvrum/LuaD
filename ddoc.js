@@ -136,8 +136,8 @@ function buildSymbolTree() {
 				var subTree = {
 					'name': symbol,
 					'type': type,
-					'decl': text,
 					'members': new Array(),
+					'decl': $decl,
 					'symbolNode': $symbol
 				};
 				
@@ -149,7 +149,7 @@ function buildSymbolTree() {
 				var leaf = {
 					'name': symbol,
 					'type': type,
-					'decl': text,
+					'decl': $decl,
 					'symbolNode': $symbol
 				};
 				
@@ -191,12 +191,12 @@ function buildSymbolTree() {
 function populateSymbolList(tree) {	
 	function expandableNode(name, anchor, type) {
 		return '<li class="dropdown"><span>' +
-		       '<i class="ddoc-icon-' + type + '"></i><a href="#' + anchor + '">' + name + '</a>' +
+		       '<i class="ddoc-icon-' + type + '"></i><a class="symbol-anchor" href="#' + anchor + '">' + name + '</a>' +
 		       '</span><ul class="custom-icon-list"></ul></li>';
 	}
 	
 	function leafNode(name, anchor, type) {
-		return '<li><span><i class="ddoc-icon-' + type + '"></i><a href="#' + anchor + '">' + name + '</a></span></li>';
+		return '<li><span><i class="ddoc-icon-' + type + '"></i><a class="symbol-anchor" href="#' + anchor + '">' + name + '</a></span></li>';
 	}
 	
 	var anchorNames = new Array();
@@ -269,6 +269,29 @@ $(document).ready(function() {
 	if(symbolTree.length > 0) {
 		var symbolAnchors = populateSymbolList(symbolTree);
 		setupGotoSymbolForm(symbolAnchors);
+	}
+	
+	// Setup symbol anchor highlighting.
+	function highlightSymbol(targetId) {
+		var escapedTargetId = targetId.replace(/\./g, '\\.');
+		var $target = $(escapedTargetId).parent();
+		
+		$target.addClass('highlighted-symbol');
+		
+		if(window.currentlyHighlightedSymbol) {
+			window.currentlyHighlightedSymbol.removeClass('highlighted-symbol');
+		}
+		
+		window.currentlyHighlightedSymbol = $target;
+	}
+	
+	$('.symbol-anchor').click(function() {
+		var targetId = $(this).attr('href');
+		highlightSymbol(targetId);
+	});
+	
+	if(document.location.hash.length > 0) {
+		highlightSymbol(document.location.hash);
 	}
 	
 	// Setup collapsable tree nodes.

@@ -181,7 +181,7 @@ D_STRING = <span class="d_string">$0</span>
 D_PARAM = $(B $0)
 D_COMMENT = <span class="d_comment">$0</span>
 
-DDOC_PSYMBOL = <a class="psymbol anchor" name="$0" href="#$0">$0</a>
+DDOC_PSYMBOL = <a class="psymbol anchor symbol-anchor" name="$0" href="#$0">$0</a>
 DDOC_SYMBOL = <s>$0</s>
 
 RPAREN = )

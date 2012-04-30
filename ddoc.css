@@ -26,6 +26,10 @@
 	color: gray;
 }
 
+.highlighted-symbol {
+	background-color: rgba(255, 200, 0, 0.5);
+}
+
 .ddoc-icon-variable { background-image: url('ddoc-icons/var.png'); }
 .ddoc-icon-function { background-image: url('ddoc-icons/func.png'); }
 .ddoc-icon-property { background-image: url('ddoc-icons/property.png'); }
