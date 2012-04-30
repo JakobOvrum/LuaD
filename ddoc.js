@@ -177,11 +177,7 @@ function buildSymbolTree() {
  * Create the symbol list in the sidebar.
  * Returns an array of the anchor names for the symbols in the list.
  */
-function populateSymbolList(tree) {
-	if(tree.length == 0) { // Do not show the symbol list header on pages with no symbols.
-		return;
-	}
-	
+function populateSymbolList(tree) {	
 	function expandableNode(name, anchor, type) {
 		return '<li class="dropdown"><span>' +
 		       '<i class="ddoc-icon-' + type + '"></i><a href="#' + anchor + '">' + name + '</a>' +
@@ -234,10 +230,6 @@ function populateSymbolList(tree) {
  * Configure the goto-symbol search form in the titlebar.
  */
 function setupGotoSymbolForm(typeaheadData) {
-	if(typeaheadData.length == 0) { // Do not show the goto-symbol form on pages with no symbols.
-		return;
-	}
-	
 	var $form = $('#gotosymbol');
 	var $input = $form.children('input');
 	
@@ -263,8 +255,10 @@ $(document).ready(function() {
 	
 	// Construct symbol list and setup goto-symbol form.
 	var symbolTree = buildSymbolTree();
-	var symbolAnchors = populateSymbolList(symbolTree);
-	setupGotoSymbolForm(symbolAnchors);
+	if(symbolTree.length > 0) {
+		var symbolAnchors = populateSymbolList(symbolTree);
+		setupGotoSymbolForm(symbolAnchors);
+	}
 	
 	// Setup collapsable tree nodes.
 	function treeNodeClick() {
