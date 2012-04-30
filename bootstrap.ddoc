@@ -93,7 +93,10 @@ DDOC = <!DOCTYPE html>
 			<div class="span10">
 				<div class="row-fluid">
 					<div class="span11">
-						<ul id="module-breadcrumb" class="breadcrumb"></ul>
+						<ul id="module-breadcrumb" class="breadcrumb">
+							<noscript><h1>$(TITLE)</h1></noscript>
+						</ul>
+						
 					</div>
 					<div class="span1 offset11">
 						<a href="$(LOGOLINK)"><img src="$(LOGOSRC)" alt="$(LOGOALT)"/></a>
