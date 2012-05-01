@@ -1,11 +1,11 @@
-PROJECTNAME = Example Project
-REFERENCETOP = example.html
-REPOSRCTREE = http://github.com/JakobOvrum/bootDoc/tree/master
-TITLEBARTEXT = <a href="htps://github.com/JakobOvrum/bootDoc">Github Page</a>
-RESOURCEROOT = ../../
-FAVICON = $(RESOURCEROOT)assets/ico/favicon.ico
-LOGOSRC = $(RESOURCEROOT)assets/img/icon-github.png
+PROJECTNAME = LuaD
+REFERENCETOP = index.html
+REPOSRCTREE = http://github.com/JakobOvrum/LuaD/tree/master
+TITLEBARTEXT = <a href="htps://github.com/JakobOvrum/LuaD">Github Page</a>
+RESOURCEROOT = /LuaD/
+FAVICON = $(RESOURCEROOT)favicon.png
+LOGOSRC = $(RESOURCEROOT)logo.png
 LOGOALT = $(PROJECTNAME)
 LOGOLINK = $(REFERENCETOP)
 COPYRIGHT = Jakob Ovrum
-STARTYEAR = 2012
+STARTYEAR = 2010
