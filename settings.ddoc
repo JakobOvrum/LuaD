@@ -2,9 +2,9 @@ PROJECTNAME = LuaD
 REFERENCETOP = index.html
 REPOSRCTREE = http://github.com/JakobOvrum/LuaD/tree/master
 TITLEBARTEXT = <a href="htps://github.com/JakobOvrum/LuaD">Github Page</a>
-RESOURCEROOT = /LuaD/
-FAVICON = $(RESOURCEROOT)favicon.png
-LOGOSRC = $(RESOURCEROOT)logo.png
+RESOURCEROOT = bootDoc/
+FAVICON = favicon.png
+LOGOSRC = logo.png
 LOGOALT = $(PROJECTNAME)
 LOGOLINK = $(REFERENCETOP)
 COPYRIGHT = Jakob Ovrum
