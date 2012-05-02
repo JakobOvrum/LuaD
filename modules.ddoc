@@ -10,6 +10,7 @@ MODULES =
 	
 	$(MODULE luad.conversions.arrays)
 	$(MODULE luad.conversions.assocarrays)
+	$(MODULE luad.conversions.classes)
 	$(MODULE luad.conversions.functions)
 	$(MODULE luad.conversions.structs)
 	$(MODULE luad.conversions.variant)
