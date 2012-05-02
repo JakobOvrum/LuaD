@@ -85,7 +85,7 @@
 					</ul>
 					
 					<form id="gotosymbol" class="navbar-search pull-left hidden">
-						<input type="text" class="search-query" placeholder="Goto symbol in luad.state" data-provide="typeahead" data-items="4">
+						<input type="text" class="search-query" placeholder="Go to symbol in luad.state" data-provide="typeahead" data-items="4">
 					</form>
 					
 					<p class="navbar-text pull-right"><a href="htps://github.com/JakobOvrum/LuaD">Github Page</a></p>
@@ -99,8 +99,8 @@
 			<div class="span2">
 				<div class="well sidebar-nav">
 				<ul class="nav nav-list">
-					<li id="module-list" class="nav-header">Modules<li>
-					<li id="symbol-list" class="nav-header hidden">luad.state</li>
+					<li id="module-list" class="nav-header sidebar-list-entry">Modules<li>
+					<li id="symbol-list" class="nav-header sidebar-list-entry hidden">luad.state</li>
 				</ul>
 				</div><!--/.well -->
 			</div><!--/span-->
@@ -123,21 +123,24 @@
 <hr><div class="row-fluid declaration"><h3>enum <a class="symbol symbol-anchor" name="LuaErrorHandler" href="#LuaErrorHandler">LuaErrorHandler</a>;
 </h3></div>
 
-<div class="declaration-content"><p>Specify error handling scheme for doString and doFile.</p>
 
+<div class="declaration-content"><dl><p>Specify error handling scheme for doString and doFile.</p>
 
+</dl>
 <div class="offset1 member-list"><hr><div class="row-fluid declaration"><h3><a class="symbol symbol-anchor" name="None" href="#None">None</a></h3></div>
 
-<div class="declaration-content"><p>No extra error handler.</p>
 
+<div class="declaration-content"><dl><p>No extra error handler.</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3><a class="symbol symbol-anchor" name="Traceback" href="#Traceback">Traceback</a></h3></div>
 
-<div class="declaration-content"><p>Append a stack traceback to the error message.</p>
 
+<div class="declaration-content"><dl><p>Append a stack traceback to the error message.</p>
 
+</dl>
 </div>
 
 </div>
@@ -147,13 +150,15 @@
 <hr><div class="row-fluid declaration"><h3>class <a class="symbol symbol-anchor" name="LuaState" href="#LuaState">LuaState</a>;
 </h3></div>
 
-<div class="declaration-content"><p>Represents a Lua state instance.</p>
 
+<div class="declaration-content"><dl><p>Represents a Lua state instance.</p>
 
+</dl>
 <div class="offset1 member-list"><hr><div class="row-fluid declaration"><h3>this();
 </h3></div>
 
-<div class="declaration-content"><p>Create a new, empty Lua state. The standard library is not loaded.
+
+<div class="declaration-content"><dl><p>Create a new, empty Lua state. The standard library is not loaded.
 </p>
 
 <p>If an uncaught error for any operation on this state
@@ -161,86 +166,99 @@
  an exception of type LuaError is thrown.
 
 </p>
-<div><b>See also</b>:<br/> &nbsp; &nbsp; &nbsp; openLibs</div>
+<dt>See Also</dt><dd>openLibs</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>this(void** <i>L</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Create a D wrapper for an existing Lua state.
+
+<div class="declaration-content"><dl><p>Create a D wrapper for an existing Lua state.
 </p>
 
 <p>The new LuaState does not assume ownership of the state.
 </p>
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">void** <i>L</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">void** <i>L</i></td>
 <td>state to wrap.</td>
 </tr>
-</table></div>
-<b>Note:</b><br>
-The panic function is not changed - a Lua panic will not throw a D exception!
-<br><br>
-<div><b>See also</b>:<br/> &nbsp; &nbsp; &nbsp; setPanicHandler</div>
+</table></dd>
 
+<dt>Note:</dt><dd>
+The panic function is not changed - a Lua panic will not throw a D exception!
+</dd>
+<dt>See Also</dt><dd>setPanicHandler</dd>
+
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>pure nothrow @property @safe void** <a class="symbol symbol-anchor" name="state" href="#state">state</a>();
 </h3></div>
 
-<div class="declaration-content"><p>The underlying lua_State pointer for interfacing with C.</p>
 
+<div class="declaration-content"><dl><p>The underlying lua_State pointer for interfacing with C.</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>static @trusted LuaState <a class="symbol symbol-anchor" name="fromPointer" href="#fromPointer">fromPointer</a>(void** <i>L</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Get the LuaState instance for a Lua state.
+
+<div class="declaration-content"><dl><p>Get the LuaState instance for a Lua state.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">void** <i>L</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">void** <i>L</i></td>
 <td>Lua state</td>
 </tr>
-</table></div>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; LuaState for the given lua_State*, or <span class="d_keyword">null</span> if a LuaState is not currently attached to the state</div>
+</table></dd>
 
+<dt>Returns</dt><dd>LuaState for the given lua_State*, or <span class="d_keyword">null</span> if a LuaState is not currently attached to the state</dd>
+
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted void <a class="symbol symbol-anchor" name="openLibs" href="#openLibs">openLibs</a>();
 </h3></div>
 
-<div class="declaration-content"><p>Open the standard library.</p>
 
+<div class="declaration-content"><dl><p>Open the standard library.</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>pure nothrow @property @safe LuaTable <a class="symbol symbol-anchor" name="globals" href="#globals">globals</a>();
 </h3></div>
 
-<div class="declaration-content"><p>The global table for this instance.</p>
 
+<div class="declaration-content"><dl><p>The global table for this instance.</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>pure nothrow @property @safe LuaTable <a class="symbol symbol-anchor" name="registry" href="#registry">registry</a>();
 </h3></div>
 
-<div class="declaration-content"><p>The registry table for this instance.</p>
 
+<div class="declaration-content"><dl><p>The registry table for this instance.</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted void <a class="symbol symbol-anchor" name="setPanicHandler" href="#setPanicHandler">setPanicHandler</a>(void function(LuaState, const(char[])) <i>onPanic</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Set a new panic handler.
+
+<div class="declaration-content"><dl><p>Set a new panic handler.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">void function(LuaState, const(char[])) <i>onPanic</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">void function(LuaState, const(char[])) <i>onPanic</i></td>
 <td>new panic handler</td>
 </tr>
-</table></div>
-<div><b>Examples</b>:<br/> &nbsp; &nbsp; &nbsp; <pre class="d_code">	<span class="d_keyword">auto</span> L = luaL_newstate(); <span class="d_comment">// found in luad.c.all
+</table></dd>
+
+<dt>Examples</dt><dd><pre class="d_code">	<span class="d_keyword">auto</span> L = luaL_newstate(); <span class="d_comment">// found in luad.c.all
 </span>
 	<span class="d_keyword">auto</span> lua = <span class="d_keyword">new</span> LuaState(L);
 
@@ -251,174 +269,206 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 
 	lua.<u>setPanicHandler</u>(&amp;panic);
 </pre>
-</div>
+</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted LuaFunction <a class="symbol symbol-anchor" name="loadString" href="#loadString">loadString</a>(in char[] <i>code</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Compile a string of Lua code.
+
+<div class="declaration-content"><dl><p>Compile a string of Lua code.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>code</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>code</i></td>
 <td>code to compile</td>
 </tr>
-</table></div>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Loaded code as a function.</div>
+</table></dd>
 
+<dt>Returns</dt><dd>Loaded code as a function.</dd>
+
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted LuaFunction <a class="symbol symbol-anchor" name="loadFile" href="#loadFile">loadFile</a>(in char[] <i>path</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Compile a file of Lua code.
+
+<div class="declaration-content"><dl><p>Compile a file of Lua code.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>path</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>path</i></td>
 <td>path to file</td>
 </tr>
-</table></div>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Loaded code as a function.</div>
+</table></dd>
 
+<dt>Returns</dt><dd>Loaded code as a function.</dd>
+
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted LuaObject[] <a class="symbol symbol-anchor" name="doString" href="#doString">doString</a>(in char[] <i>code</i>, LuaErrorHandler <i>handler</i> = (LuaErrorHandler).None);
 </h3></div>
 
-<div class="declaration-content"><p>Execute a string of Lua code.
+
+<div class="declaration-content"><dl><p>Execute a string of Lua code.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>code</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>code</i></td>
 <td>code to run</td>
 </tr>
 <tr><td class="span2">LuaErrorHandler <i>handler</i></td>
 <td>error handling scheme</td>
 </tr>
-</table></div>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Any code return values</div>
+</table></dd>
 
+<dt>Returns</dt><dd>Any code return values</dd>
+
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted LuaObject[] <a class="symbol symbol-anchor" name="doFile" href="#doFile">doFile</a>(in char[] <i>path</i>, LuaErrorHandler <i>handler</i> = (LuaErrorHandler).None);
 </h3></div>
 
-<div class="declaration-content"><p>Execute a file of Lua code.
+
+<div class="declaration-content"><dl><p>Execute a file of Lua code.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>path</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>path</i></td>
 <td>path to file</td>
 </tr>
 <tr><td class="span2">LuaErrorHandler <i>handler</i></td>
 <td>error handling scheme</td>
 </tr>
-</table></div>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Any script return values</div>
+</table></dd>
 
+<dt>Returns</dt><dd>Any script return values</dd>
+
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted LuaTable <a class="symbol symbol-anchor" name="newTable" href="#newTable">newTable</a>();
 </h3></div>
 
-<div class="declaration-content"><p>Create a new, empty table.
+
+<div class="declaration-content"><dl><p>Create a new, empty table.
 </p>
 
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; The new table</div>
+<dt>Returns</dt><dd>The new table</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted LuaTable <a class="symbol symbol-anchor" name="newTable" href="#newTable">newTable</a>(uint <i>narr</i>, uint <i>nrec</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Create a new, empty table with pre-allocated space for members.
+
+<div class="declaration-content"><dl><p>Create a new, empty table with pre-allocated space for members.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">uint <i>narr</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">uint <i>narr</i></td>
 <td>number of pre-allocated array slots</td>
 </tr>
 <tr><td class="span2">uint <i>nrec</i></td>
 <td>number of pre-allocated non-array slots</td>
 </tr>
-</table></div>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; The new table</div>
+</table></dd>
 
+<dt>Returns</dt><dd>The new table</dd>
+
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted T <a class="symbol symbol-anchor" name="wrap" href="#wrap">wrap</a>(T = LuaObject, U)(U <i>value</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Wrap a D value in a Lua reference.
+
+<div class="declaration-content"><dl><p>Wrap a D value in a Lua reference.
 </p>
 
 <p>Note that using this method is only necessary in certain situations,
  like when you want to act on the reference before fully exposing it to Lua.
 </p>
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
 <td>type of reference. Must be LuaObject, LuaTable, LuaFunction or LuaDynamic.
    Defaults to LuaObject.</td>
 </tr>
 <tr><td class="span2">value</td>
 <td>D value to wrap</td>
 </tr>
-</table></div>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; A Lua reference to value</div>
+</table></dd>
 
+<dt>Returns</dt><dd>A Lua reference to value</dd>
+
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted LuaObject <a class="symbol symbol-anchor" name="registerType" href="#registerType">registerType</a>(T)();
 </h3></div>
 
-<div class="declaration-content"><p>Register a D class or struct with Lua.
+
+<div class="declaration-content"><dl><p>Register a D class or struct with Lua.
 </p>
 
 <p>This method exposes a type's constructors and static interface to Lua.
 </p>
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
 <td>class or struct to register</td>
 </tr>
-</table></div>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Reference to the registered type in Lua</div>
+</table></dd>
 
+<dt>Returns</dt><dd>Reference to the registered type in Lua</dd>
+
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>T <a class="symbol symbol-anchor" name="get" href="#get">get</a>(T, U...)(U <i>args</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Same as calling globals.get with the same arguments.
+
+<div class="declaration-content"><dl><p>Same as calling globals.get with the same arguments.
 </p>
 
-<div><b>See also</b>:<br/> &nbsp; &nbsp; &nbsp; LuaTable.get</div>
+<dt>See Also</dt><dd>LuaTable.get</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>LuaObject <a class="symbol symbol-anchor" name="opIndex" href="#opIndex">opIndex</a>(T...)(T <i>args</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Same as calling globals.get!LuaObject with the same arguments.
+
+<div class="declaration-content"><dl><p>Same as calling globals.get!LuaObject with the same arguments.
 </p>
 
-<div><b>See also</b>:<br/> &nbsp; &nbsp; &nbsp; LuaTable.opIndex</div>
+<dt>See Also</dt><dd>LuaTable.opIndex</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>void <a class="symbol symbol-anchor" name="set" href="#set">set</a>(T, U)(T <i>key</i>, U <i>value</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Same as calling globals.set with the same arguments.
+
+<div class="declaration-content"><dl><p>Same as calling globals.set with the same arguments.
 </p>
 
-<div><b>See also</b>:<br/> &nbsp; &nbsp; &nbsp; LuaTable.set</div>
+<dt>See Also</dt><dd>LuaTable.set</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>void <a class="symbol symbol-anchor" name="opIndexAssign" href="#opIndexAssign">opIndexAssign</a>(T, U...)(T <i>value</i>, U <i>args</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Same as calling globals.opIndexAssign with the same arguments.
+
+<div class="declaration-content"><dl><p>Same as calling globals.opIndexAssign with the same arguments.
 </p>
 
-<div><b>See also</b>:<br/> &nbsp; &nbsp; &nbsp; LuaTable.opIndexAssign</div>
+<dt>See Also</dt><dd>LuaTable.opIndexAssign</dd>
 
+</dl>
 </div>
 
 </div>

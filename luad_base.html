@@ -85,7 +85,7 @@
 					</ul>
 					
 					<form id="gotosymbol" class="navbar-search pull-left hidden">
-						<input type="text" class="search-query" placeholder="Goto symbol in luad.base" data-provide="typeahead" data-items="4">
+						<input type="text" class="search-query" placeholder="Go to symbol in luad.base" data-provide="typeahead" data-items="4">
 					</form>
 					
 					<p class="navbar-text pull-right"><a href="htps://github.com/JakobOvrum/LuaD">Github Page</a></p>
@@ -99,8 +99,8 @@
 			<div class="span2">
 				<div class="well sidebar-nav">
 				<ul class="nav nav-list">
-					<li id="module-list" class="nav-header">Modules<li>
-					<li id="symbol-list" class="nav-header hidden">luad.base</li>
+					<li id="module-list" class="nav-header sidebar-list-entry">Modules<li>
+					<li id="symbol-list" class="nav-header sidebar-list-entry hidden">luad.base</li>
 				</ul>
 				</div><!--/.well -->
 			</div><!--/span-->
@@ -123,56 +123,64 @@
 <hr><div class="row-fluid declaration"><h3>enum <a class="symbol symbol-anchor" name="LuaType" href="#LuaType">LuaType</a>;
 </h3></div>
 
-<div class="declaration-content"><p>Enumerates all Lua types.</p>
 
+<div class="declaration-content"><dl><p>Enumerates all Lua types.</p>
 
+</dl>
 <div class="offset1 member-list"><hr><div class="row-fluid declaration"><h3><a class="symbol symbol-anchor" name="String" href="#String">String</a></h3></div>
 
-<div class="declaration-content"><p>string</p>
 
+<div class="declaration-content"><dl><p>string</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3><a class="symbol symbol-anchor" name="Number" href="#Number">Number</a></h3></div>
 
-<div class="declaration-content"><p>number</p>
 
+<div class="declaration-content"><dl><p>number</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3><a class="symbol symbol-anchor" name="Nil" href="#Nil">Nil</a></h3></div>
 
-<div class="declaration-content"><p>nil</p>
 
+<div class="declaration-content"><dl><p>nil</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3><a class="symbol symbol-anchor" name="Boolean" href="#Boolean">Boolean</a></h3></div>
 
-<div class="declaration-content"><p>boolean</p>
 
+<div class="declaration-content"><dl><p>boolean</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3><a class="symbol symbol-anchor" name="Function" href="#Function">Function</a></h3></div>
 
-<div class="declaration-content"><p>function</p>
 
+<div class="declaration-content"><dl><p>function</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3><a class="symbol symbol-anchor" name="Userdata" href="#Userdata">Userdata</a><br><a class="symbol symbol-anchor" name="LightUserdata" href="#LightUserdata">LightUserdata</a></h3></div>
 
-<div class="declaration-content"><p>userdata</p>
 
+<div class="declaration-content"><dl><p>userdata</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3><a class="symbol symbol-anchor" name="Thread" href="#Thread">Thread</a></h3></div>
 
-<div class="declaration-content"><p>thread</p>
 
+<div class="declaration-content"><dl><p>thread</p>
 
+</dl>
 </div>
 
 </div>
@@ -182,108 +190,122 @@
 <hr><div class="row-fluid declaration"><h3>Nil <a class="symbol symbol-anchor" name="nil" href="#nil">nil</a>;
 </h3></div>
 
-<div class="declaration-content"><p>Special value representing the Lua type and value <a class="symbol symbol-anchor" name="nil" href="#nil">nil</a>.
+
+<div class="declaration-content"><dl><p>Special value representing the Lua type and value <a class="symbol symbol-anchor" name="nil" href="#nil">nil</a>.
 </p>
 
-<div><b>Examples</b>:<br/> &nbsp; &nbsp; &nbsp; Useful for clearing keys in a table:
+<dt>Examples</dt><dd>Useful for clearing keys in a table:
 <pre class="d_code">	lua[<span class="d_string">"n"</span>] = 1.23;
 	<span class="d_keyword">assert</span>(lua.get!<span class="d_keyword">double</span>(<span class="d_string">"n"</span>) == 1.23);
 
 	lua[<span class="d_string">"n"</span>] = <u>nil</u>;
 	<span class="d_keyword">assert</span>(lua[<span class="d_string">"n"</span>].type == LuaType.Nil);
 </pre>
-</div>
+</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>struct <a class="symbol symbol-anchor" name="LuaObject" href="#LuaObject">LuaObject</a>;
 </h3></div>
 
-<div class="declaration-content"><p>Represents a reference to a Lua value of any type.
+
+<div class="declaration-content"><dl><p>Represents a reference to a Lua value of any type.
  It contains only the bare minimum of functionality which all Lua values support.
  For a generic reference type with more functionality, see <a href="luad_dynamic.html">LuaDynamic</a>
 .</p>
 
-
+</dl>
 <div class="offset1 member-list"><hr><div class="row-fluid declaration"><h3>pure nothrow @property @safe void** <a class="symbol symbol-anchor" name="state" href="#state">state</a>();
 </h3></div>
 
-<div class="declaration-content"><p>The underlying lua_State pointer for interfacing with C.</p>
 
+<div class="declaration-content"><dl><p>The underlying lua_State pointer for interfacing with C.</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>pure nothrow @safe void <a class="symbol symbol-anchor" name="release" href="#release">release</a>();
 </h3></div>
 
-<div class="declaration-content"><p>Release this reference.
+
+<div class="declaration-content"><dl><p>Release this reference.
 </p>
 
 <p>This reference becomes a nil reference.
  This is only required when you want to release the reference before the lifetime
  of this LuaObject has ended.</p>
-
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>nothrow @property @trusted LuaType <a class="symbol symbol-anchor" name="type" href="#type">type</a>();
 </h3></div>
 
-<div class="declaration-content"><p>Type of referenced object.
+
+<div class="declaration-content"><dl><p>Type of referenced object.
 </p>
 
-<div><b>See also</b>:<br/> &nbsp; &nbsp; &nbsp; LuaType</div>
+<dt>See Also</dt><dd>LuaType</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@property @trusted string <a class="symbol symbol-anchor" name="typeName" href="#typeName">typeName</a>();
 </h3></div>
 
-<div class="declaration-content"><p>Type name of referenced object.</p>
 
+<div class="declaration-content"><dl><p>Type name of referenced object.</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>pure nothrow @property @safe bool <a class="symbol symbol-anchor" name="isNil" href="#isNil">isNil</a>();
 </h3></div>
 
-<div class="declaration-content"><p>Boolean whether or not the referenced object is nil.</p>
 
+<div class="declaration-content"><dl><p>Boolean whether or not the referenced object is nil.</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted string <a class="symbol symbol-anchor" name="toString" href="#toString">toString</a>();
 </h3></div>
 
-<div class="declaration-content"><p>Convert the referenced object into a textual representation.
+
+<div class="declaration-content"><dl><p>Convert the referenced object into a textual representation.
 </p>
 
 <p>The returned string is formatted exactly like the Lua 'tostring' function.
 
 </p>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; String representation of referenced object</div>
+<dt>Returns</dt><dd>String representation of referenced object</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>T <a class="symbol symbol-anchor" name="to" href="#to">to</a>(T)();
 </h3></div>
 
-<div class="declaration-content"><p>Attempt to convert the referenced object to any D type.
+
+<div class="declaration-content"><dl><p>Attempt to convert the referenced object to any D type.
 </p>
 
-<div><b>Examples</b>:<br/> &nbsp; &nbsp; &nbsp; <pre class="d_code">	<span class="d_keyword">auto</span> results = lua.doString(<span class="d_string">`return "hello!"`</span>);
+<dt>Examples</dt><dd><pre class="d_code">	<span class="d_keyword">auto</span> results = lua.doString(<span class="d_string">`return "hello!"`</span>);
 	<span class="d_keyword">assert</span>(results[0].<u>to</u>!string() == <span class="d_string">"hello!"</span>);
 </pre>
-</div>
+</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted bool <a class="symbol symbol-anchor" name="opEquals" href="#opEquals">opEquals</a>(T : LuaObject)(ref T <i>o</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Compare this object to another with Lua's equality semantics.
+
+<div class="declaration-content"><dl><p>Compare this object to another with Lua's equality semantics.
  Also returns <span class="d_keyword">false</span> if the two objects are in different Lua states.</p>
 
-
+</dl>
 </div>
 
 </div>

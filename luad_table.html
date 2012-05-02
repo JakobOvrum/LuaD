@@ -85,7 +85,7 @@
 					</ul>
 					
 					<form id="gotosymbol" class="navbar-search pull-left hidden">
-						<input type="text" class="search-query" placeholder="Goto symbol in luad.table" data-provide="typeahead" data-items="4">
+						<input type="text" class="search-query" placeholder="Go to symbol in luad.table" data-provide="typeahead" data-items="4">
 					</form>
 					
 					<p class="navbar-text pull-right"><a href="htps://github.com/JakobOvrum/LuaD">Github Page</a></p>
@@ -99,8 +99,8 @@
 			<div class="span2">
 				<div class="well sidebar-nav">
 				<ul class="nav nav-list">
-					<li id="module-list" class="nav-header">Modules<li>
-					<li id="symbol-list" class="nav-header hidden">luad.table</li>
+					<li id="module-list" class="nav-header sidebar-list-entry">Modules<li>
+					<li id="symbol-list" class="nav-header sidebar-list-entry hidden">luad.table</li>
 				</ul>
 				</div><!--/.well -->
 			</div><!--/span-->
@@ -123,185 +123,215 @@
 <hr><div class="row-fluid declaration"><h3>struct <a class="symbol symbol-anchor" name="LuaTable" href="#LuaTable">LuaTable</a>;
 </h3></div>
 
-<div class="declaration-content"><p>Represents a Lua table.</p>
 
+<div class="declaration-content"><dl><p>Represents a Lua table.</p>
 
+</dl>
 <div class="offset1 member-list"><hr><div class="row-fluid declaration"><h3>LuaObject <a class="symbol symbol-anchor" name="object" href="#object">object</a>;
 </h3></div>
 
-<div class="declaration-content"><p>LuaTable sub-types LuaObject through this reference.</p>
 
+<div class="declaration-content"><dl><p>LuaTable sub-types LuaObject through this reference.</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted T <a class="symbol symbol-anchor" name="get" href="#get">get</a>(T, U...)(U <i>args</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Lookup a value in this table or in a sub-table of this table.
+
+<div class="declaration-content"><dl><p>Lookup a value in this table or in a sub-table of this table.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
 <td>type of value</td>
 </tr>
 <tr><td class="span2">args</td>
 <td>list of keys, where all keys but the last one should result in a table</td>
 </tr>
-</table></div>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; t[k] where t is the table for the second-to-last parameter, and k is the last parameter
+</table></dd>
 
-</div>
-<div><b>Examples</b>:<br/> &nbsp; &nbsp; &nbsp; <pre class="d_code">	<span class="d_keyword">auto</span> execute = lua.<u>get</u>!LuaFunction(<span class="d_string">"os"</span>, <span class="d_string">"execute"</span>);
+<dt>Returns</dt><dd>t[k] where t is the table for the second-to-last parameter, and k is the last parameter
+
+</dd>
+
+<dt>Examples</dt><dd><pre class="d_code">	<span class="d_keyword">auto</span> execute = lua.<u>get</u>!LuaFunction(<span class="d_string">"os"</span>, <span class="d_string">"execute"</span>);
 	execute(<span class="d_string">`echo hello, world!`</span>);
 </pre>
-</div>
+</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted bool <a class="symbol symbol-anchor" name="readString" href="#readString">readString</a>(T)(T <i>key</i>, scope void delegate(in char[] str) <i>dg</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Read a string value in this table without making a copy of the string.
+
+<div class="declaration-content"><dl><p>Read a string value in this table without making a copy of the string.
  The read string is passed to dg, and should not be escaped.
  If the value for key is not a string, dg is not called.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">key</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">key</td>
 <td>lookup key</td>
 </tr>
 <tr><td class="span2">dg</td>
 <td>delegate to receive string</td>
 </tr>
-</table></div>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; <span class="d_keyword">true</span> if the value for key was a string and passed to dg, <span class="d_keyword">false</span> otherwise
-</div>
-<div><b>Examples</b>:<br/> &nbsp; &nbsp; &nbsp; <pre class="d_code">	t[2] = <span class="d_string">"two"</span>;
+</table></dd>
+
+<dt>Returns</dt><dd><span class="d_keyword">true</span> if the value for key was a string and passed to dg, <span class="d_keyword">false</span> otherwise
+</dd>
+
+<dt>Examples</dt><dd><pre class="d_code">	t[2] = <span class="d_string">"two"</span>;
 	t.<u>readString</u>(2, str =&gt; <span class="d_keyword">assert</span>(str == <span class="d_string">"two"</span>));
 </pre>
-</div>
+</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>LuaObject <a class="symbol symbol-anchor" name="opIndex" href="#opIndex">opIndex</a>(T...)(T <i>args</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Same as calling get!LuaObject with the same arguments.
+
+<div class="declaration-content"><dl><p>Same as calling get!LuaObject with the same arguments.
 </p>
 
-<div><b>Examples</b>:<br/> &nbsp; &nbsp; &nbsp; <pre class="d_code">	<span class="d_keyword">auto</span> luapath = lua[<span class="d_string">"package"</span>, <span class="d_string">"path"</span>];
+<dt>Examples</dt><dd><pre class="d_code">	<span class="d_keyword">auto</span> luapath = lua[<span class="d_string">"package"</span>, <span class="d_string">"path"</span>];
 	writefln(<span class="d_string">"LUA_PATH:\n%s"</span>, luapath);
 </pre>
-</div>
-<div><b>See also</b>:<br/> &nbsp; &nbsp; &nbsp; get</div>
+</dd>
 
+<dt>See Also</dt><dd>get</dd>
+
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted void <a class="symbol symbol-anchor" name="set" href="#set">set</a>(T, U)(T <i>key</i>, U <i>value</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Set a key-value pair in this table.
+
+<div class="declaration-content"><dl><p>Set a key-value pair in this table.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">key</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">key</td>
 <td>key to set</td>
 </tr>
 <tr><td class="span2">value</td>
 <td>value of key</td>
 </tr>
-</table></div>
+</table></dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted void <a class="symbol symbol-anchor" name="opIndexAssign" href="#opIndexAssign">opIndexAssign</a>(T, U...)(T <i>value</i>, U <i>args</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Set a key-value pair this table or in a sub-table of this table.
+
+<div class="declaration-content"><dl><p>Set a key-value pair this table or in a sub-table of this table.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">value</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">value</td>
 <td>value to set</td>
 </tr>
 <tr><td class="span2">args</td>
 <td>list of keys, where all keys but the last one should result in a table</td>
 </tr>
-</table></div>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; t[k] = value, where t is the table for the second-to-last parameter in args,
+</table></dd>
+
+<dt>Returns</dt><dd>t[k] = value, where t is the table for the second-to-last parameter in args,
 	 and k is the last parameter in args
 
-</div>
-<div><b>Examples</b>:<br/> &nbsp; &nbsp; &nbsp; <pre class="d_code">	lua[<span class="d_string">"string"</span>, <span class="d_string">"empty"</span>] = (<span class="d_keyword">in</span> <span class="d_keyword">char</span>[] s){ <span class="d_keyword">return</span> s.length == 0; };
+</dd>
+
+<dt>Examples</dt><dd><pre class="d_code">	lua[<span class="d_string">"string"</span>, <span class="d_string">"empty"</span>] = (<span class="d_keyword">in</span> <span class="d_keyword">char</span>[] s){ <span class="d_keyword">return</span> s.length == 0; };
 	lua.doString(<span class="d_string">`assert(string.empty(""))`</span>);
 </pre>
-</div>
+</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted T <a class="symbol symbol-anchor" name="toStruct" href="#toStruct">toStruct</a>(T)();
 </h3></div>
 
-<div class="declaration-content"><p>Create struct of type T and fill its members with fields from this table.
+
+<div class="declaration-content"><dl><p>Create struct of type T and fill its members with fields from this table.
 </p>
 
 <p>Struct fields that are not present in this table are left at their default value.
 
 </p>
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
 <td>any struct type</td>
 </tr>
-</table></div>
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; Newly created struct</div>
+</table></dd>
 
+<dt>Returns</dt><dd>Newly created struct</dd>
+
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted void <a class="symbol symbol-anchor" name="copyTo" href="#copyTo">copyTo</a>(T)(ref T <i>s</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Fill a struct's members with fields from this table.
+
+<div class="declaration-content"><dl><p>Fill a struct's members with fields from this table.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">s</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">s</td>
 <td>struct to fill</td>
 </tr>
-</table></div>
+</table></dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted void <a class="symbol symbol-anchor" name="setMetaTable" href="#setMetaTable">setMetaTable</a>(ref LuaTable <i>meta</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Set the metatable for this table.
+
+<div class="declaration-content"><dl><p>Set the metatable for this table.
 </p>
 
-<b>Parameters</b> <div><table class="table table-condensed table-bordered"><tr><td class="span2">LuaTable <i>meta</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">LuaTable <i>meta</i></td>
 <td>new metatable</td>
 </tr>
-</table></div>
+</table></dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted LuaTable <a class="symbol symbol-anchor" name="getMetaTable" href="#getMetaTable">getMetaTable</a>();
 </h3></div>
 
-<div class="declaration-content"><p>Get the metatable for this table.
+
+<div class="declaration-content"><dl><p>Get the metatable for this table.
 </p>
 
-<div><b>Returns</b>:<br/> &nbsp; &nbsp; &nbsp; A reference to the metatable for this table. The reference is nil if this table has no metatable.</div>
+<dt>Returns</dt><dd>A reference to the metatable for this table. The reference is nil if this table has no metatable.</dd>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted int <a class="symbol symbol-anchor" name="opApply" href="#opApply">opApply</a>(T)(int delegate(ref T value) <i>dg</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Iterate over the values in this table.</p>
 
+<div class="declaration-content"><dl><p>Iterate over the values in this table.</p>
 
+</dl>
 </div>
 
 <hr><div class="row-fluid declaration"><h3>@trusted int <a class="symbol symbol-anchor" name="opApply" href="#opApply">opApply</a>(T, U)(int delegate(ref U key, ref T value) <i>dg</i>);
 </h3></div>
 
-<div class="declaration-content"><p>Iterate over the key-value pairs in this table.</p>
 
+<div class="declaration-content"><dl><p>Iterate over the key-value pairs in this table.</p>
 
+</dl>
 </div>
 
 </div>

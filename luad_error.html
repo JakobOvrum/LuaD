@@ -85,7 +85,7 @@
 					</ul>
 					
 					<form id="gotosymbol" class="navbar-search pull-left hidden">
-						<input type="text" class="search-query" placeholder="Goto symbol in luad.error" data-provide="typeahead" data-items="4">
+						<input type="text" class="search-query" placeholder="Go to symbol in luad.error" data-provide="typeahead" data-items="4">
 					</form>
 					
 					<p class="navbar-text pull-right"><a href="htps://github.com/JakobOvrum/LuaD">Github Page</a></p>
@@ -99,8 +99,8 @@
 			<div class="span2">
 				<div class="well sidebar-nav">
 				<ul class="nav nav-list">
-					<li id="module-list" class="nav-header">Modules<li>
-					<li id="symbol-list" class="nav-header hidden">luad.error</li>
+					<li id="module-list" class="nav-header sidebar-list-entry">Modules<li>
+					<li id="symbol-list" class="nav-header sidebar-list-entry hidden">luad.error</li>
 				</ul>
 				</div><!--/.well -->
 			</div><!--/span-->
@@ -123,7 +123,8 @@
 <hr><div class="row-fluid declaration"><h3>class <a class="symbol symbol-anchor" name="LuaErrorException" href="#LuaErrorException">LuaErrorException</a>: object.Exception;
 </h3></div>
 
-<div class="declaration-content"><p>Thrown on Lua panic.
+
+<div class="declaration-content"><dl><p>Thrown on Lua panic.
 </p>
 
 <p>This exception is only thrown if there is no protected Lua call (e.g. pcall)
@@ -134,7 +135,7 @@
  Additionally, exceptions thrown in D functions given to Lua are converted to
  and propagated as Lua errors. You can subvert this by throwing an object not
  deriving from Exception (i.e. derive from Error, Throwable, etc).</p>
-
+</dl>
 </div>
 
 
