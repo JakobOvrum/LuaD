@@ -149,7 +149,7 @@
 <dl><p>Internal module for pushing and getting functions and delegates.
 </p>
 
-<p>LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see <a href="luad_stack.html">luad.stack</a>).
+<p>LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see <a href="luad.stack.html">luad.stack</a>).
 <br><br>
 
 For multiple return values, return a Tuple (from std.typecons) or a static array. For a variable number of return values, return LuaObject[] (for returning an array of LuaObject as a table, wrap it in LuaTable).
@@ -162,7 +162,7 @@ When a copy is desired, use char[] or string, or dup or idup the string manually
 If a function with the lua_CFunction signature is encountered, it is pushed directly with no inserted conversions or overhead.
 <br><br>
 
-Typesafe varargs is supported when pushing functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use <a href="luad_lfunction.html">LuaFunction</a>
+Typesafe varargs is supported when pushing functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use <a href="luad.lfunction.html">LuaFunction</a>
  instead).</p>
 </dl>
 <hr><div class="row-fluid declaration"><h3>T <a class="symbol symbol-anchor" name="getFunction" href="#getFunction">getFunction</a>(T)(lua_State* <i>L</i>, int <i>idx</i>);
