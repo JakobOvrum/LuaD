@@ -36,26 +36,7 @@
 	<script type="text/javascript">
 		var Title = 'luad.lfunction';
 		var SourceRepository = 'http://github.com/JakobOvrum/LuaD/tree/master';
-		var Modules = [
-			
-	"luad.all",
-	"luad.state",
-	"luad.base",
-	"luad.table",
-	"luad.lfunction",
-	"luad.dynamic",
-	"luad.error",
-	"luad.stack",
-	
-	"luad.conversions.arrays",
-	"luad.conversions.assocarrays",
-	"luad.conversions.classes",
-	"luad.conversions.functions",
-	"luad.conversions.structs",
-	"luad.conversions.variant",
-	
-	"luad.c.all",
-		];
+		var PackageSeparator = '.';
 	</script>
 	
 	<style type="text/css">
@@ -70,6 +51,32 @@
 	</head>
 
 	<body>
+	<!--
+	JavaScript reaps the module list from this element.
+	This is required for the MODULES macro to be reusable
+	in a noscript element later.
+	-->
+	<ul id="module-list-source" class="hidden">
+		
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.all.html" title="luad.all"><i class="icon-th"></i>luad.all</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.state.html" title="luad.state"><i class="icon-th"></i>luad.state</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.base.html" title="luad.base"><i class="icon-th"></i>luad.base</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.table.html" title="luad.table"><i class="icon-th"></i>luad.table</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.lfunction.html" title="luad.lfunction"><i class="icon-th"></i>luad.lfunction</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.dynamic.html" title="luad.dynamic"><i class="icon-th"></i>luad.dynamic</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.error.html" title="luad.error"><i class="icon-th"></i>luad.error</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.stack.html" title="luad.stack"><i class="icon-th"></i>luad.stack</a></li>
+	
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.conversions.arrays.html" title="luad.conversions.arrays"><i class="icon-th"></i>luad.conversions.arrays</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.conversions.assocarrays.html" title="luad.conversions.assocarrays"><i class="icon-th"></i>luad.conversions.assocarrays</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.conversions.classes.html" title="luad.conversions.classes"><i class="icon-th"></i>luad.conversions.classes</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.conversions.functions.html" title="luad.conversions.functions"><i class="icon-th"></i>luad.conversions.functions</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.conversions.structs.html" title="luad.conversions.structs"><i class="icon-th"></i>luad.conversions.structs</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.conversions.variant.html" title="luad.conversions.variant"><i class="icon-th"></i>luad.conversions.variant</a></li>
+	
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.c.all.html" title="luad.c.all"><i class="icon-th"></i>luad.c.all</a></li>
+	</ul>
+	
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container-fluid">
@@ -100,6 +107,26 @@
 				<div class="well sidebar-nav">
 				<ul class="nav nav-list">
 					<li id="module-list" class="nav-header sidebar-list-entry">Modules<li>
+					<noscript>
+						
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.all.html" title="luad.all"><i class="icon-th"></i>luad.all</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.state.html" title="luad.state"><i class="icon-th"></i>luad.state</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.base.html" title="luad.base"><i class="icon-th"></i>luad.base</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.table.html" title="luad.table"><i class="icon-th"></i>luad.table</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.lfunction.html" title="luad.lfunction"><i class="icon-th"></i>luad.lfunction</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.dynamic.html" title="luad.dynamic"><i class="icon-th"></i>luad.dynamic</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.error.html" title="luad.error"><i class="icon-th"></i>luad.error</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.stack.html" title="luad.stack"><i class="icon-th"></i>luad.stack</a></li>
+	
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.conversions.arrays.html" title="luad.conversions.arrays"><i class="icon-th"></i>luad.conversions.arrays</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.conversions.assocarrays.html" title="luad.conversions.assocarrays"><i class="icon-th"></i>luad.conversions.assocarrays</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.conversions.classes.html" title="luad.conversions.classes"><i class="icon-th"></i>luad.conversions.classes</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.conversions.functions.html" title="luad.conversions.functions"><i class="icon-th"></i>luad.conversions.functions</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.conversions.structs.html" title="luad.conversions.structs"><i class="icon-th"></i>luad.conversions.structs</a></li>
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.conversions.variant.html" title="luad.conversions.variant"><i class="icon-th"></i>luad.conversions.variant</a></li>
+	
+	<li class="sidebar-list-entry tree-leaf"><a href="luad.c.all.html" title="luad.c.all"><i class="icon-th"></i>luad.c.all</a></li>
+					</noscript>
 					<li id="symbol-list" class="nav-header sidebar-list-entry hidden">luad.lfunction</li>
 				</ul>
 				</div><!--/.well -->
