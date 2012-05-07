@@ -208,8 +208,6 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 </dl>
 <hr><div class="row-fluid declaration"><h3>void <a class="symbol symbol-anchor" name="pushValue" href="#pushValue">pushValue</a>(T)(lua_State* <i>L</i>, T <i>value</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Push a value of any type to the stack.
 </p>
 
@@ -220,25 +218,17 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <td>value to push</td>
 </tr>
 </table></dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>template <a class="symbol symbol-anchor" name="luaTypeOf" href="#luaTypeOf">luaTypeOf</a>(T)</h3></div>
-
-
 <div class="declaration-content"><dl><p>Get the associated Lua type for T.
 </p>
 
 <dt>Returns</dt><dd>Lua type for T</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>T <a class="symbol symbol-anchor" name="getValue" href="#getValue">getValue</a>(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* <i>L</i>, int <i>idx</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Get a value of any type from the stack.
 </p>
 
@@ -255,26 +245,18 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <td>value stack index</td>
 </tr>
 </table></dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>T <a class="symbol symbol-anchor" name="popValue" href="#popValue">popValue</a>(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* <i>L</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Same as calling getValue!(T, typeMismatchHandler)(L, -1), then popping one value from the stack.
 </p>
 
 <dt>See Also</dt><dd>getValue</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>T[] <a class="symbol symbol-anchor" name="popStack" href="#popStack">popStack</a>(T = LuaObject)(lua_State* <i>L</i>, size_t <i>n</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Pop a number of elements from the stack.
 </p>
 
@@ -288,33 +270,22 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <td>number of elements to pop</td>
 </tr>
 </table></dd>
-
 <dt>Returns</dt><dd>array of popped elements, or a <span class="d_keyword">null</span> array if n = 0</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>auto <a class="symbol symbol-anchor" name="getArgument" href="#getArgument">getArgument</a>(T, int narg)(lua_State* <i>L</i>, int <i>idx</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Get a function argument from the stack.</p>
 
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>template <a class="symbol symbol-anchor" name="returnTypeSize" href="#returnTypeSize">returnTypeSize</a>(T)</h3></div>
-
-
 <div class="declaration-content"><dl><p>Used for getting a suitable nresults argument to lua_call or lua_pcall.</p>
 
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>T <a class="symbol symbol-anchor" name="popReturnValues" href="#popReturnValues">popReturnValues</a>(T)(lua_State* <i>L</i>, size_t <i>nret</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Pop return values from stack.
  Defaults to popValue, but has special handling for LuaObject[], Tuple!(...), static arrays and void.
 </p>
@@ -323,44 +294,30 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <td>number of return values</td>
 </tr>
 </table></dd>
-
 <dt>Returns</dt><dd>Return value, collection of return values, or nothing</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>int <a class="symbol symbol-anchor" name="pushReturnValues" href="#pushReturnValues">pushReturnValues</a>(T)(lua_State* <i>L</i>, T <i>value</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Push return values to the stack.
  Defaults to pushValue, but has special handling for LuaObject[], Tuple!(...) and static arrays.</p>
 
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>T <a class="symbol symbol-anchor" name="popTuple" href="#popTuple">popTuple</a>(T)(lua_State* <i>L</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Pops a Tuple from the values at the top of the stack.</p>
 
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>void <a class="symbol symbol-anchor" name="pushTuple" href="#pushTuple">pushTuple</a>(T)(lua_State* <i>L</i>, ref T <i>tup</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Pushes all the values in a Tuple to the stack.</p>
 
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>T <a class="symbol symbol-anchor" name="callWithRet" href="#callWithRet">callWithRet</a>(T)(lua_State* <i>L</i>, int <i>nargs</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Call a Lua function and handle its return values.
 </p>
 
@@ -371,21 +328,15 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <td>number of arguments</td>
 </tr>
 </table></dd>
-
 <dt>Returns</dt><dd>Zero, one or all return values as T, taking into account void, LuaObject[] and Tuple returns</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>void <a class="symbol symbol-anchor" name="printStack" href="#printStack">printStack</a>(void** <i>L</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Print the Lua stack to stdout.</p>
 
 </dl>
 </div>
-
 
 
 				</div>
@@ -407,19 +358,8 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 	<!-- Bootstrap javascript
 	================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="bootDoc/assets/js/jquery.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-transition.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-alert.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-modal.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-dropdown.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-scrollspy.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-tab.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-tooltip.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-popover.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-button.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-collapse.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-carousel.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-typeahead.js"></script>
+	<script src="bootDoc/assets/js/jquery.min.js"></script>
+	<script src="bootDoc/assets/js/bootstrap.min.js"></script>
 	
 	<!-- bootDoc javascript
 	================================================== -->

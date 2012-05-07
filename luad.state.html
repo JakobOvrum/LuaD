@@ -149,42 +149,29 @@
 <br><br>
 <hr><div class="row-fluid declaration"><h3>enum <a class="symbol symbol-anchor" name="LuaErrorHandler" href="#LuaErrorHandler">LuaErrorHandler</a>;
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Specify error handling scheme for doString and doFile.</p>
 
 </dl>
 <div class="offset1 member-list"><hr><div class="row-fluid declaration"><h3><a class="symbol symbol-anchor" name="None" href="#None">None</a></h3></div>
-
-
 <div class="declaration-content"><dl><p>No extra error handler.</p>
 
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3><a class="symbol symbol-anchor" name="Traceback" href="#Traceback">Traceback</a></h3></div>
-
-
 <div class="declaration-content"><dl><p>Append a stack traceback to the error message.</p>
 
 </dl>
 </div>
-
 </div>
 
 </div>
-
 <hr><div class="row-fluid declaration"><h3>class <a class="symbol symbol-anchor" name="LuaState" href="#LuaState">LuaState</a>;
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Represents a Lua state instance.</p>
 
 </dl>
 <div class="offset1 member-list"><hr><div class="row-fluid declaration"><h3>this();
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Create a new, empty Lua state. The standard library is not loaded.
 </p>
 
@@ -194,14 +181,10 @@
 
 </p>
 <dt>See Also</dt><dd>openLibs</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>this(void** <i>L</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Create a D wrapper for an existing Lua state.
 </p>
 
@@ -211,28 +194,20 @@
 <td>state to wrap.</td>
 </tr>
 </table></dd>
-
 <dt>Note:</dt><dd>
 The panic function is not changed - a Lua panic will not throw a D exception!
 </dd>
 <dt>See Also</dt><dd>setPanicHandler</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>pure nothrow @property @safe void** <a class="symbol symbol-anchor" name="state" href="#state">state</a>();
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>The underlying lua_State pointer for interfacing with C.</p>
 
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>static @trusted LuaState <a class="symbol symbol-anchor" name="fromPointer" href="#fromPointer">fromPointer</a>(void** <i>L</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Get the LuaState instance for a Lua state.
 </p>
 
@@ -240,43 +215,29 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <td>Lua state</td>
 </tr>
 </table></dd>
-
 <dt>Returns</dt><dd>LuaState for the given lua_State*, or <span class="d_keyword">null</span> if a LuaState is not currently attached to the state</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>@trusted void <a class="symbol symbol-anchor" name="openLibs" href="#openLibs">openLibs</a>();
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Open the standard library.</p>
 
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>pure nothrow @property @safe LuaTable <a class="symbol symbol-anchor" name="globals" href="#globals">globals</a>();
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>The global table for this instance.</p>
 
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>pure nothrow @property @safe LuaTable <a class="symbol symbol-anchor" name="registry" href="#registry">registry</a>();
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>The registry table for this instance.</p>
 
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>@trusted void <a class="symbol symbol-anchor" name="setPanicHandler" href="#setPanicHandler">setPanicHandler</a>(void function(LuaState, const(char[])) <i>onPanic</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Set a new panic handler.
 </p>
 
@@ -284,7 +245,6 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <td>new panic handler</td>
 </tr>
 </table></dd>
-
 <dt>Examples</dt><dd><pre class="d_code">	<span class="d_keyword">auto</span> L = luaL_newstate(); <span class="d_comment">// found in luad.c.all
 </span>
 	<span class="d_keyword">auto</span> lua = <span class="d_keyword">new</span> LuaState(L);
@@ -297,14 +257,10 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 	lua.<u>setPanicHandler</u>(&amp;panic);
 </pre>
 </dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>@trusted LuaFunction <a class="symbol symbol-anchor" name="loadString" href="#loadString">loadString</a>(in char[] <i>code</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Compile a string of Lua code.
 </p>
 
@@ -312,16 +268,11 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <td>code to compile</td>
 </tr>
 </table></dd>
-
 <dt>Returns</dt><dd>Loaded code as a function.</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>@trusted LuaFunction <a class="symbol symbol-anchor" name="loadFile" href="#loadFile">loadFile</a>(in char[] <i>path</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Compile a file of Lua code.
 </p>
 
@@ -329,16 +280,11 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <td>path to file</td>
 </tr>
 </table></dd>
-
 <dt>Returns</dt><dd>Loaded code as a function.</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>@trusted LuaObject[] <a class="symbol symbol-anchor" name="doString" href="#doString">doString</a>(in char[] <i>code</i>, LuaErrorHandler <i>handler</i> = (LuaErrorHandler).None);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Execute a string of Lua code.
 </p>
 
@@ -349,16 +295,11 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <td>error handling scheme</td>
 </tr>
 </table></dd>
-
 <dt>Returns</dt><dd>Any code return values</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>@trusted LuaObject[] <a class="symbol symbol-anchor" name="doFile" href="#doFile">doFile</a>(in char[] <i>path</i>, LuaErrorHandler <i>handler</i> = (LuaErrorHandler).None);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Execute a file of Lua code.
 </p>
 
@@ -369,28 +310,19 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <td>error handling scheme</td>
 </tr>
 </table></dd>
-
 <dt>Returns</dt><dd>Any script return values</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>@trusted LuaTable <a class="symbol symbol-anchor" name="newTable" href="#newTable">newTable</a>();
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Create a new, empty table.
 </p>
 
 <dt>Returns</dt><dd>The new table</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>@trusted LuaTable <a class="symbol symbol-anchor" name="newTable" href="#newTable">newTable</a>(uint <i>narr</i>, uint <i>nrec</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Create a new, empty table with pre-allocated space for members.
 </p>
 
@@ -401,16 +333,11 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <td>number of pre-allocated non-array slots</td>
 </tr>
 </table></dd>
-
 <dt>Returns</dt><dd>The new table</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>@trusted T <a class="symbol symbol-anchor" name="wrap" href="#wrap">wrap</a>(T = LuaObject, U)(U <i>value</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Wrap a D value in a Lua reference.
 </p>
 
@@ -425,16 +352,11 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <td>D value to wrap</td>
 </tr>
 </table></dd>
-
 <dt>Returns</dt><dd>A Lua reference to value</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>@trusted LuaObject <a class="symbol symbol-anchor" name="registerType" href="#registerType">registerType</a>(T)();
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Register a D class or struct with Lua.
 </p>
 
@@ -444,63 +366,43 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <td>class or struct to register</td>
 </tr>
 </table></dd>
-
 <dt>Returns</dt><dd>Reference to the registered type in Lua</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>T <a class="symbol symbol-anchor" name="get" href="#get">get</a>(T, U...)(U <i>args</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Same as calling globals.get with the same arguments.
 </p>
 
 <dt>See Also</dt><dd>LuaTable.get</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>LuaObject <a class="symbol symbol-anchor" name="opIndex" href="#opIndex">opIndex</a>(T...)(T <i>args</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Same as calling globals.get!LuaObject with the same arguments.
 </p>
 
 <dt>See Also</dt><dd>LuaTable.opIndex</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>void <a class="symbol symbol-anchor" name="set" href="#set">set</a>(T, U)(T <i>key</i>, U <i>value</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Same as calling globals.set with the same arguments.
 </p>
 
 <dt>See Also</dt><dd>LuaTable.set</dd>
-
 </dl>
 </div>
-
 <hr><div class="row-fluid declaration"><h3>void <a class="symbol symbol-anchor" name="opIndexAssign" href="#opIndexAssign">opIndexAssign</a>(T, U...)(T <i>value</i>, U <i>args</i>);
 </h3></div>
-
-
 <div class="declaration-content"><dl><p>Same as calling globals.opIndexAssign with the same arguments.
 </p>
 
 <dt>See Also</dt><dd>LuaTable.opIndexAssign</dd>
-
 </dl>
 </div>
-
 </div>
 </div>
-
 
 
 				</div>
@@ -522,19 +424,8 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 	<!-- Bootstrap javascript
 	================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="bootDoc/assets/js/jquery.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-transition.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-alert.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-modal.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-dropdown.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-scrollspy.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-tab.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-tooltip.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-popover.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-button.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-collapse.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-carousel.js"></script>
-	<script src="bootDoc/assets/js/bootstrap-typeahead.js"></script>
+	<script src="bootDoc/assets/js/jquery.min.js"></script>
+	<script src="bootDoc/assets/js/bootstrap.min.js"></script>
 	
 	<!-- bootDoc javascript
 	================================================== -->
