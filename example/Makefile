@@ -26,12 +26,12 @@ else
 	DFLAGS += -debug -gc
 endif
 
-all: bin/hello bin/phonebook dump/dump
+all: bin/hello bin/phonebook bin/precompiled
 
 clean:
 	rm -f bin/hello bin/hello.o
 	rm -f bin/phonebook bin/phonebook.o
-	rm -f dump/dump dump/dump.o
+	rm -f bin/precompiled bin/precompiled.o
 
 bin/hello: hello/hello.d
 	dmd $(DFLAGS) -of$@ hello/hello.d
@@ -39,6 +39,6 @@ bin/hello: hello/hello.d
 bin/phonebook: phonebook/phonebook.d
 	dmd $(DFLAGS) -of$@ phonebook/phonebook.d 
 
-dump/dump: dump/dump.d
-	dmd $(DFLAGS) -of$@ dump/dump.d
+bin/precompiled: precompiled/precompiled.d
+	dmd $(DFLAGS) -of$@ precompiled/precompiled.d
 
