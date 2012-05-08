@@ -190,7 +190,7 @@
 
 <p>The new LuaState does not assume ownership of the state.
 </p>
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">void** <i>L</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>void** <i>L</i></td>
 <td>state to wrap.</td>
 </tr>
 </table></dd>
@@ -211,7 +211,7 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <div class="declaration-content"><dl><p>Get the LuaState instance for a Lua state.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">void** <i>L</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>void** <i>L</i></td>
 <td>Lua state</td>
 </tr>
 </table></dd>
@@ -241,7 +241,7 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <div class="declaration-content"><dl><p>Set a new panic handler.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">void function(LuaState, const(char[])) <i>onPanic</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>void function(LuaState, const(char[])) <i>onPanic</i></td>
 <td>new panic handler</td>
 </tr>
 </table></dd>
@@ -264,7 +264,7 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <div class="declaration-content"><dl><p>Compile a string of Lua code.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>code</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>char[] <i>code</i></td>
 <td>code to compile</td>
 </tr>
 </table></dd>
@@ -276,7 +276,7 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <div class="declaration-content"><dl><p>Compile a file of Lua code.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>path</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>char[] <i>path</i></td>
 <td>path to file</td>
 </tr>
 </table></dd>
@@ -288,10 +288,10 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <div class="declaration-content"><dl><p>Execute a string of Lua code.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>code</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>char[] <i>code</i></td>
 <td>code to run</td>
 </tr>
-<tr><td class="span2">LuaErrorHandler <i>handler</i></td>
+<tr><td>LuaErrorHandler <i>handler</i></td>
 <td>error handling scheme</td>
 </tr>
 </table></dd>
@@ -303,10 +303,10 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <div class="declaration-content"><dl><p>Execute a file of Lua code.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">char[] <i>path</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>char[] <i>path</i></td>
 <td>path to file</td>
 </tr>
-<tr><td class="span2">LuaErrorHandler <i>handler</i></td>
+<tr><td>LuaErrorHandler <i>handler</i></td>
 <td>error handling scheme</td>
 </tr>
 </table></dd>
@@ -326,10 +326,10 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <div class="declaration-content"><dl><p>Create a new, empty table with pre-allocated space for members.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">uint <i>narr</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>uint <i>narr</i></td>
 <td>number of pre-allocated array slots</td>
 </tr>
-<tr><td class="span2">uint <i>nrec</i></td>
+<tr><td>uint <i>nrec</i></td>
 <td>number of pre-allocated non-array slots</td>
 </tr>
 </table></dd>
@@ -344,11 +344,11 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <p>Note that using this method is only necessary in certain situations,
  like when you want to act on the reference before fully exposing it to Lua.
 </p>
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>T</td>
 <td>type of reference. Must be LuaObject, LuaTable, LuaFunction or LuaDynamic.
    Defaults to LuaObject.</td>
 </tr>
-<tr><td class="span2">value</td>
+<tr><td>value</td>
 <td>D value to wrap</td>
 </tr>
 </table></dd>
@@ -362,7 +362,7 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 
 <p>This method exposes a type's constructors and static interface to Lua.
 </p>
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>T</td>
 <td>class or struct to register</td>
 </tr>
 </table></dd>

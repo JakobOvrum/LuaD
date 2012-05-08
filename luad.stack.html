@@ -211,10 +211,10 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <div class="declaration-content"><dl><p>Push a value of any type to the stack.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">L</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>L</td>
 <td>stack to push to</td>
 </tr>
-<tr><td class="span2">value</td>
+<tr><td>value</td>
 <td>value to push</td>
 </tr>
 </table></dd>
@@ -232,16 +232,16 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <div class="declaration-content"><dl><p>Get a value of any type from the stack.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>T</td>
 <td>type of value</td>
 </tr>
-<tr><td class="span2">typeMismatchHandler</td>
+<tr><td>typeMismatchHandler</td>
 <td>function called to produce an error in case of an invalid conversion.</td>
 </tr>
-<tr><td class="span2">L</td>
+<tr><td>L</td>
 <td>stack to get from</td>
 </tr>
-<tr><td class="span2">idx</td>
+<tr><td>idx</td>
 <td>value stack index</td>
 </tr>
 </table></dd>
@@ -260,13 +260,13 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <div class="declaration-content"><dl><p>Pop a number of elements from the stack.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>T</td>
 <td>wrapper type to use</td>
 </tr>
-<tr><td class="span2">L</td>
+<tr><td>L</td>
 <td>stack to pop from</td>
 </tr>
-<tr><td class="span2">n</td>
+<tr><td>n</td>
 <td>number of elements to pop</td>
 </tr>
 </table></dd>
@@ -290,7 +290,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
  Defaults to popValue, but has special handling for LuaObject[], Tuple!(...), static arrays and void.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">nret</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>nret</td>
 <td>number of return values</td>
 </tr>
 </table></dd>
@@ -321,10 +321,10 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <div class="declaration-content"><dl><p>Call a Lua function and handle its return values.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td class="span2">T</td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>T</td>
 <td>type of return value or container of return values</td>
 </tr>
-<tr><td class="span2">nargs</td>
+<tr><td>nargs</td>
 <td>number of arguments</td>
 </tr>
 </table></dd>
