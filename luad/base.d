@@ -158,7 +158,7 @@ struct LuaObject
 		const(char)* cstr = luaL_tolstring(state, -1, &len);
 		auto str = cstr[0 .. len].idup;
 
-		lua_pop(state, 1);
+		lua_pop(state, 2);
 		return str;
 	}
 	

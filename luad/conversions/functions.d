@@ -357,6 +357,8 @@ unittest
 	unittest_lua(L, `assert(returnArg("foo") == "foo")`);
 }
 
+version(unittest) import luad.base;
+
 // multiple return values
 unittest
 {
@@ -372,7 +374,7 @@ unittest
 		result.age = ageInfo[idx];
 		return result;
 	}
-		
+	
 	pushValue(L, &getInfo);
 	lua_setglobal(L, "getInfo");
 		
@@ -398,6 +400,32 @@ unittest
 		local first, last = getName()
 		assert(first == "Foo")
 		assert(last == "Bar")
+	`);
+
+	// variable length returns
+	LuaObject[] makeList(uint n)
+	{
+		LuaObject[] list;
+
+		foreach(i; 1 .. n + 1)
+		{
+			pushValue(L, i);
+			auto obj = popValue!LuaObject(L);
+			list ~= obj;
+		}
+		
+		return list;
+	}
+
+	pushValue(L, &makeList);
+	lua_setglobal(L, "makeList");
+
+	unittest_lua(L, `
+		local one, two, three, four = makeList(4)
+		assert(one == 1)
+		assert(two == 2)
+		assert(three == 3)
+		assert(four == 4)
 	`);
 }
 	

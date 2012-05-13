@@ -446,6 +446,7 @@ int pushReturnValues(T)(lua_State* L, T value)
 			assert(obj.state == L);
 			obj.push();
 		}
+
 		return value.length;
 	}
 	else static if(isTuple!T)
