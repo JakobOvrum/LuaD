@@ -196,18 +196,18 @@ int  lua_type(lua_State *L, int idx) nothrow;
 char * lua_typename(lua_State *L, int tp) nothrow;
 
 //C	 LUA_API int			(lua_equal) (lua_State *L, int idx1, int idx2);
-bool  lua_equal(lua_State *L, int idx1, int idx2);
+int  lua_equal(lua_State *L, int idx1, int idx2);
 //C	 LUA_API int			(lua_rawequal) (lua_State *L, int idx1, int idx2);
-bool  lua_rawequal(lua_State *L, int idx1, int idx2);
+int  lua_rawequal(lua_State *L, int idx1, int idx2);
 //C	 LUA_API int			(lua_lessthan) (lua_State *L, int idx1, int idx2);
-bool  lua_lessthan(lua_State *L, int idx1, int idx2);
+int  lua_lessthan(lua_State *L, int idx1, int idx2);
 
 //C	 LUA_API lua_Number	  (lua_tonumber) (lua_State *L, int idx);
 lua_Number  lua_tonumber(lua_State *L, int idx);
 //C	 LUA_API lua_Integer	 (lua_tointeger) (lua_State *L, int idx);
 lua_Integer  lua_tointeger(lua_State *L, int idx);
 //C	 LUA_API int			 (lua_toboolean) (lua_State *L, int idx);
-bool  lua_toboolean(lua_State *L, int idx);
+int  lua_toboolean(lua_State *L, int idx);
 //C	 LUA_API const char	 *(lua_tolstring) (lua_State *L, int idx, size_t *len);
 const(char)* lua_tolstring(lua_State *L, int idx, size_t *len);
 //C	 LUA_API size_t		  (lua_objlen) (lua_State *L, int idx);

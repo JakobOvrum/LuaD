@@ -194,7 +194,7 @@ struct LuaObject
 		o.push();
 		scope(success) lua_pop(state, 2);
 		
-		return lua_equal(state, -1, -2);
+		return cast(bool)lua_equal(state, -1, -2);
 	}
 }
 

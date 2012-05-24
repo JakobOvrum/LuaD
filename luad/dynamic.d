@@ -132,7 +132,7 @@ struct LuaDynamic
 		{
 			pushValue(object.state, other);
 			scope(success) lua_pop(object.state, 2);
-			return lua_equal(object.state, -1, -2);
+			return cast(bool)lua_equal(object.state, -1, -2);
 		}
 	}
 }
