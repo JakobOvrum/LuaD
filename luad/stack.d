@@ -243,7 +243,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		return nil;
 	
 	else static if(is(T == bool))
-		return lua_toboolean(L, idx);
+		return cast(bool)lua_toboolean(L, idx);
 
 	else static if(is(T == char))
 		return *lua_tostring(L, idx); // TODO: better define this
