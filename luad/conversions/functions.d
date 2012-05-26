@@ -3,7 +3,7 @@ Internal module for pushing and getting _functions and delegates.
 
 LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see $(LINKMODULE stack)).
 
-For multiple return values, return a Tuple (from std.typecons) or a static array. For a variable number of return values, return LuaObject[] (for returning an array of LuaObject as a table, wrap it in LuaTable).
+For multiple return values, return a Tuple (from std.typecons) or a static array. For a variable number of return values, return LuaVariableReturn.
 
 As a special case for const(char)[] parameter types in _functions pushed to Lua, no copy of the string is made when called; take care not to escape such references, they are effectively scope parameters.
 When a copy is desired, use char[] or string, or dup or idup the string manually.
@@ -15,9 +15,11 @@ Typesafe varargs is supported when pushing _functions to Lua, but as of DMD 2.05
 module luad.conversions.functions;
 
 import core.memory;
+import std.range;
+import std.string : toStringz;
 import std.traits;
 import std.typetuple;
-import std.string : toStringz;
+
 import luad.c.all;
 
 import luad.stack;
@@ -226,7 +228,7 @@ void pushMethod(Class, string member)(lua_State* L) if (isSomeFunction!(__traits
 
 /**
  * Currently this function allocates a reference in the registry that is never deleted,
-   one for each call... see code comments
+ * one for each call... see code comments
  */
 T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 {	
@@ -266,6 +268,51 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 
 		return callWithRet!RetType(L, args.length);
 	};
+}
+
+/**
+ * Type for efficiently returning a variable number of return values.
+ * Use $(D variableReturn) to instantiate it.
+ * Params:
+ *   T = any input range
+ */
+struct LuaVariableReturn(T) if(isInputRange!T)
+{
+	T returnValues;
+}
+
+/**
+ * Create a LuaVariableReturn object for efficient variable number returns.
+ * Params:
+ *   returnValues = any input range
+ * Example:
+-----------------------------
+	LuaVariableReturn!(uint[]) makeList(uint n)
+	{
+		uint[] list;
+
+		foreach(i; 1 .. n + 1)
+		{
+			list ~= i;
+		}
+
+		return variableReturn(list);
+	}
+
+	lua["makeList"] = &makeList;
+
+	lua.doString(`
+		local one, two, three, four = makeList(4)
+		assert(one == 1)
+		assert(two == 2)
+		assert(three == 3)
+		assert(four == 4)
+	`);
+-----------------------------
+ */
+LuaVariableReturn!T variableReturn(T)(T returnValues) if(isInputRange!T)
+{
+	return LuaVariableReturn!T(returnValues);
 }
 
 version(unittest)
@@ -403,18 +450,16 @@ unittest
 	`);
 
 	// variable length returns
-	LuaObject[] makeList(uint n)
+	LuaVariableReturn!(uint[]) makeList(uint n)
 	{
-		LuaObject[] list;
+		uint[] list;
 
 		foreach(i; 1 .. n + 1)
 		{
-			pushValue(L, i);
-			auto obj = popValue!LuaObject(L);
-			list ~= obj;
+			list ~= i;
 		}
 		
-		return list;
+		return variableReturn(list);
 	}
 
 	pushValue(L, &makeList);

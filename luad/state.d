@@ -62,7 +62,7 @@ public:
 	 *
 	 * The new LuaState does not assume ownership of the state.
 	 * Params:
-	 *	 L = state to wrap.
+	 *	 L = state to wrap
 	 * Note:
 	 *	 The panic function is not changed - a Lua panic will not throw a D exception!
 	 * See_Also:

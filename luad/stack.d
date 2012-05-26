@@ -55,6 +55,7 @@ $(DL
 +/
 module luad.stack;
 
+import std.range;
 import std.traits;
 import std.typecons;
 
@@ -371,9 +372,14 @@ auto getArgument(T, int narg)(lua_State* L, int idx)
 		return getValue!(Arg, argumentTypeMismatch)(L, idx);
 }
 
+template isVariableReturnType(T : LuaVariableReturn!U, U)
+{
+	enum isVariableReturnType = true;
+}
+
 template isVariableReturnType(T)
 {
-	enum isVariableReturnType = is(T : const(LuaObject)[]);
+	enum isVariableReturnType = false;
 }
 
 /// Used for getting a suitable nresults argument to lua_call or lua_pcall.
@@ -397,7 +403,7 @@ template returnTypeSize(T)
 
 /**
  * Pop return values from stack. 
- * Defaults to popValue, but has special handling for LuaObject[], Tuple!(...), static arrays and void.
+ * Defaults to popValue, but has special handling for LuaVariableReturn, Tuple!(...), static arrays and void.
  * Params:
  *    nret = number of return values
  * Returns:
@@ -435,19 +441,29 @@ T popReturnValues(T)(lua_State* L, size_t nret)
 
 /**
  * Push return values to the stack.
- * Defaults to pushValue, but has special handling for LuaObject[], Tuple!(...) and static arrays.
+ * Defaults to pushValue, but has special handling for LuaVariableReturn, Tuple!(...) and static arrays.
  */
 int pushReturnValues(T)(lua_State* L, T value)
 {
 	static if(isVariableReturnType!T)
 	{
-		foreach(obj; value)
-		{
-			assert(obj.state == L);
-			obj.push();
-		}
+		enum calculateLength = !hasLength!(typeof(value.returnValues));
 
-		return value.length;
+		static if(calculateLength)
+			int length;
+
+		foreach(obj; value.returnValues)
+		{
+			pushValue(L, obj);
+
+			static if(calculateLength)
+				++length;
+		}
+		
+		static if(calculateLength)
+			return length;
+		else
+			return cast(int)value.returnValues.length;
 	}
 	else static if(isTuple!T)
 	{
@@ -457,7 +473,7 @@ int pushReturnValues(T)(lua_State* L, T value)
 	else static if(isStaticArray!T)
 	{
 		pushStaticArray(L, value);
-		return value.length;
+		return cast(int)value.length;
 	}
 	else
 	{
