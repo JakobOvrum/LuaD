@@ -1,5 +1,6 @@
 /* Converted to D from lua.h by htod */
 module luad.c.lua;
+import core.vararg;
 import luad.c.luaconf;
 
 /*
@@ -235,16 +236,9 @@ void  lua_pushinteger(lua_State *L, lua_Integer n);
 void  lua_pushlstring(lua_State *L, const(char)* s, size_t l);
 //C	 LUA_API void  (lua_pushstring) (lua_State *L, const char *s);
 void  lua_pushstring(lua_State *L, const(char)* s);
-
-
 //C	 LUA_API const char *(lua_pushvfstring) (lua_State *L, const char *fmt,
 //C														   va_list argp);
-/*
-where is va_list?
-*/
-//const(char)* lua_pushvfstring(lua_State *L, const char *fmt, va_list argp);
-
-
+const(char)* lua_pushvfstring(lua_State *L, const(char)* fmt, va_list argp);
 //C	 LUA_API const char *(lua_pushfstring) (lua_State *L, const char *fmt, ...);
 const(char)* lua_pushfstring(lua_State *L, const(char)* fmt,...);
 //C	 LUA_API void  (lua_pushcclosure) (lua_State *L, lua_CFunction fn, int n);
