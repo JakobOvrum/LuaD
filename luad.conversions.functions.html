@@ -152,7 +152,7 @@
 <p>LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see <a href="luad.stack.html">luad.stack</a>).
 <br><br>
 
-For multiple return values, return a Tuple (from std.typecons) or a static array. For a variable number of return values, return LuaObject[] (for returning an array of LuaObject as a table, wrap it in LuaTable).
+For multiple return values, return a Tuple (from std.typecons) or a static array. For a variable number of return values, return LuaVariableReturn.
 <br><br>
 
 As a special case for const(char)[] parameter types in functions pushed to Lua, no copy of the string is made when called; take care not to escape such references, they are effectively scope parameters.
@@ -168,8 +168,55 @@ Typesafe varargs is supported when pushing functions to Lua, but as of DMD 2.054
 <hr><div class="row-fluid declaration"><h3>T <a class="symbol symbol-anchor" name="getFunction" href="#getFunction">getFunction</a>(T)(lua_State* <i>L</i>, int <i>idx</i>);
 </h3></div>
 <div class="declaration-content"><dl><p>Currently this function allocates a reference in the registry that is never deleted,
-   one for each call... see code comments</p>
+ one for each call... see code comments</p>
 
+</dl>
+</div>
+<hr><div class="row-fluid declaration"><h3>struct <a class="symbol symbol-anchor" name="LuaVariableReturn" href="#LuaVariableReturn">LuaVariableReturn</a>(T) if (isInputRange!(T));
+</h3></div>
+<div class="declaration-content"><dl><p>Type for efficiently returning a variable number of return values.
+ Use <span class="inlinecode">variableReturn</span> to instantiate it.
+</p>
+
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>T</td>
+<td>any input range</td>
+</tr>
+</table></dd>
+</dl>
+</div>
+<hr><div class="row-fluid declaration"><h3>LuaVariableReturn!(T) <a class="symbol symbol-anchor" name="variableReturn" href="#variableReturn">variableReturn</a>(T)(T <i>returnValues</i>);
+</h3></div>
+<div class="declaration-content"><dl><p>Create a LuaVariableReturn object for efficient variable number returns.
+</p>
+
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>returnValues</td>
+<td>any input range</td>
+</tr>
+</table></dd>
+<dt>Example:</dt><dd>
+<pre class="d_code">	LuaVariableReturn!(<span class="d_keyword">uint</span>[]) makeList(<span class="d_keyword">uint</span> n)
+	{
+		<span class="d_keyword">uint</span>[] list;
+
+		<span class="d_keyword">foreach</span>(i; 1 .. n + 1)
+		{
+			list ~= i;
+		}
+
+		<span class="d_keyword">return</span> <u>variableReturn</u>(list);
+	}
+
+	lua[<span class="d_string">"makeList"</span>] = &amp;makeList;
+
+	lua.doString(<span class="d_string">`
+		local one, two, three, four = makeList(4)
+		assert(one == 1)
+		assert(two == 2)
+		assert(three == 3)
+		assert(four == 4)
+	`</span>);
+</pre>
+</dd>
 </dl>
 </div>
 
