@@ -73,6 +73,8 @@ import luad.conversions.assocarrays;
 import luad.conversions.classes;
 import luad.conversions.variant;
 
+public import luad.conversions.functions : LuaVariableReturn, variableReturn;
+
 /**
  * Push a value of any type to the stack.
  * Params:
@@ -308,7 +310,7 @@ T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
 /**
  * Pop a number of elements from the stack.
  * Params:
- *   T = wrapper type to use
+ *   T = element type
  *   L = stack to pop from
  *   n = number of elements to pop
  * Returns:
@@ -412,7 +414,7 @@ template returnTypeSize(T)
 T popReturnValues(T)(lua_State* L, size_t nret)
 {
 	static if(isVariableReturnType!T)
-		return popStack(L, nret);
+		return variableReturn(popStack!(ElementType!(T.wrappedType))(L, nret));
 		
 	else static if(isTuple!T)
 	{
@@ -506,7 +508,7 @@ void pushTuple(T)(lua_State* L, ref T tup) if(isTuple!T)
  *    T = type of return value or container of return values
  *    nargs = number of arguments
  * Returns:
- * Zero, one or all return values as T, taking into account void, LuaObject[] and Tuple returns
+ * Zero, one or all return values as T, taking into account void, LuaVariableReturn and Tuple returns
  */
 T callWithRet(T)(lua_State* L, int nargs)
 {

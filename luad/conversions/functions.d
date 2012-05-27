@@ -278,6 +278,7 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
  */
 struct LuaVariableReturn(T) if(isInputRange!T)
 {
+	alias T wrappedType;
 	T returnValues;
 }
 

@@ -35,7 +35,7 @@ struct LuaFunction
 	 */
 	LuaObject[] opCall(U...)(U args)
 	{
-		return call!(LuaObject[])(args);
+		return call!(LuaVariableReturn!(LuaObject[]))(args).returnValues;
 	}
 	
 	/**
@@ -136,7 +136,7 @@ unittest
 	
 	lua_getglobal(L, "tostring");
 	auto tostring = popValue!LuaFunction(L);
-	
+
 	LuaObject[] ret = tostring(123);
 	assert(ret[0].to!string() == "123");
 
@@ -185,4 +185,5 @@ unittest
 	
 	multRet.setEnvironment(env);
 	assert(multRet.call!int() == 42);
+	
 }

@@ -251,7 +251,6 @@ struct LuaTable
 		return 0;
 	}
 }
-
 unittest
 {
 	lua_State* L = luaL_newstate();
