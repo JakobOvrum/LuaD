@@ -3,7 +3,7 @@ Internal module for pushing and getting _functions and delegates.
 
 LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see $(LINKMODULE stack)).
 
-For multiple return values, return a Tuple (from std.typecons) or a static array. For a variable number of return values, return LuaVariableReturn.
+For a fixed number of multiple return values, return a Tuple (from std.typecons) or a static array. For a variable number of return values, return LuaVariableReturn.
 
 As a special case for const(char)[] parameter types in _functions pushed to Lua, no copy of the string is made when called; take care not to escape such references, they are effectively scope parameters.
 When a copy is desired, use char[] or string, or dup or idup the string manually.
@@ -271,19 +271,22 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 }
 
 /**
- * Type for efficiently returning a variable number of return values.
+ * Type for efficiently returning a variable number of return values
+ * from a function.
+ *
  * Use $(D variableReturn) to instantiate it.
  * Params:
  *   T = any input range
  */
 struct LuaVariableReturn(T) if(isInputRange!T)
 {
-	alias T wrappedType;
-	T returnValues;
+	alias T wrappedType; /// The type of the wrapped input range.
+	T returnValues; /// The wrapped input range.
 }
 
 /**
- * Create a LuaVariableReturn object for efficient variable number returns.
+ * Create a LuaVariableReturn object for efficiently returning
+ * a variable number of values from a function.
  * Params:
  *   returnValues = any input range
  * Example:

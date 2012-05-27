@@ -20,7 +20,8 @@ struct LuaFunction
 	}
 	
 	/**
-	 * Same as call!(LuaObject[])(args);
+	 * Call this function and collect all return values as
+	 * an array of LuaObject references.
 	 * Examples:
 	 -----------------------
 	lua.doString(`function f(...) return ... end`);
@@ -45,9 +46,8 @@ struct LuaFunction
 	 *	 args = list of arguments.
 	 * Returns:
 	 *	 Return value of type T, or nothing if T was unspecified.
-	 *   For multiple return values, use a Tuple (from std.typecons).
-	 *	 Additionally, a value of LuaObject[] for T will result
-	 *	 all return values being collected and returned in a LuaObject[].
+	 *   See $(LINKSUBMODULE conversions,functions) for how to
+	 *   catch multiple return values.
 	 * Examples:
 	 * ------------------
 	lua.doString(`function ask(question) return 42 end`);
