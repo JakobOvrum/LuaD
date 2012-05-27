@@ -261,7 +261,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 </p>
 
 <dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>T</td>
-<td>wrapper type to use</td>
+<td>element type</td>
 </tr>
 <tr><td>L</td>
 <td>stack to pop from</td>
@@ -328,10 +328,10 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <td>number of arguments</td>
 </tr>
 </table></dd>
-<dt>Returns</dt><dd>Zero, one or all return values as T, taking into account void, LuaObject[] and Tuple returns</dd>
+<dt>Returns</dt><dd>Zero, one or all return values as T, taking into account void, LuaVariableReturn and Tuple returns</dd>
 </dl>
 </div>
-<hr><div class="row-fluid declaration"><h3>void <a class="symbol symbol-anchor" name="printStack" href="#printStack">printStack</a>(void** <i>L</i>);
+<hr><div class="row-fluid declaration"><h3>void <a class="symbol symbol-anchor" name="printStack" href="#printStack">printStack</a>(lua_State* <i>L</i>);
 </h3></div>
 <div class="declaration-content"><dl><p>Print the Lua stack to stdout.</p>
 

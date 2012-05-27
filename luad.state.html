@@ -183,14 +183,14 @@
 <dt>See Also</dt><dd>openLibs</dd>
 </dl>
 </div>
-<hr><div class="row-fluid declaration"><h3>this(void** <i>L</i>);
+<hr><div class="row-fluid declaration"><h3>this(lua_State* <i>L</i>);
 </h3></div>
 <div class="declaration-content"><dl><p>Create a D wrapper for an existing Lua state.
 </p>
 
 <p>The new LuaState does not assume ownership of the state.
 </p>
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>void** <i>L</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>lua_State* <i>L</i></td>
 <td>state to wrap</td>
 </tr>
 </table></dd>
@@ -200,18 +200,18 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <dt>See Also</dt><dd>setPanicHandler</dd>
 </dl>
 </div>
-<hr><div class="row-fluid declaration"><h3>pure nothrow @property @safe void** <a class="symbol symbol-anchor" name="state" href="#state">state</a>();
+<hr><div class="row-fluid declaration"><h3>pure nothrow @property @safe lua_State* <a class="symbol symbol-anchor" name="state" href="#state">state</a>();
 </h3></div>
 <div class="declaration-content"><dl><p>The underlying lua_State pointer for interfacing with C.</p>
 
 </dl>
 </div>
-<hr><div class="row-fluid declaration"><h3>static @trusted LuaState <a class="symbol symbol-anchor" name="fromPointer" href="#fromPointer">fromPointer</a>(void** <i>L</i>);
+<hr><div class="row-fluid declaration"><h3>static @trusted LuaState <a class="symbol symbol-anchor" name="fromPointer" href="#fromPointer">fromPointer</a>(lua_State* <i>L</i>);
 </h3></div>
 <div class="declaration-content"><dl><p>Get the LuaState instance for a Lua state.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>void** <i>L</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>lua_State* <i>L</i></td>
 <td>Lua state</td>
 </tr>
 </table></dd>
