@@ -3,6 +3,7 @@ module luad.lfunction;
 import luad.base;
 import luad.table;
 import luad.stack;
+import luad.conversions.functions;
 
 import luad.c.all;
 

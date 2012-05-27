@@ -6,3 +6,5 @@
 module luad.all;
 
 public import luad.base, luad.table, luad.lfunction, luad.dynamic, luad.state;
+
+public import luad.conversions.functions : LuaVariableReturn, variableReturn;

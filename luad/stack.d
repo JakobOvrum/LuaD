@@ -73,8 +73,6 @@ import luad.conversions.assocarrays;
 import luad.conversions.classes;
 import luad.conversions.variant;
 
-public import luad.conversions.functions : LuaVariableReturn, variableReturn;
-
 /**
  * Push a value of any type to the stack.
  * Params:
