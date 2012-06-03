@@ -55,10 +55,10 @@ struct luaL_Reg
 
 //C	 LUALIB_API void (luaI_openlib) (lua_State *L, const char *libname,
 //C									 const luaL_Reg *l, int nup);
-void  luaL_openlib(lua_State *L, const(char)* libname, luaL_Reg *l, int nup);
+void  luaL_openlib(lua_State *L, const(char)* libname, const luaL_Reg *l, int nup);
 //C	 LUALIB_API void (luaL_register) (lua_State *L, const char *libname,
 //C									 const luaL_Reg *l);
-void  luaL_register(lua_State *L, const(char)* libname, luaL_Reg *l);
+void  luaL_register(lua_State *L, const(char)* libname, const luaL_Reg *l);
 //C	 LUALIB_API int (luaL_getmetafield) (lua_State *L, int obj, const char *e);
 int  luaL_getmetafield(lua_State *L, int obj, const(char)* e);
 //C	 LUALIB_API int (luaL_callmeta) (lua_State *L, int obj, const char *e);
