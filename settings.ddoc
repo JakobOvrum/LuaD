@@ -1,7 +1,7 @@
 PROJECTNAME = LuaD
 REFERENCETOP = index.html
 REPOSRCTREE = http://github.com/JakobOvrum/LuaD/tree/master
-TITLEBARTEXT = <a href="htps://github.com/JakobOvrum/LuaD">Github Page</a>
+TITLEBARTEXT = <a href="https://github.com/JakobOvrum/LuaD">Github Page</a>
 RESOURCEROOT = bootDoc/
 PACKAGESEP = .
 FAVICON = favicon.png
