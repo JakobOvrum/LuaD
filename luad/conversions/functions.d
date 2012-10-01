@@ -24,9 +24,7 @@ import luad.c.all;
 
 import luad.stack;
 
-private:
-
-void argsError(lua_State* L, int nargs, int expected)
+private void argsError(lua_State* L, int nargs, int expected)
 {
 	lua_Debug debugInfo;
 	lua_getstack(L, 0, &debugInfo);
@@ -113,6 +111,8 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 	else
 		return 0;
 }
+
+private:
 
 // TODO: right now, virtual functions on specialized classes can be called with base classes as 'self', not safe!
 extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
