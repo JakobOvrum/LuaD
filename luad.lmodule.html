@@ -156,14 +156,16 @@
 <dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>modname</td>
 <td>module name. Typically this should be the same as the name of
    the shared library containing this module. Only characters in the set
-   [a-zA-Z_] are allowed. Underscores are used to denote a submodule.</td>
+   <span class="inlinecode">[a-zA-Z_]</span> are allowed. Underscores are used to denote a submodule.
+   The module name must be unique for the current executable.</td>
 </tr>
 <tr><td>initFunc</td>
 <td>module initialization function. Called when the module is loaded.
    Its return value is returned by <span class="inlinecode">require</span> on the Lua side. Its first
-   parameter must be of type <span class="inlinecode">LuaState</span>, which is the state of the calling environment.
+   parameter must be of type <a href="luad.state.html">LuaState</a>
+, which is the state of the calling environment.
    Optionally, there may be a second parameter implicitly convertible to the type
-   const(char[]), which is the name of the module to be loaded (useful for submodules).</td>
+   <span class="inlinecode">const(char[])</span>, which is the name of the module to be loaded (useful for submodules).</td>
 </tr>
 </table></dd>
 </dl>
