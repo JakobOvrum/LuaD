@@ -32,7 +32,18 @@ extern(C) int openDModule(F)(lua_State* L, F initFunc)
 }
 
 /**
- * 
+ * Generate module entry point for use by Lua's $(D require) function.
+ *
+ * Params:
+ *   modname = module name. Typically this should be the same as the name of
+ *   the shared library containing this module. Only characters in the set
+ *   [a-zA-Z_] are allowed. Underscores are used to denote a submodule.
+ *
+ *   initFunc = module initialization function. Called when the module is loaded.
+ *   Its return value is returned by $(D require) on the Lua side. Its first
+ *   parameter must be of type $(D LuaState), which is the state of the calling environment.
+ *   Optionally, there may be a second parameter implicitly convertible to the type
+ *   const(char[]), which is the name of the module to be loaded (useful for submodules).
  */
 // TODO: verify modname
 template LuaModule(string modname, alias initFunc)
