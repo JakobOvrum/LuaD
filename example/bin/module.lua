@@ -1,3 +1,11 @@
-local dmodule = require "dmodule"
+local cpuid = require "dmodule"
 
-dmodule.message_box("Hello from Lua", "hello, world!")
+for name, value in pairs(cpuid) do
+	if name ~= "datacache" then
+		print(name .. ":", value())
+	end
+end
+
+for i, cache in ipairs(cpuid.datacache) do
+	print(("cache #%d: %dkB"):format(i, cache.size))
+end

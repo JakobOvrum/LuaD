@@ -1,14 +1,31 @@
 import luad.all;
 
-import std.string;
-import core.sys.windows.windows;
+import std.traits;
+import core.cpuid;
 
 LuaTable initModule(LuaState lua)
 {
 	auto lib = lua.newTable();
-	lib["message_box"] = (in char[] title, in char[] message) {
-		MessageBoxA(null, toStringz(message), toStringz(title), MB_OK);
-	};
+	
+	foreach(member; __traits(allMembers, core.cpuid))
+	{
+		enum qualifiedName = "core.cpuid." ~ member;
+		static if(__traits(compiles, mixin(qualifiedName)) && isSomeFunction!(mixin(qualifiedName)))
+			lib[member] = &mixin("core.cpuid." ~ member);		
+	}
+
+	auto datacache = lua.newTable();
+
+	foreach(i, cache; core.cpuid.datacache)
+	{
+		if(cache.size != size_t.max)
+			datacache[i + 1] = cache;
+		else
+			break;
+	}
+
+	lib["datacache"] = datacache;
+
 	return lib;
 }
 
