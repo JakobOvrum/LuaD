@@ -73,6 +73,7 @@ LUAD_SOURCES = \
 	luad/dynamic.d \
 	luad/error.d \
 	luad/lfunction.d \
+	luad/lmodule.d \
 	luad/stack.d \
 	luad/state.d \
 	luad/table.d \
