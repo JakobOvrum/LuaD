@@ -11,7 +11,7 @@ LuaTable initModule(LuaState lua)
 	{
 		enum qualifiedName = "core.cpuid." ~ member;
 		static if(__traits(compiles, mixin(qualifiedName)) && isSomeFunction!(mixin(qualifiedName)))
-			lib[member] = &mixin("core.cpuid." ~ member);		
+			lib[member] = &mixin(qualifiedName);		
 	}
 
 	auto datacache = lua.newTable();
