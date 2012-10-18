@@ -70,16 +70,7 @@ void fillStruct(T)(lua_State* L, int idx, ref T s) if(is(T == struct))
 
 version(unittest)
 {
-	import luad.testing;
 	import luad.base;
-}
-
-unittest
-{
-	lua_State* L = luaL_newstate();
-	scope(success) lua_close(L);
-	luaL_openlibs(L);
-	
 	struct S
 	{
 		LuaObject o;
@@ -89,6 +80,15 @@ unittest
 		
 		string f(){ return "foobar"; }
 	}
+}
+
+unittest
+{
+	import luad.testing;
+
+	lua_State* L = luaL_newstate();
+	scope(success) lua_close(L);
+	luaL_openlibs(L);
 	
 	pushValue(L, "test");
 	auto obj = popValue!LuaObject(L);
