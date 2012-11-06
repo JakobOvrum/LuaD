@@ -42,7 +42,7 @@ extern(C) int openDModule(F)(lua_State* L, F initFunc)
  *
  *   initFunc = module initialization function. Called when the module is loaded.
  *   Its return value is returned by $(D require) on the Lua side. Its first
- *   parameter must be of type $(LINKMODULE2 state,LuaState), which is the state of the calling environment.
+ *   parameter must be of type $(DPREF state,LuaState), which is the state of the calling environment.
  *   Optionally, there may be a second parameter implicitly convertible to the type
  *   $(D const(char[])), which is the name of the module to be loaded (useful for submodules).
  */

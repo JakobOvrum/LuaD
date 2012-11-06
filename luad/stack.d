@@ -4,52 +4,52 @@ This internal module, with the help of the luad.conversions package, takes care 
 The conversion rules are as follows, where conversion goes both ways:
 $(DL
 	$(DT boolean
-		$(DD bool)
+		$(DD $(D bool))
 	)
 	$(DT number
-		$(DD lua_Integer (default int))
-		$(DD lua_Number (default double))
+		$(DD $(D lua_Integer) (default $(D int)))
+		$(DD $(D lua_Number) (default $(D double)))
 	)
 	$(DT string
-		$(DD string, const(char)[], char[])
-		$(DD const(char)*)
-		$(DD char)
-		$(DD immutable(void)[], const(void)[], void[] (binary data))
+		$(DD $(D string), $(D const(char)[]), $(D char[]))
+		$(DD $(D const(char)*))
+		$(DD $(D char))
+		$(DD $(D immutable(void)[]), $(D const(void)[]), $(D void[]) (binary data))
 	)
 	$(DT table
-		$(DD $(LINKSUBMODULE2 conversions,assocarrays,associative arrays))
-		$(DD $(LINKSUBMODULE2 conversions,arrays,arrays))
-		$(DD $(LINKSUBMODULE2 conversions,structs,structs))
-		$(DD $(LINKMODULE2 table,LuaTable))
+		$(DD associative arrays (see $(DPMODULE2 conversions,assocarrays)))
+		$(DD arrays (see $(DPMODULE2 conversions,arrays)))
+		$(DD structs (see $(DPMODULE2 conversions,structs)))
+		$(DD $(DPREF table,LuaTable))
 	)
-	$(DT function (see $(LINKSUBMODULE conversions,functions))
+	$(DT function (see $(DPMODULE2 conversions,functions))
 		$(DD function pointers)
 		$(DD delegates)
-		$(DD $(LINKMODULE2 lfunction,LuaFunction))
+		$(DD $(DPREF lfunction,LuaFunction))
 	)
 	$(DT userdata
-		$(DD $(LINKSUBMODULE2 conversions,classes,classes))
+		$(DD classes (see $(DPMODULE2 conversions,classes)))
 	)
 	$(DT nil
-		$(DD the special identifier nil)
-		$(DD null class references)
+		$(DD the special identifier $(D nil))
+		$(DD $(D null) class references)
 	)
 	$(DT any of the above
-		$(DD $(LINKMODULE2 base,LuaObject))
-		$(DD $(LINKMODULE2 dynamic,LuaDynamic))
-		$(DD $(LINKSUBMODULE2 conversions,variant,Algebraic) (when given a compatible value))
+		$(DD $(DPREF base,LuaObject))
+		$(DD $(DPREF dynamic,LuaDynamic))
+		$(DD $(D Algebraic), when given a compatible value (see $(DPMODULE2 conversions,variant)))
 	)
 )
 
-The conversions are checked in the specified order. For example, even though bool is implicitly convertible
-to lua_Integer, it will be converted to a boolean because boolean has precedence.
+The conversions are checked in the specified order. For example, even though $(D bool) is implicitly convertible
+to $(D lua_Integer), it will be converted to a boolean because boolean has precedence.
 
-wchar and dchar are explicitly disallowed. Lua strings consist of 8-bit characters, if you want to push UTF-16 or UTF-32 strings, convert to UTF-8 first.
+$(D wchar) and $(D dchar) are explicitly disallowed. Lua strings consist of 8-bit characters, if you want to push UTF-16 or UTF-32 strings, convert to UTF-8 first.
 
 Additionally, the following types are pushable to Lua, but can't be retrieved back:
 $(DL
 	$(DT function
-		$(DD lua_CFunction)
+		$(DD $(D lua_CFunction))
 	)
 )
 +/

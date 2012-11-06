@@ -47,7 +47,7 @@ struct LuaFunction
 	 *	 args = list of arguments.
 	 * Returns:
 	 *	 Return value of type T, or nothing if T was unspecified.
-	 *   See $(LINKSUBMODULE conversions,functions) for how to
+	 *   See $(DPMODULE2 conversions,functions) for how to
 	 *   catch multiple return values.
 	 * Examples:
 	 * ------------------

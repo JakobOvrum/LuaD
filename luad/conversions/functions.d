@@ -1,7 +1,7 @@
 /**
 Internal module for pushing and getting _functions and delegates.
 
-LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see $(LINKMODULE stack)).
+LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see $(DPMODULE stack)).
 
 For a fixed number of multiple return values, return a Tuple (from std.typecons) or a static array. For a variable number of return values, return LuaVariableReturn.
 
@@ -10,7 +10,7 @@ When a copy is desired, use char[] or string, or dup or idup the string manually
 
 If a function with the lua_CFunction signature is encountered, it is pushed directly with no inserted conversions or overhead.
 
-Typesafe varargs is supported when pushing _functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use $(LINKMODULE2 lfunction,LuaFunction) instead).
+Typesafe varargs is supported when pushing _functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use $(DPREF lfunction,LuaFunction) instead).
 */
 module luad.conversions.functions;
 
