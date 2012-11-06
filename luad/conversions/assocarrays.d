@@ -1,7 +1,7 @@
 /**
 Internal module for pushing and getting associative arrays.
 All associative arrays with LuaD compatible key and value types are supported.
-For tables with heterogeneous key or value types, use Algebraic (see $(DPMODULE2 conversions,variant)) keys/values or $(DPREF table,LuaTable).
+For tables with heterogeneous key or value types, use $(D Algebraic) (see $(DPMODULE2 conversions,variant)) keys/values or $(DPREF table,LuaTable).
 For string keys and heterogeneous value types, consider using a $(D struct) (see $(DPMODULE2 conversions,structs)).
 */
 module luad.conversions.assocarrays;
