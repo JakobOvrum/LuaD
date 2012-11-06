@@ -151,7 +151,7 @@
 <dl><p>Internal module for pushing and getting functions and delegates.
 </p>
 
-<p>LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see <a href="luad.stack.html">luad.stack</a>).
+<p>LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see <a href="luad.stack.html"><span class="inlinecode">luad.stack</span></a>).
 <br><br>
 
 For a fixed number of multiple return values, return a Tuple (from std.typecons) or a static array. For a variable number of return values, return LuaVariableReturn.
@@ -164,8 +164,7 @@ When a copy is desired, use char[] or string, or dup or idup the string manually
 If a function with the lua_CFunction signature is encountered, it is pushed directly with no inserted conversions or overhead.
 <br><br>
 
-Typesafe varargs is supported when pushing functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use <a href="luad.lfunction.html">LuaFunction</a>
- instead).</p>
+Typesafe varargs is supported when pushing functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use <a href="luad.lfunction.html#LuaFunction"><span class="inlinecode">luad.lfunction.LuaFunction</span></a> instead).</p>
 </dl>
 <hr><div class="row-fluid declaration"><h3>T <span class="symbol-target" id="getFunction">&nbsp;</span><a class="symbol-link" href="#getFunction">getFunction</a>(T)(lua_State* <i>L</i>, int <i>idx</i>);
 </h3></div>
@@ -248,8 +247,7 @@ Typesafe varargs is supported when pushing functions to Lua, but as of DMD 2.054
 				</footer>
 				
 				<footer class="pull-right">
-					<p>&copy; Jakob Ovrum 2010-2012
-</p>
+					<p>&copy; Jakob Ovrum 2010-2012</p>
 				</footer>
 			</div>
 		</div>

@@ -153,58 +153,54 @@
 
 <p>The conversion rules are as follows, where conversion goes both ways:
 <dl><dt>boolean
-		<dd>bool</dd>
+		<dd><span class="inlinecode">bool</span></dd>
 	</dt>
 	<dt>number
-		<dd>lua_Integer (default int)</dd>
-		<dd>lua_Number (default double)</dd>
+		<dd><span class="inlinecode">lua_Integer</span> (default <span class="inlinecode">int</span>)</dd>
+		<dd><span class="inlinecode">lua_Number</span> (default <span class="inlinecode">double</span>)</dd>
 	</dt>
 	<dt>string
-		<dd>string, const(char)[], char[]</dd>
-		<dd>const(char)*</dd>
-		<dd>char</dd>
-		<dd>immutable(void)[], const(void)[], void[] (binary data)</dd>
+		<dd><span class="inlinecode">string</span>, <span class="inlinecode">const(char)[]</span>, <span class="inlinecode">char[]</span></dd>
+		<dd><span class="inlinecode">const(char)*</span></dd>
+		<dd><span class="inlinecode">char</span></dd>
+		<dd><span class="inlinecode">immutable(void)[]</span>, <span class="inlinecode">const(void)[]</span>, <span class="inlinecode">void[]</span> (binary data)</dd>
 	</dt>
 	<dt>table
-		<dd><a href="luad.conversions.assocarrays.html">associative arrays</a></dd>
-		<dd><a href="luad.conversions.arrays.html">arrays</a></dd>
-		<dd><a href="luad.conversions.structs.html">structs</a></dd>
-		<dd><a href="luad.table.html">LuaTable</a>
-</dd>
+		<dd>associative arrays (see <a href="luad.conversions.assocarrays.html"><span class="inlinecode">luad.conversions.assocarrays</span></a>)</dd>
+		<dd>arrays (see <a href="luad.conversions.arrays.html"><span class="inlinecode">luad.conversions.arrays</span></a>)</dd>
+		<dd>structs (see <a href="luad.conversions.structs.html"><span class="inlinecode">luad.conversions.structs</span></a>)</dd>
+		<dd><a href="luad.table.html#LuaTable"><span class="inlinecode">luad.table.LuaTable</span></a></dd>
 	</dt>
-	<dt>function (see <a href="luad.conversions.functions.html">luad.conversions.functions</a>)
+	<dt>function (see <a href="luad.conversions.functions.html"><span class="inlinecode">luad.conversions.functions</span></a>)
 		<dd>function pointers</dd>
 		<dd>delegates</dd>
-		<dd><a href="luad.lfunction.html">LuaFunction</a>
-</dd>
+		<dd><a href="luad.lfunction.html#LuaFunction"><span class="inlinecode">luad.lfunction.LuaFunction</span></a></dd>
 	</dt>
 	<dt>userdata
-		<dd><a href="luad.conversions.classes.html">classes</a></dd>
+		<dd>classes (see <a href="luad.conversions.classes.html"><span class="inlinecode">luad.conversions.classes</span></a>)</dd>
 	</dt>
 	<dt>nil
-		<dd>the special identifier nil</dd>
-		<dd><span class="d_keyword">null</span> class references</dd>
+		<dd>the special identifier <span class="inlinecode">nil</span></dd>
+		<dd><span class="inlinecode"><span class="d_keyword">null</span></span> class references</dd>
 	</dt>
 	<dt>any of the above
-		<dd><a href="luad.base.html">LuaObject</a>
-</dd>
-		<dd><a href="luad.dynamic.html">LuaDynamic</a>
-</dd>
-		<dd><a href="luad.conversions.variant.html">Algebraic</a> (when given a compatible value)</dd>
+		<dd><a href="luad.base.html#LuaObject"><span class="inlinecode">luad.base.LuaObject</span></a></dd>
+		<dd><a href="luad.dynamic.html#LuaDynamic"><span class="inlinecode">luad.dynamic.LuaDynamic</span></a></dd>
+		<dd><span class="inlinecode">Algebraic</span>, when given a compatible value (see <a href="luad.conversions.variant.html"><span class="inlinecode">luad.conversions.variant</span></a>)</dd>
 	</dt>
 </dl>
 <br><br>
 
-The conversions are checked in the specified order. For example, even though bool is implicitly convertible
-to lua_Integer, it will be converted to a boolean because boolean has precedence.
+The conversions are checked in the specified order. For example, even though <span class="inlinecode">bool</span> is implicitly convertible
+to <span class="inlinecode">lua_Integer</span>, it will be converted to a boolean because boolean has precedence.
 <br><br>
 
-wchar and dchar are explicitly disallowed. Lua strings consist of 8-bit characters, if you want to push UTF-16 or UTF-32 strings, convert to UTF-8 first.
+<span class="inlinecode">wchar</span> and <span class="inlinecode">dchar</span> are explicitly disallowed. Lua strings consist of 8-bit characters, if you want to push UTF-16 or UTF-32 strings, convert to UTF-8 first.
 <br><br>
 
 Additionally, the following types are pushable to Lua, but can't be retrieved back:
 <dl><dt>function
-		<dd>lua_CFunction</dd>
+		<dd><span class="inlinecode">lua_CFunction</span></dd>
 	</dt>
 </dl></p>
 </dl>
@@ -350,8 +346,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 				</footer>
 				
 				<footer class="pull-right">
-					<p>&copy; Jakob Ovrum 2010-2012
-</p>
+					<p>&copy; Jakob Ovrum 2010-2012</p>
 				</footer>
 			</div>
 		</div>
