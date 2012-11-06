@@ -3,13 +3,13 @@ LuaD is a bridge between the D and Lua programming languages.
 Unlike many other libraries built on the Lua C API, LuaD doesn't expose the Lua stack - instead,
 it has wrappers for references to Lua objects, and supports seamlessly and directly converting any D type into a Lua type and vice versa.
 
-See $(LINKMODULE2 state,LuaState) to get started.
+See $(DPREF state,LuaState) to get started.
 
 See_Also:
 Check out the $(LINK2 http://github.com/JakobOvrum/LuaD,github project page) for the full source code
 and usage information.
 
-See $(LINKMODULE stack) for the full list of possible type conversions.
+See $(DPMODULE stack) for the full list of possible type conversions.
 
 Examples:
 "Hello, world"

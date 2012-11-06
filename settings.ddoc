@@ -3,6 +3,7 @@ REFERENCETOP = index.html
 REPOSRCTREE = http://github.com/JakobOvrum/LuaD/tree/master
 TITLEBARTEXT = <a href="https://github.com/JakobOvrum/LuaD">Github Page</a>
 RESOURCEROOT = bootDoc/
+DEFAULTPACKAGE = luad
 PACKAGESEP = .
 FAVICON = favicon.png
 LOGOSRC = logo.png
@@ -10,9 +11,3 @@ LOGOALT = $(PROJECTNAME)
 LOGOLINK = $(REFERENCETOP)
 COPYRIGHT = Jakob Ovrum
 COPYRIGHTFOOTER = &copy; $(COPYRIGHT) 2010-$(YEAR)
-
-LINKMODULE =$(LINK2 luad$(PACKAGESEP)$0.html,luad.$0)
-LINKMODULE2 =$(LINK2 luad$(PACKAGESEP)$1.html,$2)
-
-LINKSUBMODULE =$(LINK2 luad$(PACKAGESEP)$1$(PACKAGESEP)$2.html,luad.$1.$2)
-LINKSUBMODULE2 =$(LINK2 luad$(PACKAGESEP)$1$(PACKAGESEP)$2.html,$3)
