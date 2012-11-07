@@ -3,6 +3,7 @@ REFERENCETOP = index.html
 REPOSRCTREE = http://github.com/JakobOvrum/LuaD/tree/master
 TITLEBARTEXT = <a href="https://github.com/JakobOvrum/LuaD">Github Page</a>
 RESOURCEROOT = bootDoc/
+ISSUETRACKER = https://github.com/JakobOvrum/LuaD/issues/$1
 DEFAULTPACKAGE = luad
 PACKAGESEP = .
 FAVICON = favicon.png
