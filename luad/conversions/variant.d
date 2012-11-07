@@ -1,6 +1,6 @@
 /**
-Internal module for pushing and getting variants (from $(D std._variant)).
-Currently, only $(D Algebraic) is supported.
+Internal module for pushing and getting variants (from $(STDMODULE _variant)).
+Currently, only $(STDREF _variant,Algebraic) is supported.
 */
 module luad.conversions.variant;
 

@@ -3,12 +3,12 @@ Internal module for pushing and getting _functions and delegates.
 
 LuaD allows for pushing of all D function or delegate types with return type and parameter types compatible with LuaD (see $(DPMODULE stack)).
 
-For a fixed number of multiple return values, return a Tuple (from std.typecons) or a static array. For a variable number of return values, return LuaVariableReturn.
+For a fixed number of multiple return values, return a $(STDREF typecons,Tuple) or a static array. For a variable number of return values, return $(MREF LuaVariableReturn).
 
-As a special case for const(char)[] parameter types in _functions pushed to Lua, no copy of the string is made when called; take care not to escape such references, they are effectively scope parameters.
-When a copy is desired, use char[] or string, or dup or idup the string manually.
+As a special case for $(D const(char)[]) parameter types in _functions pushed to Lua, no copy of the string is made when called; take care not to escape such references, they are effectively $(D scope) parameters.
+When a copy is desired, use $(D char[]) or $(D string), or $(D dup) or $(D idup) the string manually.
 
-If a function with the lua_CFunction signature is encountered, it is pushed directly with no inserted conversions or overhead.
+If a function with the $(D lua_CFunction) signature is encountered, it is pushed directly with no inserted conversions or overhead.
 
 Typesafe varargs is supported when pushing _functions to Lua, but as of DMD 2.054, compiler bugs prevent getting delegates with varargs from Lua (use $(DPREF lfunction,LuaFunction) instead).
 */
