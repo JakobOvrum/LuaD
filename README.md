@@ -80,12 +80,9 @@ You can find automatically generated documentation on the [gh-pages branch](http
 --------------------------------------------
 A tutorial can be found on the project's Wiki.
 
-64 bit Auto-Tester
+Auto-Tester
 ============================================
-An auto-tester running 64-bit Linux can be found at:
-
-http://ci.lycus.org/view/LuaD/
-
+An auto-tester running 32-bit Linux can be found [here](http://joshrsimmons.com:8080/view/LuaD/).
 
 License
 ============================================
