@@ -179,7 +179,7 @@
 
 <p>If an uncaught error for any operation on this state
  causes a Lua panic for the underlying state,
- an exception of type <a href="luad.error.html#LuaError"><span class="inlinecode">luad.error.LuaError</span></a> is thrown.
+ an exception of type <a href="luad.error.html#LuaErrorException"><span class="inlinecode">luad.error.LuaErrorException</span></a> is thrown.
 
 </p>
 <dt>See Also</dt><dd><a class="symbol-link" href="#LuaState.openLibs"><span class="inlinecode">LuaState.openLibs</span></a></dd>
@@ -190,7 +190,7 @@
 <div class="declaration-content"><dl><p>Create a D wrapper for an existing Lua state.
 </p>
 
-<p>The new LuaState does not assume ownership of the state.
+<p>The new <span class="inlinecode">LuaState</span> object does not assume ownership of the state.
 </p>
 <dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>lua_State* <i>L</i></td>
 <td>state to wrap</td>
@@ -199,25 +199,25 @@
 <dt>Note:</dt><dd>
 The panic function is not changed - a Lua panic will not throw a D exception!
 </dd>
-<dt>See Also</dt><dd>setPanicHandler</dd>
+<dt>See Also</dt><dd><a class="symbol-link" href="#LuaState"><span class="inlinecode">LuaState</span></a></dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>pure nothrow @property @safe lua_State* <span class="symbol-target" id="state">&nbsp;</span><a class="symbol-link" href="#state">state</a>();
 </h3></div>
-<div class="declaration-content"><dl><p>The underlying lua_State pointer for interfacing with C.</p>
+<div class="declaration-content"><dl><p>The underlying <span class="inlinecode">lua_State</span> pointer for interfacing with C.</p>
 
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>static @trusted LuaState <span class="symbol-target" id="fromPointer">&nbsp;</span><a class="symbol-link" href="#fromPointer">fromPointer</a>(lua_State* <i>L</i>);
 </h3></div>
-<div class="declaration-content"><dl><p>Get the LuaState instance for a Lua state.
+<div class="declaration-content"><dl><p>Get the <span class="inlinecode">LuaState</span> instance for a Lua state.
 </p>
 
 <dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>lua_State* <i>L</i></td>
 <td>Lua state</td>
 </tr>
 </table></dd>
-<dt>Returns</dt><dd>LuaState for the given lua_State*, or <span class="d_keyword">null</span> if a LuaState is not currently attached to the state</dd>
+<dt>Returns</dt><dd><span class="inlinecode">LuaState</span> for the given <span class="inlinecode">lua_State*</span>, or <span class="inlinecode"><span class="d_keyword">null</span></span> if a <span class="inlinecode">LuaState</span> is not currently attached to the state</dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>@trusted void <span class="symbol-target" id="openLibs">&nbsp;</span><a class="symbol-link" href="#openLibs">openLibs</a>();
@@ -347,8 +347,8 @@ The panic function is not changed - a Lua panic will not throw a D exception!
  like when you want to act on the reference before fully exposing it to Lua.
 </p>
 <dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>T</td>
-<td>type of reference. Must be LuaObject, LuaTable, LuaFunction or LuaDynamic.
-   Defaults to LuaObject.</td>
+<td>type of reference. Must be <span class="inlinecode">LuaObject</span>, <span class="inlinecode">LuaTable</span>, <span class="inlinecode">LuaFunction</span> or <span class="inlinecode">LuaDynamic</span>.
+   Defaults to <span class="inlinecode">LuaObject</span>.</td>
 </tr>
 <tr><td>value</td>
 <td>D value to wrap</td>
@@ -376,31 +376,31 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <div class="declaration-content"><dl><p>Same as calling globals.get with the same arguments.
 </p>
 
-<dt>See Also</dt><dd>LuaTable.get</dd>
+<dt>See Also</dt><dd><a href="luad.table.html#LuaTable.get"><span class="inlinecode">luad.table.LuaTable.get</span></a></dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>LuaObject <span class="symbol-target" id="opIndex">&nbsp;</span><a class="symbol-link" href="#opIndex">opIndex</a>(T...)(T <i>args</i>);
 </h3></div>
-<div class="declaration-content"><dl><p>Same as calling globals.get!LuaObject with the same arguments.
+<div class="declaration-content"><dl><p>Same as calling <span class="inlinecode">globals.get!LuaObject</span> with the same arguments.
 </p>
 
-<dt>See Also</dt><dd>LuaTable.opIndex</dd>
+<dt>See Also</dt><dd><a href="luad.table.html#LuaTable.opIndex"><span class="inlinecode">luad.table.LuaTable.opIndex</span></a></dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>void <span class="symbol-target" id="set">&nbsp;</span><a class="symbol-link" href="#set">set</a>(T, U)(T <i>key</i>, U <i>value</i>);
 </h3></div>
-<div class="declaration-content"><dl><p>Same as calling globals.set with the same arguments.
+<div class="declaration-content"><dl><p>Same as calling <span class="inlinecode">globals.set</span> with the same arguments.
 </p>
 
-<dt>See Also</dt><dd>LuaTable.set</dd>
+<dt>See Also</dt><dd><a href="luad.table.html#LuaTable.set"><span class="inlinecode">luad.table.LuaTable.set</span></a></dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>void <span class="symbol-target" id="opIndexAssign">&nbsp;</span><a class="symbol-link" href="#opIndexAssign">opIndexAssign</a>(T, U...)(T <i>value</i>, U <i>args</i>);
 </h3></div>
-<div class="declaration-content"><dl><p>Same as calling globals.opIndexAssign with the same arguments.
+<div class="declaration-content"><dl><p>Same as calling <span class="inlinecode">globals.opIndexAssign</span> with the same arguments.
 </p>
 
-<dt>See Also</dt><dd>LuaTable.opIndexAssign</dd>
+<dt>See Also</dt><dd><a href="luad.table.html#LuaTable.opIndexAssign"><span class="inlinecode">luad.table.LuaTable.opIndexAssign</span></a></dd>
 </dl>
 </div>
 </div>
