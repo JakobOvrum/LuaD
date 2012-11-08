@@ -51,13 +51,13 @@ struct LuaTable
 	
 	/**
 	 * Read a string value in this table without making a copy of the string.
-	 * The read string is passed to dg, and should not be escaped.
-	 * If the value for key is not a string, dg is not called.
+	 * The read string is passed to $(D dg), and should not be escaped.
+	 * If the value for $(D key) is not a string, $(D dg) is not called.
 	 * Params:
 	 *    key = lookup _key
 	 *    dg = delegate to receive string
 	 * Returns:
-	 *    true if the value for key was a string and passed to dg, false otherwise
+	 *    $(D true) if the value for $(D key) was a string and passed to $(D dg), $(D false) otherwise
 	 * Examples:
 	 --------------------
 	t[2] = "two";
@@ -84,7 +84,8 @@ struct LuaTable
 	}
 	
 	/**
-	 * Same as calling get!LuaObject with the same arguments.
+	 * Same as calling $(D get!LuaObject) with the same arguments.
+	 * See_Also: $(MREF LuaTable.get)
 	 * Examples:
 	 * ---------------------
 	auto luapath = lua["package", "path"];
@@ -102,7 +103,7 @@ struct LuaTable
 	 * Set a key-value pair in this table.
 	 * Params:
 	 *	 key = key to _set
-	 *	 value = value of key
+	 *	 value = value for $(D key)
 	 */
 	void set(T, U)(T key, U value) @trusted
 	{
@@ -120,8 +121,8 @@ struct LuaTable
 	 *	 value = value to set
 	 *	 args = list of keys, where all keys but the last one should result in a table
 	 * Returns:
-	 *	 t[k] = value, where t is the table for the second-to-last parameter in args, 
-	 *	 and k is the last parameter in args
+	 *	 $(D t[k] = value), where $(D t) is the table for the second-to-last parameter in args, 
+	 *	 and $(D k) is the last parameter in args
 	 *
 	 * Examples:
 	 * ----------------------
@@ -151,7 +152,7 @@ struct LuaTable
 	}
 	
 	/**
-	 * Create struct of type T and fill its members with fields from this table.
+	 * Create struct of type $(D T) and fill its members with fields from this table.
 	 *
 	 * Struct fields that are not present in this table are left at their default value.
 	 *
