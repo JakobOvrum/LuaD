@@ -92,7 +92,7 @@ struct LuaObject
 		luaL_unref(L, LUA_REGISTRYINDEX, r);
 	}
 
-	/// The underlying lua_State pointer for interfacing with C.
+	/// The underlying $(D lua_State) pointer for interfacing with C.
 	lua_State* state() pure nothrow @safe @property
 	{
 		return L;
