@@ -315,7 +315,7 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <dt>Returns</dt><dd>Any script return values</dd>
 </dl>
 </div>
-<hr><div class="row-fluid declaration"><h3>@trusted LuaTable <span class="symbol-target" id="newTable">&nbsp;</span><a class="symbol-link" href="#newTable">newTable</a>();
+<hr><div class="row-fluid declaration"><h3>@trusted LuaTable <span class="symbol-target" id="newTable">&nbsp;</span><a class="symbol-link" href="#newTable">newTable</a>()();
 </h3></div>
 <div class="declaration-content"><dl><p>Create a new, empty table.
 </p>
@@ -323,19 +323,30 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <dt>Returns</dt><dd>The new table</dd>
 </dl>
 </div>
-<hr><div class="row-fluid declaration"><h3>@trusted LuaTable <span class="symbol-target" id="newTable">&nbsp;</span><a class="symbol-link" href="#newTable">newTable</a>(uint <i>narr</i>, uint <i>nrec</i>);
+<hr><div class="row-fluid declaration"><h3>@trusted LuaTable <span class="symbol-target" id="newTable">&nbsp;</span><a class="symbol-link" href="#newTable">newTable</a>()(uint <i>narr</i>, uint <i>nrec</i>);
 </h3></div>
 <div class="declaration-content"><dl><p>Create a new, empty table with pre-allocated space for members.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>uint <i>narr</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>narr</td>
 <td>number of pre-allocated array slots</td>
 </tr>
-<tr><td>uint <i>nrec</i></td>
+<tr><td>nrec</td>
 <td>number of pre-allocated non-array slots</td>
 </tr>
 </table></dd>
 <dt>Returns</dt><dd>The new table</dd>
+</dl>
+</div>
+<hr><div class="row-fluid declaration"><h3>@trusted LuaTable <span class="symbol-target" id="newTable">&nbsp;</span><a class="symbol-link" href="#newTable">newTable</a>(Range)(Range <i>range</i>);
+</h3></div>
+<div class="declaration-content"><dl><p>Create a new table from an <span class="inlinecode">InputRange</span>.
+ If the element type of the range is <span class="inlinecode">Tuple!(T, U)</span>,
+ then each element makes up a key-value pair, where
+ <span class="inlinecode">T</span> is the key and <span class="inlinecode">U</span> is the value of the pair.
+ For any other element type <span class="inlinecode">T</span>, a table with sequential numeric
+ keys is created (an array).</p>
+
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>@trusted T <span class="symbol-target" id="wrap">&nbsp;</span><a class="symbol-link" href="#wrap">wrap</a>(T = LuaObject, U)(U <i>value</i>);
