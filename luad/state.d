@@ -32,7 +32,7 @@ public:
 	 *
 	 * If an uncaught error for any operation on this state
 	 * causes a Lua panic for the underlying state, 
-	 * an exception of type $(DPREF error, LuaError) is thrown.
+	 * an exception of type $(DPREF error, LuaErrorException) is thrown.
 	 *
 	 * See_Also: $(MREF LuaState.openLibs)
 	 */
@@ -60,13 +60,13 @@ public:
 	/**
 	 * Create a D wrapper for an existing Lua state.
 	 *
-	 * The new LuaState does not assume ownership of the state.
+	 * The new $(D LuaState) object does not assume ownership of the state.
 	 * Params:
 	 *	 L = state to wrap
 	 * Note:
 	 *	 The panic function is not changed - a Lua panic will not throw a D exception!
 	 * See_Also:
-		setPanicHandler
+		$(MREF LuaState, setPanicHandler)
 	 */
 	this(lua_State* L)
 	{
@@ -94,18 +94,18 @@ public:
 		}
 	}
 	
-	/// The underlying lua_State pointer for interfacing with C.
+	/// The underlying $(D lua_State) pointer for interfacing with C.
 	@property lua_State* state() nothrow pure @safe
 	{
 		return L;
 	}
 	
 	/**
-	 * Get the LuaState instance for a Lua state.
+	 * Get the $(D LuaState) instance for a Lua state.
 	 * Params:
 	 *	 L = Lua state
 	 * Returns:
-	 *	 LuaState for the given lua_State*, or null if a LuaState is not currently attached to the state
+	 *	 $(D LuaState) for the given $(D lua_State*), or $(D null) if a $(D LuaState) is not currently attached to the state
 	 */
 	static LuaState fromPointer(lua_State* L) @trusted
 	{
@@ -298,8 +298,8 @@ public:
 	 * Note that using this method is only necessary in certain situations,
 	 * like when you want to act on the reference before fully exposing it to Lua.
 	 * Params:
-	 *   T = type of reference. Must be LuaObject, LuaTable, LuaFunction or LuaDynamic.
-	 *   Defaults to LuaObject.
+	 *   T = type of reference. Must be $(D LuaObject), $(D LuaTable), $(D LuaFunction) or $(D LuaDynamic).
+	 *   Defaults to $(D LuaObject).
 	 *	 value = D value to _wrap
 	 * Returns:
 	 *	 A Lua reference to value
@@ -328,7 +328,7 @@ public:
 	/**
 	 * Same as calling globals._get with the same arguments.
 	 * See_Also:
-	 *	 LuaTable._get
+	 *	 $(DPREF table, LuaTable._get)
 	 */
 	T get(T, U...)(U args)
 	{
@@ -336,9 +336,9 @@ public:
 	}
 	
 	/**
-	 * Same as calling globals.get!LuaObject with the same arguments.
+	 * Same as calling $(D globals.get!LuaObject) with the same arguments.
 	 * See_Also:
-	 *	 LuaTable._opIndex
+	 *	 $(DPREF table, LuaTable._opIndex)
 	 */
 	LuaObject opIndex(T...)(T args)
 	{
@@ -346,9 +346,9 @@ public:
 	}
 	
 	/**
-	 * Same as calling globals._set with the same arguments.
+	 * Same as calling $(D globals._set) with the same arguments.
 	 * See_Also:
-	 *	 LuaTable._set
+	 *	 $(DPREF table, LuaTable._set)
 	 */
 	void set(T, U)(T key, U value)
 	{
@@ -356,9 +356,9 @@ public:
 	}
 	
 	/**
-	 * Same as calling globals._opIndexAssign with the same arguments.
+	 * Same as calling $(D globals._opIndexAssign) with the same arguments.
 	 * See_Also:
-	 *	 LuaTable._opIndexAssign
+	 *	 $(DPREF table, LuaTable._opIndexAssign)
 	 */
 	void opIndexAssign(T, U...)(T value, U args)
 	{
