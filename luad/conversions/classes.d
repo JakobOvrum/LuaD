@@ -263,4 +263,12 @@ unittest
 		assert(a ~= b)
 		assert(b == otherb)
 	`);
+
+	pushValue(L, cast(B)null);
+	lua_setglobal(L, "c");
+	unittest_lua(L, `assert(c == nil)`);
+
+	pushValue(L, (B b) => assert(b is null));
+	lua_setglobal(L, "checkNull");
+	unittest_lua(L, `checkNull(nil)`);
 }

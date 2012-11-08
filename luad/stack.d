@@ -221,6 +221,14 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	{
 		int type = lua_type(L, idx);
 		enum expectedType = luaTypeOf!T;
+
+		//if a class reference, return null for nil values
+		static if(is(T : Object))
+		{
+			if(type == LuaType.Nil)
+				return null;
+		}
+
 		if(type != expectedType)
 			typeMismatchHandler(L, idx, expectedType);
 	}

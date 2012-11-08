@@ -478,7 +478,6 @@ unittest
 unittest // LuaTable.newTable(range)
 {
 	import std.algorithm;
-	import std.typecons : tuple;
 
 	auto input = [1, 2, 3];
 
