@@ -103,7 +103,7 @@ struct LuaObject
 	 *
 	 * This reference becomes a nil reference.
 	 * This is only required when you want to _release the reference before the lifetime
-	 * of this LuaObject has ended.
+	 * of this $(D LuaObject) has ended.
 	 */
 	void release() pure nothrow @safe
 	{
@@ -114,7 +114,7 @@ struct LuaObject
 	/**
 	 * Type of referenced object.
 	 * See_Also:
-	 *	 LuaType
+	 *	 $(MREF LuaType)
 	 */
 	@property LuaType type() @trusted nothrow
 	{
@@ -145,7 +145,7 @@ struct LuaObject
 	/**
 	 * Convert the referenced object into a textual representation.
 	 *
-	 * The returned string is formatted exactly like the Lua 'tostring' function.
+	 * The returned string is formatted in the same way the Lua $(D tostring) function formats.
 	 *
 	 * Returns:
 	 * String representation of referenced object
@@ -163,7 +163,7 @@ struct LuaObject
 	}
 	
 	/**
-	 * Attempt _to convert the referenced object _to any D type.
+	 * Attempt _to convert the referenced object _to the specified D type.
 	 * Examples:
 	 -----------------------
 	auto results = lua.doString(`return "hello!"`);

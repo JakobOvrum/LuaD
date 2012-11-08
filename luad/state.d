@@ -8,7 +8,7 @@ import luad.conversions.classes;
 
 import luad.base, luad.table, luad.lfunction, luad.dynamic, luad.error;
 
-/// Specify error handling scheme for doString and doFile.
+/// Specify error handling scheme for $(MREF LuaState.doString) and $(MREF LuaState.doFile).
 enum LuaErrorHandler
 {
 	None, /// No extra error handler.
@@ -32,9 +32,9 @@ public:
 	 *
 	 * If an uncaught error for any operation on this state
 	 * causes a Lua panic for the underlying state, 
-	 * an exception of type LuaError is thrown.
+	 * an exception of type $(DPREF error, LuaError) is thrown.
 	 *
-	 * See_Also: openLibs
+	 * See_Also: $(MREF LuaState.openLibs)
 	 */
 	this()
 	{

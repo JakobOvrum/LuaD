@@ -297,7 +297,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 
 /**
  * Same as calling getValue!(T, typeMismatchHandler)(L, -1), then popping one value from the stack.
- * See_Also: getValue
+ * See_Also: $(MREF getValue)
  */
 T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
 {
@@ -312,7 +312,7 @@ T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
  *   L = stack to pop from
  *   n = number of elements to pop
  * Returns:
- *	 array of popped elements, or a null array if n = 0
+ *	 array of popped elements, or a $(D null) array if n = 0
  */
 T[] popStack(T = LuaObject)(lua_State* L, size_t n)
 {
@@ -382,7 +382,7 @@ template isVariableReturnType(T)
 	enum isVariableReturnType = false;
 }
 
-/// Used for getting a suitable nresults argument to lua_call or lua_pcall.
+/// Used for getting a suitable nresults argument to $(D lua_call) or $(D lua_pcall).
 template returnTypeSize(T)
 {
 	static if(isVariableReturnType!T)
@@ -403,7 +403,8 @@ template returnTypeSize(T)
 
 /**
  * Pop return values from stack. 
- * Defaults to popValue, but has special handling for LuaVariableReturn, Tuple!(...), static arrays and void.
+ * Defaults to $(MREF popValue), but has special handling for $(DPREF2 conversions, functions, LuaVariableReturn),
+ * $(STDREF typecons, Tuple), static arrays and $(D void).
  * Params:
  *    nret = number of return values
  * Returns:
@@ -441,7 +442,8 @@ T popReturnValues(T)(lua_State* L, size_t nret)
 
 /**
  * Push return values to the stack.
- * Defaults to pushValue, but has special handling for LuaVariableReturn, Tuple!(...) and static arrays.
+ * Defaults to $(MREF pushValue), but has special handling for $(DPREF2 conversions, functions, LuaVariableReturn),
+ * $(STDREF typecons, Tuple) and static arrays.
  */
 int pushReturnValues(T)(lua_State* L, T value)
 {
@@ -482,7 +484,7 @@ int pushReturnValues(T)(lua_State* L, T value)
 	}
 }
 
-/// Pops a Tuple from the values at the top of the stack.
+/// Pops a $(STDREF typecons, Tuple) from the values at the top of the stack.
 T popTuple(T)(lua_State* L) if(isTuple!T)
 {
 	T tup;
@@ -493,7 +495,7 @@ T popTuple(T)(lua_State* L) if(isTuple!T)
 	return tup;
 }
 
-/// Pushes all the values in a Tuple to the stack.
+/// Pushes all the values in a $(STDREF typecons, Tuple) to the stack.
 void pushTuple(T)(lua_State* L, ref T tup) if(isTuple!T)
 {
 	foreach(i, Elem; T.Types)
@@ -506,7 +508,8 @@ void pushTuple(T)(lua_State* L, ref T tup) if(isTuple!T)
  *    T = type of return value or container of return values
  *    nargs = number of arguments
  * Returns:
- * Zero, one or all return values as T, taking into account void, LuaVariableReturn and Tuple returns
+ * Zero, one or all return values as $(D T), taking into account $(D void),
+ * $(DPREF2 conversions, functions, LuaVariableReturn) and $(STDREF typecons, Tuple) returns
  */
 T callWithRet(T)(lua_State* L, int nargs)
 {
@@ -525,7 +528,7 @@ T callWithRet(T)(lua_State* L, int nargs)
 
 private extern(C) int printf(const(char)* fmt, ...);
 
-/// Print the Lua stack to stdout.
+/// Print the Lua stack to $(D stdout).
 void printStack(lua_State* L)
 {
 	auto top = lua_gettop(L);
