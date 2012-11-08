@@ -302,6 +302,10 @@ public:
 	 * $(D T) is the key and $(D U) is the value of the pair.
 	 * For any other element type $(D T), a table with sequential numeric
 	 * keys is created (an array).
+	 * Params:
+	 *   range = $(D InputRange) of key-value pairs or elements
+	 * Returns:
+	 *	 The new table
 	 */
 	LuaTable newTable(Range)(Range range) @trusted if(isInputRange!Range)
 	{
