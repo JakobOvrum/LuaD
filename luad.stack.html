@@ -250,7 +250,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <div class="declaration-content"><dl><p>Same as calling getValue!(T, typeMismatchHandler)(L, -1), then popping one value from the stack.
 </p>
 
-<dt>See Also</dt><dd>getValue</dd>
+<dt>See Also</dt><dd><a class="symbol-link" href="#getValue"><span class="inlinecode">getValue</span></a></dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>T[] <span class="symbol-target" id="popStack">&nbsp;</span><a class="symbol-link" href="#popStack">popStack</a>(T = LuaObject)(lua_State* <i>L</i>, size_t <i>n</i>);
@@ -268,7 +268,7 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <td>number of elements to pop</td>
 </tr>
 </table></dd>
-<dt>Returns</dt><dd>array of popped elements, or a <span class="d_keyword">null</span> array if n = 0</dd>
+<dt>Returns</dt><dd>array of popped elements, or a <span class="inlinecode"><span class="d_keyword">null</span></span> array if n = 0</dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>auto <span class="symbol-target" id="getArgument">&nbsp;</span><a class="symbol-link" href="#getArgument">getArgument</a>(T, int narg)(lua_State* <i>L</i>, int <i>idx</i>);
@@ -278,14 +278,15 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>template <span class="symbol-target" id="returnTypeSize">&nbsp;</span><a class="symbol-link" href="#returnTypeSize">returnTypeSize</a>(T)</h3></div>
-<div class="declaration-content"><dl><p>Used for getting a suitable nresults argument to lua_call or lua_pcall.</p>
+<div class="declaration-content"><dl><p>Used for getting a suitable nresults argument to <span class="inlinecode">lua_call</span> or <span class="inlinecode">lua_pcall</span>.</p>
 
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>T <span class="symbol-target" id="popReturnValues">&nbsp;</span><a class="symbol-link" href="#popReturnValues">popReturnValues</a>(T)(lua_State* <i>L</i>, size_t <i>nret</i>);
 </h3></div>
 <div class="declaration-content"><dl><p>Pop return values from stack.
- Defaults to popValue, but has special handling for LuaVariableReturn, Tuple!(...), static arrays and void.
+ Defaults to <a class="symbol-link" href="#popValue"><span class="inlinecode">popValue</span></a>, but has special handling for <a href="luad.conversions.functions.html#LuaVariableReturn"><span class="inlinecode">luad.conversions.functions.LuaVariableReturn</span></a>,
+ <a href="http://dlang.org/phobos/std_typecons.html#Tuple"><span class="inlinecode">std.typecons.Tuple</span></a>, static arrays and <span class="inlinecode">void</span>.
 </p>
 
 <dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>nret</td>
@@ -298,19 +299,20 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <hr><div class="row-fluid declaration"><h3>int <span class="symbol-target" id="pushReturnValues">&nbsp;</span><a class="symbol-link" href="#pushReturnValues">pushReturnValues</a>(T)(lua_State* <i>L</i>, T <i>value</i>);
 </h3></div>
 <div class="declaration-content"><dl><p>Push return values to the stack.
- Defaults to pushValue, but has special handling for LuaVariableReturn, Tuple!(...) and static arrays.</p>
+ Defaults to <a class="symbol-link" href="#pushValue"><span class="inlinecode">pushValue</span></a>, but has special handling for <a href="luad.conversions.functions.html#LuaVariableReturn"><span class="inlinecode">luad.conversions.functions.LuaVariableReturn</span></a>,
+ <a href="http://dlang.org/phobos/std_typecons.html#Tuple"><span class="inlinecode">std.typecons.Tuple</span></a> and static arrays.</p>
 
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>T <span class="symbol-target" id="popTuple">&nbsp;</span><a class="symbol-link" href="#popTuple">popTuple</a>(T)(lua_State* <i>L</i>);
 </h3></div>
-<div class="declaration-content"><dl><p>Pops a Tuple from the values at the top of the stack.</p>
+<div class="declaration-content"><dl><p>Pops a <a href="http://dlang.org/phobos/std_typecons.html#Tuple"><span class="inlinecode">std.typecons.Tuple</span></a> from the values at the top of the stack.</p>
 
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>void <span class="symbol-target" id="pushTuple">&nbsp;</span><a class="symbol-link" href="#pushTuple">pushTuple</a>(T)(lua_State* <i>L</i>, ref T <i>tup</i>);
 </h3></div>
-<div class="declaration-content"><dl><p>Pushes all the values in a Tuple to the stack.</p>
+<div class="declaration-content"><dl><p>Pushes all the values in a <a href="http://dlang.org/phobos/std_typecons.html#Tuple"><span class="inlinecode">std.typecons.Tuple</span></a> to the stack.</p>
 
 </dl>
 </div>
@@ -326,12 +328,13 @@ Additionally, the following types are pushable to Lua, but can't be retrieved ba
 <td>number of arguments</td>
 </tr>
 </table></dd>
-<dt>Returns</dt><dd>Zero, one or all return values as T, taking into account void, LuaVariableReturn and Tuple returns</dd>
+<dt>Returns</dt><dd>Zero, one or all return values as <span class="inlinecode">T</span>, taking into account <span class="inlinecode">void</span>,
+ <a href="luad.conversions.functions.html#LuaVariableReturn"><span class="inlinecode">luad.conversions.functions.LuaVariableReturn</span></a> and <a href="http://dlang.org/phobos/std_typecons.html#Tuple"><span class="inlinecode">std.typecons.Tuple</span></a> returns</dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>void <span class="symbol-target" id="printStack">&nbsp;</span><a class="symbol-link" href="#printStack">printStack</a>(lua_State* <i>L</i>);
 </h3></div>
-<div class="declaration-content"><dl><p>Print the Lua stack to stdout.</p>
+<div class="declaration-content"><dl><p>Print the Lua stack to <span class="inlinecode">stdout</span>.</p>
 
 </dl>
 </div>

@@ -151,7 +151,7 @@
 <br><br>
 <hr><div class="row-fluid declaration"><h3>enum <span class="symbol-target" id="LuaErrorHandler">&nbsp;</span><a class="symbol-link" href="#LuaErrorHandler">LuaErrorHandler</a>;
 </h3></div>
-<div class="declaration-content"><dl><p>Specify error handling scheme for doString and doFile.</p>
+<div class="declaration-content"><dl><p>Specify error handling scheme for <a class="symbol-link" href="#LuaState.doString"><span class="inlinecode">LuaState.doString</span></a> and <a class="symbol-link" href="#LuaState.doFile"><span class="inlinecode">LuaState.doFile</span></a>.</p>
 
 </dl>
 <div class="offset1 member-list"><hr><div class="row-fluid declaration"><h3><span class="symbol-target" id="None">&nbsp;</span><a class="symbol-link" href="#None">None</a></h3></div>
@@ -179,10 +179,10 @@
 
 <p>If an uncaught error for any operation on this state
  causes a Lua panic for the underlying state,
- an exception of type LuaError is thrown.
+ an exception of type <a href="luad.error.html#LuaError"><span class="inlinecode">luad.error.LuaError</span></a> is thrown.
 
 </p>
-<dt>See Also</dt><dd>openLibs</dd>
+<dt>See Also</dt><dd><a class="symbol-link" href="#LuaState.openLibs"><span class="inlinecode">LuaState.openLibs</span></a></dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>this(lua_State* <i>L</i>);

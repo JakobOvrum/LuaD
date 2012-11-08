@@ -227,7 +227,7 @@
 
 <p>This reference becomes a nil reference.
  This is only required when you want to release the reference before the lifetime
- of this LuaObject has ended.</p>
+ of this <span class="inlinecode">LuaObject</span> has ended.</p>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>nothrow @property @trusted LuaType <span class="symbol-target" id="type">&nbsp;</span><a class="symbol-link" href="#type">type</a>();
@@ -235,7 +235,7 @@
 <div class="declaration-content"><dl><p>Type of referenced object.
 </p>
 
-<dt>See Also</dt><dd>LuaType</dd>
+<dt>See Also</dt><dd><a class="symbol-link" href="#LuaType"><span class="inlinecode">LuaType</span></a></dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>@property @trusted string <span class="symbol-target" id="typeName">&nbsp;</span><a class="symbol-link" href="#typeName">typeName</a>();
@@ -255,7 +255,7 @@
 <div class="declaration-content"><dl><p>Convert the referenced object into a textual representation.
 </p>
 
-<p>The returned string is formatted exactly like the Lua 'tostring' function.
+<p>The returned string is formatted in the same way the Lua <span class="inlinecode">tostring</span> function formats.
 
 </p>
 <dt>Returns</dt><dd>String representation of referenced object</dd>
@@ -263,7 +263,7 @@
 </div>
 <hr><div class="row-fluid declaration"><h3>T <span class="symbol-target" id="to">&nbsp;</span><a class="symbol-link" href="#to">to</a>(T)();
 </h3></div>
-<div class="declaration-content"><dl><p>Attempt to convert the referenced object to any D type.
+<div class="declaration-content"><dl><p>Attempt to convert the referenced object to the specified D type.
 </p>
 
 <dt>Examples</dt><dd><pre class="d_code">	<span class="d_keyword">auto</span> results = lua.doString(<span class="d_string">`return "hello!"`</span>);
