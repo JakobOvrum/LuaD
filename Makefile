@@ -33,15 +33,15 @@ else
 endif
 
 ifeq ($(BUILD), test)
-	LUAD_NAME = test/luad_unittest
-	LUAD_OUTPUT = $(LUAD_NAME)
+	LUAD_NAME = luad_unittest
+	LUAD_OUTPUT = test/$(LUAD_NAME)
 else
 	ifeq ($(BUILD), debug)
-		LUAD_NAME = lib/libluad-d
+		LUAD_NAME = libluad-d
 	else
-		LUAD_NAME = lib/libluad
+		LUAD_NAME = libluad
 	endif
-	LUAD_OUTPUT = $(LUAD_NAME).a
+	LUAD_OUTPUT = lib/$(LUAD_NAME).a
 endif
 
 all: $(LUAD_OUTPUT)
@@ -64,8 +64,11 @@ else
 	LUAD_DFLAGS += -version=luad_unittest_main
 endif
 
-lib/libluad-d.a:
 lib/libluad.a: $(LUAD_SOURCES)
+	if ! test -d lib; then mkdir lib; fi
+	dmd $(LUAD_DFLAGS) -of$@ $(LUAD_SOURCES);
+
+lib/libluad-d.a: $(LUAD_SOURCES)
 	if ! test -d lib; then mkdir lib; fi
 	dmd $(LUAD_DFLAGS) -of$@ $(LUAD_SOURCES);
 
