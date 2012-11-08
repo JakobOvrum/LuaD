@@ -184,8 +184,8 @@
 <hr><div class="row-fluid declaration"><h3>@trusted bool <span class="symbol-target" id="readString">&nbsp;</span><a class="symbol-link" href="#readString">readString</a>(T)(T <i>key</i>, scope void delegate(in char[] str) <i>dg</i>);
 </h3></div>
 <div class="declaration-content"><dl><p>Read a string value in this table without making a copy of the string.
- The read string is passed to dg, and should not be escaped.
- If the value for key is not a string, dg is not called.
+ The read string is passed to <span class="inlinecode">dg</span>, and should not be escaped.
+ If the value for <span class="inlinecode">key</span> is not a string, <span class="inlinecode">dg</span> is not called.
 </p>
 
 <dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>key</td>
@@ -195,7 +195,7 @@
 <td>delegate to receive string</td>
 </tr>
 </table></dd>
-<dt>Returns</dt><dd><span class="d_keyword">true</span> if the value for key was a string and passed to dg, <span class="d_keyword">false</span> otherwise
+<dt>Returns</dt><dd><span class="inlinecode"><span class="d_keyword">true</span></span> if the value for <span class="inlinecode">key</span> was a string and passed to <span class="inlinecode">dg</span>, <span class="inlinecode"><span class="d_keyword">false</span></span> otherwise
 </dd>
 <dt>Examples</dt><dd><pre class="d_code">	t[2] = <span class="d_string">"two"</span>;
 	t.<u>readString</u>(2, str =&gt; <span class="d_keyword">assert</span>(str == <span class="d_string">"two"</span>));
@@ -205,9 +205,11 @@
 </div>
 <hr><div class="row-fluid declaration"><h3>LuaObject <span class="symbol-target" id="opIndex">&nbsp;</span><a class="symbol-link" href="#opIndex">opIndex</a>(T...)(T <i>args</i>);
 </h3></div>
-<div class="declaration-content"><dl><p>Same as calling get!LuaObject with the same arguments.
+<div class="declaration-content"><dl><p>Same as calling <span class="inlinecode">get!LuaObject</span> with the same arguments.
 </p>
 
+<dt>See Also</dt><dd><a class="symbol-link" href="#LuaTable.get"><span class="inlinecode">LuaTable.get</span></a>
+</dd>
 <dt>Examples</dt><dd><pre class="d_code">	<span class="d_keyword">auto</span> luapath = lua[<span class="d_string">"package"</span>, <span class="d_string">"path"</span>];
 	writefln(<span class="d_string">"LUA_PATH:\n%s"</span>, luapath);
 </pre>
@@ -224,7 +226,7 @@
 <td>key to set</td>
 </tr>
 <tr><td>value</td>
-<td>value of key</td>
+<td>value for <span class="inlinecode">key</span></td>
 </tr>
 </table></dd>
 </dl>
@@ -241,8 +243,8 @@
 <td>list of keys, where all keys but the last one should result in a table</td>
 </tr>
 </table></dd>
-<dt>Returns</dt><dd>t[k] = value, where t is the table for the second-to-last parameter in args,
-	 and k is the last parameter in args
+<dt>Returns</dt><dd><span class="inlinecode">t[k] = value</span>, where <span class="inlinecode">t</span> is the table for the second-to-last parameter in args,
+	 and <span class="inlinecode">k</span> is the last parameter in args
 
 </dd>
 <dt>Examples</dt><dd><pre class="d_code">	lua[<span class="d_string">"string"</span>, <span class="d_string">"empty"</span>] = (<span class="d_keyword">in</span> <span class="d_keyword">char</span>[] s){ <span class="d_keyword">return</span> s.length == 0; };
@@ -253,7 +255,7 @@
 </div>
 <hr><div class="row-fluid declaration"><h3>@trusted T <span class="symbol-target" id="toStruct">&nbsp;</span><a class="symbol-link" href="#toStruct">toStruct</a>(T)();
 </h3></div>
-<div class="declaration-content"><dl><p>Create struct of type T and fill its members with fields from this table.
+<div class="declaration-content"><dl><p>Create struct of type <span class="inlinecode">T</span> and fill its members with fields from this table.
 </p>
 
 <p>Struct fields that are not present in this table are left at their default value.
