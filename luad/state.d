@@ -1,6 +1,9 @@
 module luad.state;
 
+import std.array, std.range;
+
 import std.string : toStringz;
+import std.typecons : isTuple;
 
 import luad.c.all;
 import luad.stack;
@@ -273,7 +276,7 @@ public:
 	 * Returns:
 	 *	 The new table
 	 */
-	LuaTable newTable() @trusted
+	LuaTable newTable()() @trusted
 	{
 		return newTable(0, 0);
 	}
@@ -286,9 +289,63 @@ public:
 	 * Returns:
 	 *	 The new table
 	 */
-	LuaTable newTable(uint narr, uint nrec) @trusted
+	LuaTable newTable()(uint narr, uint nrec) @trusted
 	{
 		lua_createtable(L, narr, nrec);
+		return popValue!LuaTable(L);
+	}
+
+	/**
+	 * Create a new table from an $(D InputRange).
+	 * If the element type of the range is $(D Tuple!(T, U)),
+	 * then each element makes up a key-value pair, where
+	 * $(D T) is the key and $(D U) is the value of the pair.
+	 * For any other element type $(D T), a table with sequential numeric
+	 * keys is created (an array).
+	 */
+	LuaTable newTable(Range)(Range range) @trusted if(isInputRange!Range)
+	{
+		alias ElementType!Range Elem;
+
+		static if(hasLength!Range)
+		{
+			immutable numElements = range.length;
+			assert(numElements <= int.max, "lua_createtable only supports int.max many elements");
+		}
+		else
+		{
+			immutable numElements = 0;
+		}
+
+		static if(isTuple!Elem) // Key-value pairs
+		{
+			static assert(Elem.length == 2, "key-value tuple must have exactly 2 values.");
+
+			lua_createtable(L, 0, cast(int)numElements);
+
+			foreach(pair; range)
+			{
+				pushValue(L, pair[0]);
+				pushValue(L, pair[1]);
+				lua_rawset(L, -3);
+			}
+		}
+		else // Sequential table
+		{
+			lua_createtable(L, cast(int)numElements, 0);
+
+			size_t i = 1;
+
+			foreach(value; range)
+			{
+				pushValue(L, i);
+				pushValue(L, value);
+				lua_rawset(L, -3);
+
+				++i;
+			}
+		}
+
 		return popValue!LuaTable(L);
 	}
 	
@@ -416,6 +473,44 @@ unittest
 	assert(results[0].type == LuaType.Number);
 	assert(results[1].type == LuaType.String);
 	assert(results[2].type == LuaType.Number);
+}
+
+unittest // LuaTable.newTable(range)
+{
+	import std.algorithm;
+	import std.typecons : tuple;
+
+	auto input = [1, 2, 3];
+
+	lua["tab"] = lua.newTable(input);
+
+	unittest_lua(lua.state, `
+		assert(#tab == 3)
+		for i = 1, 3 do
+			assert(tab[i] == i)
+		end
+	`);
+
+	lua["tab"] = lua.newTable(filter!(i => i == 2)(input));
+
+	unittest_lua(lua.state, `
+		assert(#tab == 1)
+		assert(tab[1] == 2)
+	`);
+
+	auto keys = iota(7, 14);
+	auto values = repeat(42);
+
+	lua["tab"] = lua.newTable(zip(keys, values));
+
+	unittest_lua(lua.state, `
+		assert(not tab[1])
+		assert(not tab[6])
+		for i = 7, 13 do
+			assert(tab[i] == 42)
+		end
+		assert(not tab[14])
+	`);
 }
 
 unittest
