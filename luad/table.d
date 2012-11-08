@@ -9,7 +9,7 @@ import luad.conversions.structs;
 /// Represents a Lua table.
 struct LuaTable
 {
-	/// LuaTable sub-types LuaObject through this reference.
+	/// LuaTable sub-types $(DPREF base, LuaObject) through this reference.
 	LuaObject object;
 
 	alias object this;
