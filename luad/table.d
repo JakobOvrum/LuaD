@@ -26,7 +26,7 @@ struct LuaTable
 	 *	 T = type of value
 	 *	 args = list of keys, where all keys but the last one should result in a table
 	 * Returns:
-	 *	 t[k] where t is the table for the second-to-last parameter, and k is the last parameter
+	 *	 $(D t[k]) where $(D t) is the table for the second-to-last parameter, and $(D k) is the last parameter
 	 *
 	 * Examples:
 	 * ----------------------
