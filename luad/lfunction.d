@@ -10,7 +10,7 @@ import luad.c.all;
 /// Represents a Lua function.
 struct LuaFunction
 {
-	/// LuaFunction sub-types LuaObject through this reference.
+	/// LuaFunction sub-types $(DPREF base, LuaObject) through this reference.
 	LuaObject object;
 	alias object this;
 	
@@ -22,7 +22,7 @@ struct LuaFunction
 	
 	/**
 	 * Call this function and collect all return values as
-	 * an array of LuaObject references.
+	 * an array of $(DPREF base, LuaObject) references.
 	 * Examples:
 	 -----------------------
 	lua.doString(`function f(...) return ... end`);
@@ -46,7 +46,7 @@ struct LuaFunction
 	 *	 T = expected return type.
 	 *	 args = list of arguments.
 	 * Returns:
-	 *	 Return value of type T, or nothing if T was unspecified.
+	 *	 Return value of type $(D T), or nothing if $(D T) was unspecified.
 	 *   See $(DPMODULE2 conversions,functions) for how to
 	 *   catch multiple return values.
 	 * Examples:
@@ -102,8 +102,8 @@ struct LuaFunction
 	 * Params:
 	 *    writer = delegate to forward writing calls to
 	 *  
-	 *  If the delegate returns false for any of the chunks,
-	 *  the dump process ends, and the writer won't be called again.
+	 *  If the delegate returns $(D false) for any of the chunks,
+	 *  the _dump process ends, and the writer won't be called again.
 	 */
 	bool dump(scope bool delegate(in void[]) writer)
 	{

@@ -326,7 +326,7 @@ public:
 	}
 	
 	/**
-	 * Same as calling globals._get with the same arguments.
+	 * Same as calling $(D globals._get) with the same arguments.
 	 * See_Also:
 	 *	 $(DPREF table, LuaTable._get)
 	 */
