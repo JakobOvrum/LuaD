@@ -224,7 +224,7 @@ public:
 	 */
 	LuaFunction loadFile(in char[] path) @trusted
 	{
-		if(luaL_loadfile(L, toStringz(path)) != 1)
+		if(luaL_loadfile(L, toStringz(path)) != 0)
 			lua_error(L);
 
 		return popValue!LuaFunction(L);

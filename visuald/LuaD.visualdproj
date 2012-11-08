@@ -223,7 +223,7 @@
   <checkProperty>0</checkProperty>
   <genStackFrame>0</genStackFrame>
   <pic>0</pic>
-  <cov>0</cov>
+  <cov>1</cov>
   <nofloat>0</nofloat>
   <Dversion>2</Dversion>
   <ignoreUnsupportedPragmas>0</ignoreUnsupportedPragmas>
