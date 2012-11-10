@@ -199,7 +199,7 @@
 <dt>Note:</dt><dd>
 The panic function is not changed - a Lua panic will not throw a D exception!
 </dd>
-<dt>See Also</dt><dd><a class="symbol-link" href="#LuaState"><span class="inlinecode">LuaState</span></a></dd>
+<dt>See Also</dt><dd><a class="symbol-link" href="#LuaState.setPanicHandler"><span class="inlinecode">LuaState.setPanicHandler</span></a></dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>pure nothrow @property @safe lua_State* <span class="symbol-target" id="state">&nbsp;</span><a class="symbol-link" href="#state">state</a>();
@@ -297,7 +297,9 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <td>error handling scheme</td>
 </tr>
 </table></dd>
-<dt>Returns</dt><dd>Any code return values</dd>
+<dt>Returns</dt><dd>Any code return values
+</dd>
+<dt>See Also</dt><dd><a class="symbol-link" href="#LuaErrorHandler"><span class="inlinecode">LuaErrorHandler</span></a></dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>@trusted LuaObject[] <span class="symbol-target" id="doFile">&nbsp;</span><a class="symbol-link" href="#doFile">doFile</a>(in char[] <i>path</i>, LuaErrorHandler <i>handler</i> = (LuaErrorHandler).None);
@@ -312,7 +314,9 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <td>error handling scheme</td>
 </tr>
 </table></dd>
-<dt>Returns</dt><dd>Any script return values</dd>
+<dt>Returns</dt><dd>Any script return values
+</dd>
+<dt>See Also</dt><dd><a class="symbol-link" href="#LuaErrorHandler"><span class="inlinecode">LuaErrorHandler</span></a></dd>
 </dl>
 </div>
 <hr><div class="row-fluid declaration"><h3>@trusted LuaTable <span class="symbol-target" id="newTable">&nbsp;</span><a class="symbol-link" href="#newTable">newTable</a>()();
