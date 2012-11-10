@@ -85,7 +85,6 @@ struct LuaTable
 	
 	/**
 	 * Same as calling $(D get!LuaObject) with the same arguments.
-	 * See_Also: $(MREF LuaTable.get)
 	 * Examples:
 	 * ---------------------
 	auto luapath = lua["package", "path"];
