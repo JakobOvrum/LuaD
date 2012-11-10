@@ -130,7 +130,7 @@ struct LuaObject
 	@property string typeName() @trusted /+ nothrow +/
 	{
 		push();
-		const(char)* cname = luaL_typename(state, -1);
+		const(char)* cname = luaL_typename(state, -1); // TODO: Doesn't have to use luaL_typename, i.e. no copy
 		auto name = cname[0.. strlen(cname)].idup;
 		lua_pop(state, 1);
 		return name;
@@ -206,11 +206,19 @@ unittest
 	lua_pushstring(L, "foobar");
 	auto o = popValue!LuaObject(L);
 	
+	assert(!o.isNil);
 	assert(o.type == LuaType.String);
-	assert(o.to!string == "foobar");
+	assert(o.typeName == "string");
+	assert(o.to!string() == "foobar");
 	
 	lua_pushnil(L);
 	auto nilref = popValue!LuaObject(L);
 	
 	assert(nilref.isNil);
+	assert(nilref.typeName == "nil");
+
+	assert(o != nilref);
+
+	auto o2 = o;
+	assert(o2 == o);
 }

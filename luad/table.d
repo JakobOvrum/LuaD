@@ -92,7 +92,7 @@ struct LuaTable
 	writefln("LUA_PATH:\n%s", luapath);
 	 * ---------------------
 	 * See_Also:
-	 *	 get
+	 *   $(MREF LuaTable.get)
 	 */
 	LuaObject opIndex(T...)(T args)
 	{
@@ -252,6 +252,7 @@ struct LuaTable
 		return 0;
 	}
 }
+
 unittest
 {
 	lua_State* L = luaL_newstate();

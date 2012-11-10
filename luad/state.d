@@ -69,7 +69,7 @@ public:
 	 * Note:
 	 *	 The panic function is not changed - a Lua panic will not throw a D exception!
 	 * See_Also:
-		$(MREF LuaState, setPanicHandler)
+		$(MREF LuaState.setPanicHandler)
 	 */
 	this(lua_State* L)
 	{
@@ -240,6 +240,8 @@ public:
 	 *   handler = error handling scheme
 	 * Returns:
 	 *	 Any _code return values
+	 * See_Also:
+	 *   $(MREF LuaErrorHandler)
 	 */
 	LuaObject[] doString(in char[] code, LuaErrorHandler handler = LuaErrorHandler.None) @trusted
 	{
@@ -259,6 +261,8 @@ public:
 	 *   handler = error handling scheme
 	 * Returns:
 	 *	 Any script return values
+	 * See_Also:
+	 *   $(MREF LuaErrorHandler)
 	 */
 	LuaObject[] doFile(in char[] path, LuaErrorHandler handler = LuaErrorHandler.None) @trusted
 	{

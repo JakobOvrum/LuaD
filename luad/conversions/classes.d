@@ -180,12 +180,15 @@ void pushStaticTypeInterface(T)(lua_State* L)
 	lua_setmetatable(L, -2);
 }
 
-version(unittest) import luad.testing;
+version(unittest)
+{
+	import luad.testing;
+	private lua_State* L;
+}
 
 unittest
 {
-	lua_State* L = luaL_newstate();
-	scope(success) lua_close(L);
+	L = luaL_newstate();
 	
 	static class A
 	{
@@ -206,6 +209,11 @@ unittest
 		int bar(int i)
 		{
 			return n += i;
+		}
+
+		void verifyN(int n)
+		{
+			assert(this.n == n);
 		}
 	}
 
@@ -246,9 +254,15 @@ unittest
 	
 	luaL_openlibs(L);
 	unittest_lua(L, `
+		--assert(a.n == 2)
 		assert(a:bar(2) == 4)
+		--assert(a.n == 4)
 		func(a)
 		assert(a:bar(2) == 8)
+
+		--a.n = 42
+		--a:verifyN(42)
+		--assert(a.n == 42)
 
 		assert(a:foo() == "foo")
 		assert(tostring(a) == a_toString)
