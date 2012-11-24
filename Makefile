@@ -80,6 +80,7 @@ test/luad_unittest: $(LUAD_SOURCES)
 LUAD_SOURCES = \
 	luad/all.d \
 	luad/base.d \
+	luad/c_terse.d \
 	luad/dynamic.d \
 	luad/error.d \
 	luad/lfunction.d \

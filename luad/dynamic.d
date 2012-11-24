@@ -1,6 +1,6 @@
 module luad.dynamic;
 
-import luad.c.all;
+import luad.c_terse;
 
 import luad.base;
 import luad.stack;
@@ -43,34 +43,34 @@ struct LuaDynamic
 		// Push self
 		object.push();
 
-		auto frame = lua_gettop(object.state);
+		auto frame = object.state.gettop();
 		
 		// push name and self[name]
-		lua_pushlstring(object.state, name.ptr, name.length);
-		lua_gettable(object.state, -2);
+		object.state.pushstring(name);
+		object.state.gettable(-2);
 
 		// TODO: How do I properly generalize this to include other types,
 		// while not stepping on the __call metamethod?
-		if(lua_isnil(object.state, -1))
+		if(object.state.isnil())
 		{
-			lua_pop(object.state, 2);
-			luaL_error(object.state, "%s:%d: attempt to call method '%s' (a nil value)", file.ptr, line, name.ptr);
+			object.state.pop(2);
+			object.state.error("%s:%d: attempt to call method '%s' (a nil value)", file.ptr, line, name.ptr);
 		}
 
 		// Copy 'this' to the top of the stack
-		lua_pushvalue(object.state, -2);
+		object.state.pushvalue(-2);
 		
 		foreach(arg; args)
 			pushValue(object.state, arg);
 
-		lua_call(object.state, args.length + 1, LUA_MULTRET);
+		object.state.call(args.length + 1, MULTRET);
 
-		auto nret = lua_gettop(object.state) - frame;
+		auto nret = object.state.gettop() - frame;
 
 		auto ret = popStack!LuaDynamic(object.state, nret);
 		
 		// Pop self
-		lua_pop(object.state, 1);
+		object.state.pop();
 
 		return ret;
 	}
@@ -85,15 +85,15 @@ struct LuaDynamic
 	 */
 	LuaDynamic[] opCall(Args...)(Args args)
 	{
-		auto frame = lua_gettop(object.state);
+		auto frame = object.state.gettop();
 
 		object.push(); // Callable
 		foreach(arg; args)
 			pushValue(object.state, arg);
 		
-		lua_call(object.state, args.length, LUA_MULTRET);
+		object.state.call(args.length, MULTRET);
 
-		auto nret = lua_gettop(object.state) - frame;
+		auto nret = object.state.gettop() - frame;
 		
 		return popStack!LuaDynamic(object.state, nret);
 	}
@@ -108,9 +108,9 @@ struct LuaDynamic
 	{
 		object.push();
 		pushValue(object.state, key);
-		lua_gettable(object.state, -2);
+		object.state.gettable(-2);
 		auto result = getValue!LuaDynamic(object.state, -1);
-		lua_pop(object.state, 2);
+		object.state.pop(2);
 		return result;
 	}
 
@@ -125,14 +125,14 @@ struct LuaDynamic
 		object.push();
 		static if(is(T == Nil))
 		{
-			scope(success) lua_pop(object.state, 1);
-			return lua_isnil(object.state, -1) == 1;
+			scope(success) object.state.pop();
+			return object.state.isnil();
 		}
 		else
 		{
 			pushValue(object.state, other);
-			scope(success) lua_pop(object.state, 2);
-			return lua_equal(object.state, -1, -2);
+			scope(success) object.state.pop(2);
+			return object.state.equal();
 		}
 	}
 }
@@ -143,12 +143,12 @@ import std.stdio;
 
 unittest
 {
-	lua_State* L = luaL_newstate();
-	scope(success) lua_close(L);
-	luaL_openlibs(L);
+	State* L = newstate();
+	scope(success) L.close();
+	L.openlibs();
 	
-	luaL_dostring(L, `str = "test"`);
-	lua_getglobal(L, "str");
+	L.dostring(`str = "test"`);
+	L.getglobal("str");
 	auto luaString = popValue!LuaDynamic(L);
 	
 	LuaDynamic[] results = luaString.gsub("t", "f");
@@ -164,7 +164,7 @@ unittest
 	assert(results[1] == results2[1]);
 	assert(results == results2);
 
-	lua_getglobal(L, "thisisnil");
+	L.getglobal("thisisnil");
 	auto nilRef = popValue!LuaDynamic(L);
 
 	assert(nilRef == nil);
