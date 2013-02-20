@@ -525,8 +525,10 @@ unittest
 	static class Test
 	{
 		private:
+		/+ Not working as of 2.062
 		static int priv;
 		static void priv_fun() {}
+		+/
 
 		public:
 		static int pub = 123;

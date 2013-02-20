@@ -37,7 +37,7 @@ private void pushMeta(T)(lua_State* L, T obj)
 	
 	foreach(member; __traits(derivedMembers, T))
 	{
-		static if(__traits(compiles, __traits(getOverloads, T.init, member)) && //ignore non-public fields
+		static if(__traits(getProtection, __traits(getMember, T, member)) == "public" && //ignore non-public fields
 			member != "this" && member != "__ctor" && //do not handle
 			member != "Monitor" && member != "toHash" && //do not handle
 			member != "toString" && member != "opEquals" && //handle below
