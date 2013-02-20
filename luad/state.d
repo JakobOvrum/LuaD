@@ -126,13 +126,13 @@ public:
 	}
 	
 	/// The global table for this instance.
-	@property LuaTable globals() nothrow pure @safe
+	@property LuaTable globals() @trusted
 	{
 		return _G;
 	}
 	
 	/// The _registry table for this instance.
-	@property LuaTable registry() nothrow pure @safe
+	@property LuaTable registry() @trusted
 	{
 		return _R;
 	}
