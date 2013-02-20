@@ -73,11 +73,12 @@ struct LuaTable
 		
 		lua_gettable(this.state, -2);
 		scope(exit) lua_pop(this.state, 1);
+
+		if(lua_isstring(this.state, -1) == 0)
+			return false;
 		
 		size_t len;
 		const(char)* cstr = lua_tolstring(this.state, -1, &len);
-		if(cstr is null)
-			return false;
 		
 		dg(cstr[0 .. len]);
 		return true;
