@@ -5,6 +5,7 @@ All _arrays with LuaD compatible element types are supported.
 module luad.conversions.arrays;
 
 import std.traits;
+import std.range : ElementType;
 
 import luad.c.all;
 import luad.stack;
@@ -23,7 +24,7 @@ void pushArray(T)(lua_State* L, ref T arr) if (isArray!T)
 
 T getArray(T)(lua_State* L, int idx) if (isArray!T)
 {
-	alias typeof(T[0]) ElemType;
+	alias ElementType!T ElemType;
 	auto len = lua_objlen(L, idx);
 	
 	auto arr = new ElemType[len];
