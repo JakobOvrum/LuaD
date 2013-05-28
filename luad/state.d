@@ -361,7 +361,7 @@ public:
 	 * Wrap a D value in a Lua reference.
 	 *
 	 * Note that using this method is only necessary in certain situations,
-	 * like when you want to act on the reference before fully exposing it to Lua.
+	 * such as when you want to act on the reference before fully exposing it to Lua.
 	 * Params:
 	 *   T = type of reference. Must be $(D LuaObject), $(D LuaTable), $(D LuaFunction) or $(D LuaDynamic).
 	 *   Defaults to $(D LuaObject).
@@ -446,10 +446,10 @@ unittest
 	lua.openLibs();
 	
 	//default panic handler
-	string msg;
 	try
 	{
 		lua.doString(`error("Hello, D!")`, LuaErrorHandler.Traceback);
+		assert(false);
 	}
 	catch(LuaErrorException e)
 	{
