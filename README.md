@@ -1,5 +1,6 @@
 LuaD - Lua for the D Programming Language
 ============================================
+[![Build Status](http://joshrsimmons.com:8080/buildStatus/icon?job=LuaD_x86)](http://joshrsimmons.com:8080/job/LuaD_x86/)
 Hello, world!
 --------------------------------------------
 ```D
