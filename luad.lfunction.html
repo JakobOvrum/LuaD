@@ -166,14 +166,14 @@
  an array of <a href="luad.base.html#LuaObject"><span class="inlinecode">luad.base.LuaObject</span></a> references.
 </p>
 
-<dt>Examples</dt><dd><pre class="d_code">	lua.doString(<span class="d_string">`function f(...) return ... end`</span>);
-	<span class="d_keyword">auto</span> f = lua.get!LuaFunction(<span class="d_string">"f"</span>);
+<dt>Examples</dt><dd><pre class="d_code">lua.doString(<span class="d_string">`function f(...) return ... end`</span>);
+<span class="d_keyword">auto</span> f = lua.get!LuaFunction(<span class="d_string">"f"</span>);
 
-	LuaObject[] ret = f(1.2, <span class="d_string">"hello!"</span>, <span class="d_keyword">true</span>);
+LuaObject[] ret = f(1.2, <span class="d_string">"hello!"</span>, <span class="d_keyword">true</span>);
 
-	<span class="d_keyword">assert</span>(ret[0].to!<span class="d_keyword">double</span>() == 1.2);
-	<span class="d_keyword">assert</span>(ret[1].to!string() == <span class="d_string">"hello!"</span>);
-	<span class="d_keyword">assert</span>(ret[2].to!<span class="d_keyword">bool</span>());
+<span class="d_keyword">assert</span>(ret[0].to!<span class="d_keyword">double</span>() == 1.2);
+<span class="d_keyword">assert</span>(ret[1].to!string() == <span class="d_string">"hello!"</span>);
+<span class="d_keyword">assert</span>(ret[2].to!<span class="d_keyword">bool</span>());
 </pre>
 </dd>
 </dl>
@@ -194,11 +194,11 @@
    See <a href="luad.conversions.functions.html"><span class="inlinecode">luad.conversions.functions</span></a> for how to
    catch multiple return values.
 </dd>
-<dt>Examples</dt><dd><pre class="d_code">	lua.doString(<span class="d_string">`function ask(question) return 42 end`</span>);
-	<span class="d_keyword">auto</span> ask = lua.get!LuaFunction(<span class="d_string">"ask"</span>);
+<dt>Examples</dt><dd><pre class="d_code">lua.doString(<span class="d_string">`function ask(question) return 42 end`</span>);
+<span class="d_keyword">auto</span> ask = lua.get!LuaFunction(<span class="d_string">"ask"</span>);
 
-	<span class="d_keyword">auto</span> answer = ask.<u>call</u>!<span class="d_keyword">int</span>(<span class="d_string">"What's the answer to life, the universe and everything?"</span>);
-	<span class="d_keyword">assert</span>(answer == 42);
+<span class="d_keyword">auto</span> answer = ask.<u>call</u>!<span class="d_keyword">int</span>(<span class="d_string">"What's the answer to life, the universe and everything?"</span>);
+<span class="d_keyword">assert</span>(answer == 42);
 </pre>
 </dd>
 </dl>
@@ -214,25 +214,25 @@
 <td>new environment</td>
 </tr>
 </table></dd>
-<dt>Examples</dt><dd><pre class="d_code"> lua[<span class="d_string">"foo"</span>] = <span class="d_string">"bar"</span>;
- <span class="d_keyword">auto</span> func = lua.loadString(<span class="d_string">`return foo`</span>);
- <span class="d_keyword">assert</span>(func.call!string() == <span class="d_string">"bar"</span>);
+<dt>Examples</dt><dd><pre class="d_code">lua[<span class="d_string">"foo"</span>] = <span class="d_string">"bar"</span>;
+<span class="d_keyword">auto</span> func = lua.loadString(<span class="d_string">`return foo`</span>);
+<span class="d_keyword">assert</span>(func.call!string() == <span class="d_string">"bar"</span>);
 
- <span class="d_keyword">auto</span> <b>env</b> = lua.wrap([<span class="d_string">"foo"</span>: <span class="d_string">"test"</span>]);
- func.<u>setEnvironment</u>(<b>env</b>);
- <span class="d_keyword">assert</span>(func.call!string() == <span class="d_string">"test"</span>);
+<span class="d_keyword">auto</span> <b>env</b> = lua.wrap([<span class="d_string">"foo"</span>: <span class="d_string">"test"</span>]);
+func.<u>setEnvironment</u>(<b>env</b>);
+<span class="d_keyword">assert</span>(func.call!string() == <span class="d_string">"test"</span>);
 </pre>
 </dd>
 </dl>
 </div>
-<hr><div class="row-fluid declaration"><h3>bool <span class="symbol-target" id="dump">&nbsp;</span><a class="symbol-link" href="#dump">dump</a>(scope bool delegate(const(void[])) <i>writer</i>);
+<hr><div class="row-fluid declaration"><h3>bool <span class="symbol-target" id="dump">&nbsp;</span><a class="symbol-link" href="#dump">dump</a>(scope bool delegate(in void[]) <i>writer</i>);
 </h3></div>
 <div class="declaration-content"><dl><p>Dump this function as a binary chunk of Lua bytecode to the specified
  <i>writer</i> delegate.  Multiple chunks may be produced to <span class="symbol-target" id="dump">&nbsp;</span><a class="symbol-link" href="#dump">dump</a> a single
  function.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>bool delegate(const(void[])) <i>writer</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>bool delegate(in void[]) <i>writer</i></td>
 <td>delegate to forward writing calls to
 <br><br>
 

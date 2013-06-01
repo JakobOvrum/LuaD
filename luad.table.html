@@ -175,8 +175,8 @@
 <dt>Returns</dt><dd><span class="inlinecode">t[k]</span> where <span class="inlinecode">t</span> is the table for the second-to-last parameter, and <span class="inlinecode">k</span> is the last parameter
 
 </dd>
-<dt>Examples</dt><dd><pre class="d_code">	<span class="d_keyword">auto</span> execute = lua.<u>get</u>!LuaFunction(<span class="d_string">"os"</span>, <span class="d_string">"execute"</span>);
-	execute(<span class="d_string">`echo hello, world!`</span>);
+<dt>Examples</dt><dd><pre class="d_code"><span class="d_keyword">auto</span> execute = lua.<u>get</u>!LuaFunction(<span class="d_string">"os"</span>, <span class="d_string">"execute"</span>);
+execute(<span class="d_string">`echo hello, world!`</span>);
 </pre>
 </dd>
 </dl>
@@ -197,8 +197,8 @@
 </table></dd>
 <dt>Returns</dt><dd><span class="inlinecode"><span class="d_keyword">true</span></span> if the value for <span class="inlinecode">key</span> was a string and passed to <span class="inlinecode">dg</span>, <span class="inlinecode"><span class="d_keyword">false</span></span> otherwise
 </dd>
-<dt>Examples</dt><dd><pre class="d_code">	t[2] = <span class="d_string">"two"</span>;
-	t.<u>readString</u>(2, str =&gt; <span class="d_keyword">assert</span>(str == <span class="d_string">"two"</span>));
+<dt>Examples</dt><dd><pre class="d_code">t[2] = <span class="d_string">"two"</span>;
+t.<u>readString</u>(2, str =&gt; <span class="d_keyword">assert</span>(str == <span class="d_string">"two"</span>));
 </pre>
 </dd>
 </dl>
@@ -208,8 +208,8 @@
 <div class="declaration-content"><dl><p>Same as calling <span class="inlinecode">get!LuaObject</span> with the same arguments.
 </p>
 
-<dt>Examples</dt><dd><pre class="d_code">	<span class="d_keyword">auto</span> luapath = lua[<span class="d_string">"package"</span>, <span class="d_string">"path"</span>];
-	writefln(<span class="d_string">"LUA_PATH:\n%s"</span>, luapath);
+<dt>Examples</dt><dd><pre class="d_code"><span class="d_keyword">auto</span> luapath = lua[<span class="d_string">"package"</span>, <span class="d_string">"path"</span>];
+writefln(<span class="d_string">"LUA_PATH:\n%s"</span>, luapath);
 </pre>
 </dd>
 <dt>See Also</dt><dd><a class="symbol-link" href="#LuaTable.get"><span class="inlinecode">LuaTable.get</span></a></dd>
@@ -245,8 +245,8 @@
 	 and <span class="inlinecode">k</span> is the last parameter in args
 
 </dd>
-<dt>Examples</dt><dd><pre class="d_code">	lua[<span class="d_string">"string"</span>, <span class="d_string">"empty"</span>] = (<span class="d_keyword">in</span> <span class="d_keyword">char</span>[] s){ <span class="d_keyword">return</span> s.length == 0; };
-	lua.doString(<span class="d_string">`assert(string.empty(""))`</span>);
+<dt>Examples</dt><dd><pre class="d_code">lua[<span class="d_string">"string"</span>, <span class="d_string">"empty"</span>] = (<span class="d_keyword">in</span> <span class="d_keyword">char</span>[] s){ <span class="d_keyword">return</span> s.length == 0; };
+lua.doString(<span class="d_string">`assert(string.empty(""))`</span>);
 </pre>
 </dd>
 </dl>

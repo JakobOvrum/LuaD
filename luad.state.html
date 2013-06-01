@@ -172,7 +172,7 @@
 <div class="declaration-content"><dl><p>Represents a Lua state instance.</p>
 
 </dl>
-<div class="offset1 member-list"><hr><div class="row-fluid declaration"><h3>this();
+<div class="offset1 member-list"><hr><div class="row-fluid declaration"><h3> this();
 </h3></div>
 <div class="declaration-content"><dl><p>Create a new, empty Lua state. The standard library is not loaded.
 </p>
@@ -185,7 +185,7 @@
 <dt>See Also</dt><dd><a class="symbol-link" href="#LuaState.openLibs"><span class="inlinecode">LuaState.openLibs</span></a></dd>
 </dl>
 </div>
-<hr><div class="row-fluid declaration"><h3>this(lua_State* <i>L</i>);
+<hr><div class="row-fluid declaration"><h3> this(lua_State* <i>L</i>);
 </h3></div>
 <div class="declaration-content"><dl><p>Create a D wrapper for an existing Lua state.
 </p>
@@ -238,25 +238,25 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 
 </dl>
 </div>
-<hr><div class="row-fluid declaration"><h3>@trusted void <span class="symbol-target" id="setPanicHandler">&nbsp;</span><a class="symbol-link" href="#setPanicHandler">setPanicHandler</a>(void function(LuaState, const(char[])) <i>onPanic</i>);
+<hr><div class="row-fluid declaration"><h3>@trusted void <span class="symbol-target" id="setPanicHandler">&nbsp;</span><a class="symbol-link" href="#setPanicHandler">setPanicHandler</a>(void function(LuaState, in char[]) <i>onPanic</i>);
 </h3></div>
 <div class="declaration-content"><dl><p>Set a new panic handler.
 </p>
 
-<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>void function(LuaState, const(char[])) <i>onPanic</i></td>
+<dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>void function(LuaState, in char[]) <i>onPanic</i></td>
 <td>new panic handler</td>
 </tr>
 </table></dd>
-<dt>Examples</dt><dd><pre class="d_code">	<span class="d_keyword">auto</span> L = luaL_newstate(); <span class="d_comment">// found in luad.c.all
+<dt>Examples</dt><dd><pre class="d_code"><span class="d_keyword">auto</span> L = luaL_newstate(); <span class="d_comment">// found in luad.c.all
 </span>
-	<span class="d_keyword">auto</span> lua = <span class="d_keyword">new</span> LuaState(L);
+<span class="d_keyword">auto</span> lua = <span class="d_keyword">new</span> LuaState(L);
 
-	<span class="d_keyword">static</span> <span class="d_keyword">void</span> panic(LuaState lua, <span class="d_keyword">in</span> <span class="d_keyword">char</span>[] error)
-	{
-		<span class="d_keyword">throw</span> <span class="d_keyword">new</span> LuaErrorException(error.idup);
-	}
+<span class="d_keyword">static</span> <span class="d_keyword">void</span> panic(LuaState lua, <span class="d_keyword">in</span> <span class="d_keyword">char</span>[] error)
+{
+	<span class="d_keyword">throw</span> <span class="d_keyword">new</span> LuaErrorException(error.idup);
+}
 
-	lua.<u>setPanicHandler</u>(&amp;panic);
+lua.<u>setPanicHandler</u>(&amp;panic);
 </pre>
 </dd>
 </dl>
@@ -285,7 +285,7 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <dt>Returns</dt><dd>Loaded code as a function.</dd>
 </dl>
 </div>
-<hr><div class="row-fluid declaration"><h3>@trusted LuaObject[] <span class="symbol-target" id="doString">&nbsp;</span><a class="symbol-link" href="#doString">doString</a>(in char[] <i>code</i>, LuaErrorHandler <i>handler</i> = (LuaErrorHandler).None);
+<hr><div class="row-fluid declaration"><h3>@trusted LuaObject[] <span class="symbol-target" id="doString">&nbsp;</span><a class="symbol-link" href="#doString">doString</a>(in char[] <i>code</i>, LuaErrorHandler <i>handler</i> = LuaErrorHandler.None);
 </h3></div>
 <div class="declaration-content"><dl><p>Execute a string of Lua code.
 </p>
@@ -302,7 +302,7 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 <dt>See Also</dt><dd><a class="symbol-link" href="#LuaErrorHandler"><span class="inlinecode">LuaErrorHandler</span></a></dd>
 </dl>
 </div>
-<hr><div class="row-fluid declaration"><h3>@trusted LuaObject[] <span class="symbol-target" id="doFile">&nbsp;</span><a class="symbol-link" href="#doFile">doFile</a>(in char[] <i>path</i>, LuaErrorHandler <i>handler</i> = (LuaErrorHandler).None);
+<hr><div class="row-fluid declaration"><h3>@trusted LuaObject[] <span class="symbol-target" id="doFile">&nbsp;</span><a class="symbol-link" href="#doFile">doFile</a>(in char[] <i>path</i>, LuaErrorHandler <i>handler</i> = LuaErrorHandler.None);
 </h3></div>
 <div class="declaration-content"><dl><p>Execute a file of Lua code.
 </p>
@@ -365,7 +365,7 @@ The panic function is not changed - a Lua panic will not throw a D exception!
 </p>
 
 <p>Note that using this method is only necessary in certain situations,
- like when you want to act on the reference before fully exposing it to Lua.
+ such as when you want to act on the reference before fully exposing it to Lua.
 </p>
 <dt>Parameters</dt><dd><table class="table table-condensed table-bordered"><tr><td>T</td>
 <td>type of reference. Must be <span class="inlinecode">LuaObject</span>, <span class="inlinecode">LuaTable</span>, <span class="inlinecode">LuaFunction</span> or <span class="inlinecode">LuaDynamic</span>.

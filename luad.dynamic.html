@@ -180,11 +180,11 @@
 </table></dd>
 <dt>Returns</dt><dd>All return values
 </dd>
-<dt>Examples</dt><dd><pre class="d_code"> <span class="d_keyword">auto</span> luaString = lua.wrap!LuaDynamic(<span class="d_string">"test"</span>);
- <span class="d_keyword">auto</span> results = luaString.gsub(<span class="d_string">"t"</span>, <span class="d_string">"f"</span>); <span class="d_comment">// opDispatch
+<dt>Examples</dt><dd><pre class="d_code"><span class="d_keyword">auto</span> luaString = lua.wrap!LuaDynamic(<span class="d_string">"test"</span>);
+<span class="d_keyword">auto</span> results = luaString.gsub(<span class="d_string">"t"</span>, <span class="d_string">"f"</span>); <span class="d_comment">// opDispatch
 </span>
- <span class="d_keyword">assert</span>(results[0] == <span class="d_string">"fesf"</span>);
- <span class="d_keyword">assert</span>(results[1] == 2); <span class="d_comment">// two instances of 't' replaced
+<span class="d_keyword">assert</span>(results[0] == <span class="d_string">"fesf"</span>);
+<span class="d_keyword">assert</span>(results[1] == 2); <span class="d_comment">// two instances of 't' replaced
 </span>
 </pre>
 </dd>

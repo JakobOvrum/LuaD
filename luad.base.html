@@ -198,11 +198,11 @@
 </p>
 
 <dt>Examples</dt><dd>Useful for clearing keys in a table:
-<pre class="d_code">	lua[<span class="d_string">"n"</span>] = 1.23;
-	<span class="d_keyword">assert</span>(lua.get!<span class="d_keyword">double</span>(<span class="d_string">"n"</span>) == 1.23);
+<pre class="d_code">lua[<span class="d_string">"n"</span>] = 1.23;
+<span class="d_keyword">assert</span>(lua.get!<span class="d_keyword">double</span>(<span class="d_string">"n"</span>) == 1.23);
 
-	lua[<span class="d_string">"n"</span>] = <u>nil</u>;
-	<span class="d_keyword">assert</span>(lua[<span class="d_string">"n"</span>].type == LuaType.Nil);
+lua[<span class="d_string">"n"</span>] = <u>nil</u>;
+<span class="d_keyword">assert</span>(lua[<span class="d_string">"n"</span>].type == LuaType.Nil);
 </pre>
 </dd>
 </dl>
@@ -266,8 +266,8 @@
 <div class="declaration-content"><dl><p>Attempt to convert the referenced object to the specified D type.
 </p>
 
-<dt>Examples</dt><dd><pre class="d_code">	<span class="d_keyword">auto</span> results = lua.doString(<span class="d_string">`return "hello!"`</span>);
-	<span class="d_keyword">assert</span>(results[0].<u>to</u>!string() == <span class="d_string">"hello!"</span>);
+<dt>Examples</dt><dd><pre class="d_code"><span class="d_keyword">auto</span> results = lua.doString(<span class="d_string">`return "hello!"`</span>);
+<span class="d_keyword">assert</span>(results[0].<u>to</u>!string() == <span class="d_string">"hello!"</span>);
 </pre>
 </dd>
 </dl>
