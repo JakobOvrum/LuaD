@@ -4,3 +4,6 @@
 
 /docs
 /gh-pages
+
+*.build.lnkarg
+*.build.rsp
