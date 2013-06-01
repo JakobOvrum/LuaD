@@ -25,7 +25,7 @@ extern(C) int openDModule(F)(lua_State* L, F initFunc)
 	static if(Args.length == 2)
 	{
 		static assert(is(Args[1] : const(char[])), "second parameter to initFunc must be a const string");
-		args[1] = getValue!(Args[1])(L, -1);
+		args[1] = getArgument!(F, 1)(L, -1);
 	}
 
 	return callFunction!F(L, initFunc, args);

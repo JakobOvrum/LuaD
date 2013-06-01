@@ -347,10 +347,7 @@ auto getArgument(T, int narg)(lua_State* L, int idx)
 	else
 		alias Args[narg] Arg;
 
-	static if(is(typeof(Variadic.TYPESAFE)))
-		enum isVarargs = variadicFunctionStyle!T == Variadic.TYPESAFE;
-	else // Phobos >= 2.055
-		enum isVarargs = variadicFunctionStyle!T == Variadic.typesafe;
+	enum isVarargs = variadicFunctionStyle!T == Variadic.typesafe;
 	
 	static if(isVarargs && narg == Args.length-1)
 	{
@@ -478,7 +475,7 @@ int pushReturnValues(T)(lua_State* L, T value)
 	else static if(isTuple!T)
 	{
 		pushTuple(L, value);
-		return T.Types.length;
+		return cast(int)T.Types.length;
 	}
 	else static if(isStaticArray!T)
 	{

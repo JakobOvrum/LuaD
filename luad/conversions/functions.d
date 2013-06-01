@@ -83,11 +83,13 @@ template BindableReturnType(T)
 	alias StripHeadQual!(ReturnType!T) BindableReturnType;
 }
 
-int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
+//Call with or without return value, propagating Exceptions as Lua errors.
+//This should rather be throwing a userdata with __tostring and a reference to
+//the thrown exception, as it is now, everything but the error type and message is lost.
+int callFunction(T)(lua_State* L, T func, auto ref ParameterTypeTuple!T args)
+	if(!is(BindableReturnType!T == const(ReturnType!T)) &&
+	   !is(BindableReturnType!T == immutable(ReturnType!T)))
 {
-	//Call with or without return value, propagating Exceptions as Lua errors.
-	//This should rather be throwing a userdata with __tostring and a reference to
-	//the thrown exception, as it is now, everything but the error type and message is lost.
 	alias BindableReturnType!T RetType;
 	enum hasReturnValue = !is(RetType == void);
 
@@ -110,6 +112,23 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 		return pushReturnValues(L, ret);
 	else
 		return 0;
+}
+
+// Ditto, but wrap the try-catch in a nested function because the return value's
+// declaration and initialization cannot be separated.
+int callFunction(T)(lua_State* L, T func, auto ref ParameterTypeTuple!T args)
+	if(is(BindableReturnType!T == const(ReturnType!T)) ||
+	   is(BindableReturnType!T == immutable(ReturnType!T)))
+{
+	auto ref call()
+	{
+		try
+			return func(args);
+		catch(Exception e)
+			luaL_error(L, "%s", e.toString().toStringz());
+	}
+
+	return pushReturnValues(L, call());
 }
 
 private:
