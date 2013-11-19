@@ -20,17 +20,16 @@ import luad.c.luaconf;
 import luad.c.lauxlib;
 
 extern (C):
-
 //C	 #define LUA_VERSION	"Lua 5.1"
-string LUA_VERSION = "Lua 5.1";
+__gshared string LUA_VERSION = "Lua 5.1";
 //C	 #define LUA_RELEASE	"Lua 5.1.2"
-string LUA_RELEASE = "Lua 5.1.2";
+__gshared string LUA_RELEASE = "Lua 5.1.2";
 //C	 #define LUA_VERSION_NUM	501
 //C	 #define LUA_COPYRIGHT	"Copyright (C) 1994-2007 Lua.org, PUC-Rio"
-string LUA_COPYRIGHT = "Copyright (C) 1994-2007 Lua.org, PUC-Rio";
+__gshared string LUA_COPYRIGHT = "Copyright (C) 1994-2007 Lua.org, PUC-Rio";
 enum LUA_VERSION_NUM = 501;
 //C	 #define LUA_AUTHORS 	"R. Ierusalimschy, L. H. de Figueiredo & W. Celes"
-string LUA_AUTHORS = "R. Ierusalimschy, L. H. de Figueiredo & W. Celes";
+__gshared string LUA_AUTHORS = "R. Ierusalimschy, L. H. de Figueiredo & W. Celes";
 
 
 /* mark for precompiled code (`<esc>Lua') */

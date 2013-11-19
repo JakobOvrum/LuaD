@@ -78,25 +78,25 @@ test/luad_unittest: $(LUAD_SOURCES)
 	gdb --command=luad.gdb test/luad_unittest;
 
 LUAD_SOURCES = \
-	luad/all.d \
-	luad/base.d \
-	luad/dynamic.d \
-	luad/error.d \
-	luad/lfunction.d \
-	luad/lmodule.d \
-	luad/stack.d \
-	luad/state.d \
-	luad/table.d \
-	luad/testing.d \
-	luad/c/all.d \
-	luad/c/lauxlib.d \
-	luad/c/lua.d \
-	luad/c/luaconf.d \
-	luad/c/lualib.d \
-	luad/c/tostring.d \
-	luad/conversions/arrays.d \
-	luad/conversions/assocarrays.d \
-	luad/conversions/classes.d \
-	luad/conversions/functions.d \
-	luad/conversions/structs.d \
-	luad/conversions/variant.d
+	source/app.d \
+	source/luad/base.d \
+	source/luad/dynamic.d \
+	source/luad/error.d \
+	source/luad/lfunction.d \
+	source/luad/lmodule.d \
+	source/luad/stack.d \
+	source/luad/state.d \
+	source/luad/table.d \
+	source/luad/testing.d \
+	source/luad/c/all.d \
+	source/luad/c/lauxlib.d \
+	source/luad/c/lua.d \
+	source/luad/c/luaconf.d \
+	source/luad/c/lualib.d \
+	source/luad/c/tostring.d \
+	source/luad/conversions/arrays.d \
+	source/luad/conversions/assocarrays.d \
+	source/luad/conversions/classes.d \
+	source/luad/conversions/functions.d \
+	source/luad/conversions/structs.d \
+	source/luad/conversions/variant.d
