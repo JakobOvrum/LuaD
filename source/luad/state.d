@@ -327,6 +327,7 @@ public:
 
 		static if(isTuple!Elem) // Key-value pairs
 		{
+			static assert(range[0].length == 2, "key-value tuple must have exactly 2 values.");
 
 			lua_createtable(L, 0, cast(int)numElements);
 
