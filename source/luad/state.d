@@ -28,13 +28,13 @@ private:
 	LuaTable _G, _R; // global and registry tables
 	LuaFunction traceback; // debug.traceback, set in openLibs()
 	bool owner = false; // whether or not to close the underlying state in the finalizer
-	
+
 public:
 	/**
 	 * Create a new, empty Lua state. The standard library is not loaded.
 	 *
 	 * If an uncaught error for any operation on this state
-	 * causes a Lua panic for the underlying state, 
+	 * causes a Lua panic for the underlying state,
 	 * an exception of type $(DPREF error, LuaErrorException) is thrown.
 	 *
 	 * See_Also: $(MREF LuaState.openLibs)
@@ -43,23 +43,23 @@ public:
 	{
 		lua_State* L = luaL_newstate();
 		owner = true;
-		
+
 		extern(C) static int panic(lua_State* L)
 		{
 			size_t len;
 			const(char)* cMessage = lua_tolstring(L, -1, &len);
 			string message = cMessage[0 .. len].idup;
-			
+
 			lua_pop(L, 1);
-			
+
 			throw new LuaErrorException(message);
 		}
-		
+
 		lua_atpanic(L, &panic);
-		
+
 		this(L);
 	}
-	
+
 	/**
 	 * Create a D wrapper for an existing Lua state.
 	 *
@@ -76,11 +76,11 @@ public:
 		this.L = L;
 		_G = LuaTable(L, LUA_GLOBALSINDEX);
 		_R = LuaTable(L, LUA_REGISTRYINDEX);
-		
+
 		lua_pushlightuserdata(L, cast(void*)this);
 		lua_setfield(L, LUA_REGISTRYINDEX, "__dstate");
 	}
-	
+
 	~this()
 	{
 		if(owner)
@@ -96,13 +96,13 @@ public:
 			lua_setfield(L, LUA_REGISTRYINDEX, "__dstate");
 		}
 	}
-	
+
 	/// The underlying $(D lua_State) pointer for interfacing with C.
 	@property lua_State* state() nothrow pure @safe
 	{
 		return L;
 	}
-	
+
 	/**
 	 * Get the $(D LuaState) instance for a Lua state.
 	 * Params:
@@ -117,26 +117,26 @@ public:
 		lua_pop(L, 1);
 		return lua;
 	}
-	
+
 	/// Open the standard library.
 	void openLibs() @trusted
 	{
 		luaL_openlibs(L);
 		traceback = _G.get!LuaFunction("debug", "traceback");
 	}
-	
+
 	/// The global table for this instance.
 	@property LuaTable globals() @trusted
 	{
 		return _G;
 	}
-	
+
 	/// The _registry table for this instance.
 	@property LuaTable registry() @trusted
 	{
 		return _R;
 	}
-	
+
 	/**
 	 * Set a new panic handler.
 	 * Params:
@@ -145,12 +145,12 @@ public:
 	 * ----------------------
 	auto L = luaL_newstate(); // found in luad.c.all
 	auto lua = new LuaState(L);
-	
+
 	static void panic(LuaState lua, in char[] error)
 	{
 		throw new LuaErrorException(error.idup);
 	}
-	
+
 	lua.setPanicHandler(&panic);
 	 * ----------------------
 	 */
@@ -161,20 +161,20 @@ public:
 			size_t len;
 			const(char)* message = lua_tolstring(L, -1, &len);
 			auto error = message[0 .. len];
-			
+
 			lua_getfield(L, LUA_REGISTRYINDEX, "__dpanic");
 			auto callback = cast(void function(LuaState, in char[]))lua_touserdata(L, -1);
 			assert(callback);
-			
+
 			scope(exit) lua_pop(L, 2);
-			
+
 			callback(LuaState.fromPointer(L), error);
 			return 0;
 		}
-		
+
 		lua_pushlightuserdata(L, onPanic);
 		lua_setfield(L, LUA_REGISTRYINDEX, "__dpanic");
-		
+
 		lua_atpanic(L, &panic);
 	}
 
@@ -198,7 +198,7 @@ public:
 
 		if(loader(L, toStringz(s)) || lua_pcall(L, 0, LUA_MULTRET, handler == LuaErrorHandler.Traceback? -2 : 0))
 			lua_error(L);
-		
+
 		if(handler == LuaErrorHandler.Traceback)
 			lua_remove(L, 1);
 	}
@@ -274,7 +274,7 @@ public:
 
 		return popStack(L, nret);
 	}
-	
+
 	/**
 	 * Create a new, empty table.
 	 * Returns:
@@ -284,7 +284,7 @@ public:
 	{
 		return newTable(0, 0);
 	}
-	
+
 	/**
 	 * Create a new, empty table with pre-allocated space for members.
 	 * Params:
@@ -327,7 +327,6 @@ public:
 
 		static if(isTuple!Elem) // Key-value pairs
 		{
-			static assert(Elem.length == 2, "key-value tuple must have exactly 2 values.");
 
 			lua_createtable(L, 0, cast(int)numElements);
 
@@ -356,7 +355,7 @@ public:
 
 		return popValue!LuaTable(L);
 	}
-	
+
 	/**
 	 * Wrap a D value in a Lua reference.
 	 *
@@ -389,7 +388,7 @@ public:
 		pushStaticTypeInterface!T(L);
 		return popValue!LuaObject(L);
 	}
-	
+
 	/**
 	 * Same as calling $(D globals._get) with the same arguments.
 	 * See_Also:
@@ -399,7 +398,7 @@ public:
 	{
 		return globals.get!T(args);
 	}
-	
+
 	/**
 	 * Same as calling $(D globals.get!LuaObject) with the same arguments.
 	 * See_Also:
@@ -409,7 +408,7 @@ public:
 	{
 		return globals.get!LuaObject(args);
 	}
-	
+
 	/**
 	 * Same as calling $(D globals._set) with the same arguments.
 	 * See_Also:
@@ -419,7 +418,7 @@ public:
 	{
 		globals.set(key, value);
 	}
-	
+
 	/**
 	 * Same as calling $(D globals._opIndexAssign) with the same arguments.
 	 * See_Also:
@@ -442,9 +441,9 @@ unittest
 {
 	lua = new LuaState;
 	assert(LuaState.fromPointer(lua.L) == lua);
-	
+
 	lua.openLibs();
-	
+
 	//default panic handler
 	try
 	{
@@ -457,13 +456,13 @@ unittest
 		assert(lines.length > 1);
 		assert(lines[0] == `[string "error("Hello, D!")"]:1: Hello, D!`);
 	}
-	
+
 	lua.set("success", false);
 	assert(!lua.get!bool("success"));
-	
+
 	lua.doString(`success = true`);
 	assert(lua.get!bool("success"));
-	
+
 	auto foo = lua.wrap!LuaTable([1, 2, 3]);
 	foo[4] = "test"; // Lua tables start at 1
 	lua["foo"] = foo;
@@ -476,7 +475,7 @@ unittest
 
 	LuaFunction multipleReturns = lua.loadString(`return 1, "two", 3`);
 	LuaObject[] results = multipleReturns();
-	
+
 	assert(results.length == 3);
 	assert(results[0].type == LuaType.Number);
 	assert(results[1].type == LuaType.String);
@@ -534,7 +533,7 @@ unittest
 		static int pub = 123;
 
 		static string foo() { return "bar"; }
-		
+
 		this(int i)
 		{
 			_bar = i;

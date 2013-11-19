@@ -44,7 +44,7 @@ package struct Nil{}
 	assert(lua["n"].type == LuaType.Nil);
  * --------------------------
  */
-public Nil nil;
+__gshared public Nil nil;
 
 /**
  * Represents a reference to a Lua value of any type.
@@ -56,21 +56,21 @@ struct LuaObject
 	private:
 	int r = LUA_REFNIL;
 	lua_State* L = null;
-		
+
 	package:
 	this(lua_State* L, int idx)
 	{
 		this.L = L;
-		
+
 		lua_pushvalue(L, idx);
 		r = luaL_ref(L, LUA_REGISTRYINDEX);
 	}
-	
+
 	void push() nothrow
 	{
 		lua_rawgeti(L, LUA_REGISTRYINDEX, r);
 	}
-	
+
 	static void checkType(lua_State* L, int idx, int expectedType, const(char)* expectedName)
 	{
 		int t = lua_type(L, idx);
@@ -79,14 +79,14 @@ struct LuaObject
 			luaL_error(L, "attempt to create %s with %s", expectedName, lua_typename(L, t));
 		}
 	}
-	
+
 	public:
 	@trusted this(this)
 	{
 		push();
 		r = luaL_ref(L, LUA_REGISTRYINDEX);
 	}
-	
+
 	@trusted nothrow ~this()
 	{
 		luaL_unref(L, LUA_REGISTRYINDEX, r);
@@ -97,7 +97,7 @@ struct LuaObject
 	{
 		return L;
 	}
-	
+
 	/**
 	 * Release this reference.
 	 *
@@ -110,7 +110,7 @@ struct LuaObject
 		r = LUA_REFNIL;
 		L = null;
 	}
-	
+
 	/**
 	 * Type of referenced object.
 	 * See_Also:
@@ -123,7 +123,7 @@ struct LuaObject
 		lua_pop(state, 1);
 		return result;
 	}
-	
+
 	/**
 	 * Type name of referenced object.
 	 */
@@ -135,13 +135,13 @@ struct LuaObject
 		lua_pop(state, 1);
 		return name;
 	}
-	
+
 	/// Boolean whether or not the referenced object is nil.
 	@property bool isNil() pure nothrow @safe
 	{
 		return r == LUA_REFNIL;
 	}
-	
+
 	/**
 	 * Convert the referenced object into a textual representation.
 	 *
@@ -153,7 +153,7 @@ struct LuaObject
 	string toString() @trusted
 	{
 		push();
-		
+
 		size_t len;
 		const(char)* cstr = luaL_tolstring(state, -1, &len);
 		auto str = cstr[0 .. len].idup;
@@ -161,7 +161,7 @@ struct LuaObject
 		lua_pop(state, 2);
 		return str;
 	}
-	
+
 	/**
 	 * Attempt _to convert the referenced object _to the specified D type.
 	 * Examples:
@@ -176,24 +176,24 @@ struct LuaObject
 		{
 			luaL_error(L, "attempt to convert LuaObject with type %s to a %s", lua_typename(L, t), lua_typename(L, e));
 		}
-		
+
 		push();
 		return popValue!(T, typeMismatch)(state);
 	}
-	
+
 	/**
 	 * Compare this object to another with Lua's equality semantics.
-	 * Also returns false if the two objects are in different Lua states. 
+	 * Also returns false if the two objects are in different Lua states.
 	 */
 	bool opEquals(T : LuaObject)(ref T o) @trusted
 	{
 		if(o.state != this.state)
 			return false;
-		
+
 		push();
 		o.push();
 		scope(success) lua_pop(state, 2);
-		
+
 		return lua_equal(state, -1, -2);
 	}
 }
@@ -202,18 +202,18 @@ unittest
 {
 	lua_State* L = luaL_newstate();
 	scope(success) lua_close(L);
-	
+
 	lua_pushstring(L, "foobar");
 	auto o = popValue!LuaObject(L);
-	
+
 	assert(!o.isNil);
 	assert(o.type == LuaType.String);
 	assert(o.typeName == "string");
 	assert(o.to!string() == "foobar");
-	
+
 	lua_pushnil(L);
 	auto nilref = popValue!LuaObject(L);
-	
+
 	assert(nilref.isNil);
 	assert(nilref.typeName == "nil");
 
