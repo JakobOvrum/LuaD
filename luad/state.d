@@ -52,7 +52,8 @@ public:
 
 			lua_pop(L, 1);
 
-			throw new LuaErrorException(message);
+			return 1;
+			//throw new LuaErrorException(message);
 		}
 
 		lua_atpanic(L, &panic);
