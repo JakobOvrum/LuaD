@@ -1,0 +1,46 @@
+{
+	"name": "luad",
+	"description": "Lua D Framework",
+	"license": "MIT",
+	"copyright": "Copyright © 2010-2013 Jakob Ovrum",
+	"homepage": "http://jakobovrum.github.io/",
+	"authors": [
+		"Jakob Ovrum",
+		"see github for more"
+	],
+
+	"configurations": [
+
+	    {
+	        "name": "normal",
+	        "targetType": "library",
+			"targetPath": "lib"
+	    },
+		
+	    {
+	        "name": "unittest",
+	        "targetType": "executable",
+	        "libs": ["phobos"],
+			"versions": ["luad_unittest_main"],
+			"targetPath": "test/",
+			"targetName": "luad_unittest",
+			"postBuildCommands-linux": ["gdb --command=luad.gdb test/luad_unittest --silent"],
+			"postBuildCommands-windows":  ["gdb --command=luad.gdb test/luad_unittest.exe --silent"],
+	    }
+	],
+	
+	"targetType": "library",
+	"targetPath": "lib/",
+	"sourcePaths": ["luad"],
+	"libs-linux": ["lua"],
+	"importPaths-linux": ["/usr/lib64"],
+	
+	"importPaths-windows-x86": ["libs/win32"],
+	"copyFiles-windows-x86": ["libs/win32/lua51.dll", "libs/win32/lua5.1.dll"],
+	"sourceFiles-windows-x86" : ["libs/win32/lua51.lib"],
+	
+	"copyFiles-windows-x86_64": ["libs/win64/lua51.dll", "libs/win64/lua5.1.dll"],
+	"sourceFiles-windows-x86_64" : ["libs/win64/lua51.lib"],
+		
+	"buildRequirements": [ "allowWarnings" ]
+}
