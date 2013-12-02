@@ -11,23 +11,23 @@
 
 	"configurations": [
 
-	    {
-	        "name": "normal",
-	        "targetType": "library",
+		{
+			"name": "normal",
+			"targetType": "library",
 			"targetPath": "lib"
-	    },
-		
-	    {
-	        "name": "unittest",
-	        "targetType": "executable",
-	        "libs": ["phobos"],
+		},
+
+		{
+			"name": "unittest",
+			"targetType": "executable",
+			"libs": ["phobos"],
 			"versions": ["luad_unittest_main"],
 			"targetPath": "test/",
 			"targetName": "luad_unittest",
 			"postBuildCommands-linux": ["gdb --command=luad.gdb test/luad_unittest --silent"]
-	    }
+		}
 	],
-	
+
 	"targetType": "library",
 	"targetPath": "lib/",
 	"sourcePaths": ["luad"],
@@ -38,6 +38,6 @@
 	"importPaths-windows-x86": ["../../lib"],
 	"copyFiles-windows-x86": ["libs/win32/lua51.dll", "libs/win32/lua5.1.dll"],
 	"sourceFiles-windows-x86" : ["libs/win32/lua51.lib"],
-		
+
 	"buildRequirements": [ "allowWarnings" ]
 }
