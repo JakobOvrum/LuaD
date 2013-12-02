@@ -51,8 +51,9 @@ public:
 			string message = cMessage[0 .. len].idup;
 			
 			lua_pop(L, 1);
-			
-			throw new LuaErrorException(message);
+
+			version(windows) throw new LuaErrorException(message);
+			return 1;
 		}
 		
 		lua_atpanic(L, &panic);
@@ -327,7 +328,7 @@ public:
 
 		static if(isTuple!Elem) // Key-value pairs
 		{
-			static assert(Elem.length == 2, "key-value tuple must have exactly 2 values.");
+			static assert(range.front.length == 2, "key-value tuple must have exactly 2 values.");
 
 			lua_createtable(L, 0, cast(int)numElements);
 
