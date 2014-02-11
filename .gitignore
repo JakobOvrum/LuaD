@@ -7,3 +7,6 @@
 
 *.build.lnkarg
 *.build.rsp
+
+# Dub
+/.dub
