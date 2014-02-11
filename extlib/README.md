@@ -7,8 +7,8 @@ there is no dependency on a DLL.
 
 ### Reproducing the build
 Copy `dmc.mak` from this directory to the top level directory
-of the Lua source code release and invoke it with GNU make:
+of the Lua source code release. Then edit `src/luaconf.h` to manually disable `popen` support. Then invoke the makefile with GNU make:
 
     mingw32-make -fdmc.mak
 
-Requires the [DMC](http://digitalmars.com/features.html) toolchain (specially, the C compiler and the librarian).
+Requires the [DMC](http://digitalmars.com/features.html) toolchain (specifically, the C compiler and the librarian).
