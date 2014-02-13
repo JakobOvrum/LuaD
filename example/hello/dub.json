@@ -3,6 +3,7 @@
 	"description": "\"Hello, world!\" using LuaD.",
 	"authors": ["Jakob Ovrum", "Github contributors"],
 
+	"targetName": "hello",
 	"targetType": "executable",
 	"targetPath": "../bin",
 	"sourcePaths": ["."],

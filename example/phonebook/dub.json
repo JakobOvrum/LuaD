@@ -3,6 +3,7 @@
 	"description": "Example of using Lua as a data configuration language.",
 	"authors": ["Jakob Ovrum", "Github contributors"],
 
+	"targetName": "phonebook",
 	"targetType": "executable",
 	"targetPath": "../bin",
 	"sourcePaths": ["."],
