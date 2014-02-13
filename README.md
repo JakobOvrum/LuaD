@@ -53,9 +53,9 @@ Usage
 The recommended way of using LuaD is with [dub](https://github.com/rejectedsoftware/dub). See [LuaD on the package repository](http://code.dlang.org/packages/luad) for instructions.
 
 The examples can be tested by running `dub run` in the example's
-directory ([see also the examples' readme](LuaD/example#Examples)).
+directory ([see also the examples' readme](LuaD/example/README.md)).
 
-Apart from dub, there are [makefiles](LuaD#build-with-make) as well as [VisualD project files](LuaD#build-with-visualdwindows) for both the library and the examples.
+Apart from dub, there are [makefiles](#build-with-make) as well as [VisualD project files](#build-with-visualdwindows) for both the library and the examples.
 
 Manual Usage
 ============================================
@@ -86,4 +86,4 @@ The location of `lua51.lib` needs to be configured for the LuaD Unittest configu
 
 License
 ============================================
-LuaD is licensed under the terms of the MIT license (see the [LICENSE file](LuaD/blob/master/LICENSE.txt) for details).
+LuaD is licensed under the terms of the MIT license (see the [LICENSE file](LuaD/LICENSE.txt) for details).

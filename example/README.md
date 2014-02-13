@@ -2,7 +2,7 @@ Examples
 ===========================
 This directory contains some samples to help get the gist of LuaD.
 
-Each example can be run by running `dub run` from the example's directory.
+Each example can be tested by running `dub run` from the example's directory.
 
 hello
 ---------------------------
