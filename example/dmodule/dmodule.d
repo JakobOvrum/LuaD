@@ -6,12 +6,12 @@ import core.cpuid;
 LuaTable initModule(LuaState lua)
 {
 	auto lib = lua.newTable();
-	
+
 	foreach(member; __traits(allMembers, core.cpuid))
 	{
 		enum qualifiedName = "core.cpuid." ~ member;
 		static if(__traits(compiles, mixin(qualifiedName)) && isSomeFunction!(mixin(qualifiedName)))
-			lib[member] = &mixin(qualifiedName);		
+			lib[member] = &mixin(qualifiedName);
 	}
 
 	auto datacache = lua.newTable();
