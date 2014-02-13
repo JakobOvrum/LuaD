@@ -9,4 +9,4 @@
 *.build.rsp
 
 # Dub
-/.dub
+.dub

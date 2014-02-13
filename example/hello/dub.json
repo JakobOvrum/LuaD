@@ -1,0 +1,13 @@
+{
+	"name": "luad-example-hello",
+	"description": "\"Hello, world!\" using LuaD.",
+	"authors": ["Jakob Ovrum", "Github contributors"],
+
+	"targetType": "executable",
+	"targetPath": "../bin",
+	"sourcePaths": ["."],
+
+	"dependencies": {
+		"luad": {"version": "~master", "path": "../../"}
+	}
+}
