@@ -40,14 +40,6 @@ Directory Structure
  * `lib` - LuaD library files (when built).
  * `example` - LuaD examples.
 
-[Documentation](http://jakobovrum.github.com/LuaD/)
-============================================
-You can find automatically generated documentation on the [gh-pages branch](http://github.com/JakobOvrum/LuaD/tree/gh-pages/), or you can [browse it online](http://jakobovrum.github.com/LuaD/).
-
-[Tutorial](https://github.com/JakobOvrum/LuaD/wiki/Tutorial)
---------------------------------------------
-A tutorial can be found on the project's Wiki.
-
 Usage
 ============================================
 The recommended way of using LuaD is with [dub](https://github.com/rejectedsoftware/dub). See [LuaD on the package repository](http://code.dlang.org/packages/luad) for instructions.
@@ -56,6 +48,13 @@ The examples can be tested by running `dub run` in the example's
 directory ([see also the examples' readme](/example/README.md)).
 
 Apart from dub, there are [makefiles](#build-with-make) as well as [VisualD project files](#build-with-visualdwindows) for both the library and the examples.
+
+[Documentation](http://jakobovrum.github.com/LuaD/)
+============================================
+You can find automatically generated documentation on the [gh-pages branch](http://github.com/JakobOvrum/LuaD/tree/gh-pages/), or you can [browse it online](http://jakobovrum.github.com/LuaD/).
+
+### [Tutorial](https://github.com/JakobOvrum/LuaD/wiki/Tutorial)
+A tutorial can be found on the project's Wiki.
 
 Manual Usage
 ============================================
