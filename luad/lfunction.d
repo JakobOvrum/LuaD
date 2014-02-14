@@ -13,13 +13,13 @@ struct LuaFunction
 	/// LuaFunction sub-types $(DPREF base, LuaObject) through this reference.
 	LuaObject object;
 	alias object this;
-	
+
 	version(none) package this(lua_State* L, int idx)
 	{
 		LuaObject.checkType(L, idx, LUA_TFUNCTION, "LuaFunction");
 		object = LuaObject(L, idx);
 	}
-	
+
 	/**
 	 * Call this function and collect all return values as
 	 * an array of $(DPREF base, LuaObject) references.
@@ -27,9 +27,9 @@ struct LuaFunction
 	 -----------------------
 	lua.doString(`function f(...) return ... end`);
 	auto f = lua.get!LuaFunction("f");
-	
+
 	LuaObject[] ret = f(1.2, "hello!", true);
-	
+
 	assert(ret[0].to!double() == 1.2);
 	assert(ret[1].to!string() == "hello!");
 	assert(ret[2].to!bool());
@@ -39,7 +39,7 @@ struct LuaFunction
 	{
 		return call!(LuaVariableReturn!(LuaObject[]))(args).returnValues;
 	}
-	
+
 	/**
 	 * Call this function.
 	 * Params:
@@ -53,7 +53,7 @@ struct LuaFunction
 	 * ------------------
 	lua.doString(`function ask(question) return 42 end`);
 	auto ask = lua.get!LuaFunction("ask");
-	
+
 	auto answer = ask.call!int("What's the answer to life, the universe and everything?");
 	assert(answer == 42);
 	 * ------------------
@@ -66,7 +66,7 @@ struct LuaFunction
 
 		return callWithRet!T(this.state, args.length);
 	}
-	
+
 	/**
 	 * Set a new environment for this function.
 	 *
@@ -101,7 +101,7 @@ struct LuaFunction
 	 *
 	 * Params:
 	 *    writer = delegate to forward writing calls to
-	 *  
+	 *
 	 *  If the delegate returns $(D false) for any of the chunks,
 	 *  the _dump process ends, and the writer won't be called again.
 	 */
@@ -134,7 +134,7 @@ unittest
 	lua_State* L = luaL_newstate();
 	scope(success) lua_close(L);
 	luaL_openlibs(L);
-	
+
 	lua_getglobal(L, "tostring");
 	auto tostring = popValue!LuaFunction(L);
 
@@ -142,24 +142,24 @@ unittest
 	assert(ret[0].to!string() == "123");
 
 	assert(tostring.call!string(123) == "123");
-	
+
 	tostring.call(321);
-	
+
 	// Multiple return values
 	luaL_dostring(L, "function singleRet() return 42 end");
 	lua_getglobal(L, "singleRet");
 	auto singleRet = popValue!LuaFunction(L);
-	
+
 	auto singleRetResult = singleRet.call!(Tuple!int)();
 	assert(singleRetResult[0] == 42);
-	
+
 	alias Algebraic!(string, double) BasicLuaType;
 	BasicLuaType a = "foo";
 	BasicLuaType b = 1.5;
-	
+
 	pushValue(L, [a, b]);
 	lua_setglobal(L, "test");
-	
+
 	luaL_dostring(L, "function multRet() return unpack(test) end");
 	lua_getglobal(L, "multRet");
 	auto multRet = popValue!LuaFunction(L);
@@ -176,15 +176,15 @@ unittest
 	string[2] arrayRet = getName.call!(string[2])();
 	assert(arrayRet[0] == "Foo");
 	assert(arrayRet[1] == "Bar");
-	
+
 	// setEnvironment
 	pushValue(L, ["test": [42]]);
 	auto env = popValue!LuaTable(L);
-	
+
 	lua_getglobal(L, "unpack");
 	env["unpack"] = popValue!LuaObject(L);
-	
+
 	multRet.setEnvironment(env);
 	assert(multRet.call!int() == 42);
-	
+
 }

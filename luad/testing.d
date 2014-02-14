@@ -17,7 +17,7 @@ void unittest_lua(lua_State* L, string code, string chunkName = __FILE__, uint c
 	chunkName = format("@%s script on line %d", chunkName, chunkLocation);
 	if(luaL_loadbuffer(L, code.ptr, code.length, toStringz(chunkName)) != 0)
 		lua_error(L);
-	
+
 	lua_call(L, 0, 0);
 }
 

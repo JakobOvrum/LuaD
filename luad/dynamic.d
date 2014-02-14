@@ -16,7 +16,7 @@ struct LuaDynamic
 	 * LuaDynamic does not sub-type LuaObject - qualify access to this reference explicitly.
 	 */
 	LuaObject object;
-	
+
 	/**
 	 * Perform a Lua method call on this object.
 	 *
@@ -44,7 +44,7 @@ struct LuaDynamic
 		object.push();
 
 		auto frame = lua_gettop(object.state);
-		
+
 		// push name and self[name]
 		lua_pushlstring(object.state, name.ptr, name.length);
 		lua_gettable(object.state, -2);
@@ -59,7 +59,7 @@ struct LuaDynamic
 
 		// Copy 'this' to the top of the stack
 		lua_pushvalue(object.state, -2);
-		
+
 		foreach(arg; args)
 			pushValue(object.state, arg);
 
@@ -68,13 +68,13 @@ struct LuaDynamic
 		auto nret = lua_gettop(object.state) - frame;
 
 		auto ret = popStack!LuaDynamic(object.state, nret);
-		
+
 		// Pop self
 		lua_pop(object.state, 1);
 
 		return ret;
 	}
-	
+
 	/**
 	 * Call this object.
 	 * This object must either be a function, or have a metatable providing the ___call metamethod.
@@ -90,14 +90,14 @@ struct LuaDynamic
 		object.push(); // Callable
 		foreach(arg; args)
 			pushValue(object.state, arg);
-		
+
 		lua_call(object.state, args.length, LUA_MULTRET);
 
 		auto nret = lua_gettop(object.state) - frame;
-		
+
 		return popStack!LuaDynamic(object.state, nret);
 	}
-	
+
 	/**
 	 * Index this object.
 	 * This object must either be a table, or have a metatable providing the ___index metamethod.
@@ -146,11 +146,11 @@ unittest
 	lua_State* L = luaL_newstate();
 	scope(success) lua_close(L);
 	luaL_openlibs(L);
-	
+
 	luaL_dostring(L, `str = "test"`);
 	lua_getglobal(L, "str");
 	auto luaString = popValue!LuaDynamic(L);
-	
+
 	LuaDynamic[] results = luaString.gsub("t", "f");
 
 	assert(results[0] == "fesf");
@@ -158,7 +158,7 @@ unittest
 
 	auto gsub = luaString["gsub"];
 	assert(gsub.object.type == LuaType.Function);
-	
+
 	LuaDynamic[] results2 = gsub(luaString, "t", "f");
 	assert(results[0] == results2[0]);
 	assert(results[1] == results2[1]);

@@ -27,14 +27,14 @@ T getAssocArray(T)(lua_State* L, int idx) if (isAssociativeArray!T)
 	T aa;
 	alias typeof(aa.values[0]) ElemType;
 	alias typeof(aa.keys[0]) KeyType;
-	
+
 	lua_pushnil(L);
 	while(lua_next(L, idx < 0? idx - 1 : idx) != 0)
 	{
 		aa[getValue!KeyType(L, -2)] = getValue!ElemType(L, -1);
 		lua_pop(L, 1);
 	}
-	
+
 	return aa;
 }
 
@@ -45,17 +45,17 @@ unittest
 	lua_State* L = luaL_newstate();
 	scope(success) lua_close(L);
 	luaL_openlibs(L);
-	
+
 	pushValue(L, ["foo": "bar", "hello": "world"]);
 	lua_setglobal(L, "aa");
-	
+
 	unittest_lua(L, `
 		assert(aa.foo == "bar")
 		assert(aa.hello == "world")
-			
+
 		aa = {one = 1, two = 2}
 	`);
-	
+
 	lua_getglobal(L, "aa");
 	auto aa = popValue!(uint[string])(L);
 	assert(aa["one"] == 1);

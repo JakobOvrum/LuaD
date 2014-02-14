@@ -137,14 +137,14 @@ private:
 extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 {
 	alias ParameterTypeTuple!T Args;
-	
+
 	//Check arguments
 	int top = lua_gettop(L);
 	if(top < Args.length + 1)
 		argsError(L, top, Args.length + 1);
 
 	Class self =  *cast(Class*)luaL_checkudata(L, 1, toStringz(Class.mangleof));
-	
+
 	static if(virtual)
 	{
 		alias ReturnType!T function(Class, Args) VirtualWrapper;
@@ -156,7 +156,7 @@ extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 		func.ptr = cast(void*)self;
 		func.funcptr = cast(typeof(func.funcptr))lua_touserdata(L, lua_upvalueindex(1));
 	}
-	
+
 	//Assemble arguments
 	static if(virtual)
 	{
@@ -172,25 +172,25 @@ extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 
 	foreach(i, Arg; Args)
 		args[i] = getArgument!(T, i)(L, i + 2);
-	
+
 	return callFunction!(typeof(func))(L, func, allArgs);
 }
 
 extern(C) int functionWrapper(T)(lua_State* L)
 {
 	alias FillableParameterTypeTuple!T Args;
-	
+
 	//Check arguments
 	int top = lua_gettop(L);
 	if(top < Args.length)
 		argsError(L, top, Args.length);
-	
+
 	//Get function
 	static if(is(T == function))
 		T func = cast(T)lua_touserdata(L, lua_upvalueindex(1));
 	else
 		T func = *cast(T*)lua_touserdata(L, lua_upvalueindex(1));
-	
+
 	//Assemble arguments
 	Args args;
 	foreach(i, Arg; Args)
@@ -208,25 +208,25 @@ extern(C) int functionCleaner(lua_State* L)
 public:
 
 void pushFunction(T)(lua_State* L, T func) if (isSomeFunction!T)
-{	
+{
 	static if(is(T == function))
 		lua_pushlightuserdata(L, func);
 	else
 	{
 		T* udata = cast(T*)lua_newuserdata(L, T.sizeof);
 		*udata = func;
-	
+
 		GC.addRoot(udata);
-		
+
 		if(luaL_newmetatable(L, "__dcall") == 1)
 		{
-			lua_pushcfunction(L, &functionCleaner); 
+			lua_pushcfunction(L, &functionCleaner);
 			lua_setfield(L, -2, "__gc");
 		}
-		
+
 		lua_setmetatable(L, -2);
 	}
-	
+
 	lua_pushcclosure(L, &functionWrapper!T, 1);
 }
 
@@ -250,7 +250,7 @@ void pushMethod(Class, string member)(lua_State* L) if (isSomeFunction!(__traits
  * one for each call... see code comments
  */
 T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
-{	
+{
 	auto func = new class
 	{
 		int lref;
@@ -259,17 +259,17 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 			lua_pushvalue(L, idx);
 			lref = luaL_ref(L, LUA_REGISTRYINDEX);
 		}
-		
+
 		//Alright... how to fix this?
 		//The problem is that this object tends to be finalized after L is freed (by LuaState's destructor or otherwise).
 		//If you have a good solution to the problem of dangling references to a lua_State,
 		//please contact me :)
-		
+
 		/+~this()
 		{
 			luaL_unref(L, LUA_REGISTRYINDEX, lref);
 		}+/
-		
+
 		void push()
 		{
 			lua_rawgeti(L, LUA_REGISTRYINDEX, lref);
@@ -278,7 +278,7 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
 
 	alias ReturnType!T RetType;
 	alias ParameterTypeTuple!T Args;
-	
+
 	return delegate RetType(Args args)
 	{
 		func.push();
@@ -349,54 +349,54 @@ unittest
 {
 	L = luaL_newstate();
 	luaL_openlibs(L);
-	
+
 	//functions
 	static const(char)[] func(const(char)[] s)
 	{
 		return "Hello, " ~ s;
 	}
-	
+
 	pushValue(L, &func);
 	assert(lua_isfunction(L, -1));
 	lua_setglobal(L, "sayHello");
-	
+
 	unittest_lua(L, `
 		local ret = sayHello("foo")
 		local expect = "Hello, foo"
-		assert(ret == expect, 
+		assert(ret == expect,
 			("sayHello return type - got '%s', expected '%s'"):format(ret, expect)
 		)
 	`);
-	
+
 	static uint countSpaces(const(char)[] s)
 	{
 		uint n = 0;
 		foreach(dchar c; s)
 			if(c == ' ')
 				++n;
-		
+
 		return n;
 	}
-	
+
 	pushValue(L, &countSpaces);
 	assert(lua_isfunction(L, -1));
 	lua_setglobal(L, "countSpaces");
-	
+
 	unittest_lua(L, `
 		assert(countSpaces("Hello there, world!") == 2)
 	`);
-	
+
 	//delegates
 	double curry = 3.14 * 2;
 	double closure(double x)
 	{
 		return curry * x;
 	}
-	
+
 	pushValue(L, &closure);
 	assert(lua_isfunction(L, -1));
 	lua_setglobal(L, "circle");
-	
+
 	unittest_lua(L, `
 		assert(circle(2) == 3.14 * 4, "closure return type mismatch!")
 	`);
@@ -435,7 +435,7 @@ unittest
 	// tuple returns
 	auto nameInfo = ["foo"];
 	auto ageInfo = [42];
-		
+
 	alias Tuple!(string, "name", uint, "age") GetInfoResult;
 	GetInfoResult getInfo(int idx)
 	{
@@ -444,10 +444,10 @@ unittest
 		result.age = ageInfo[idx];
 		return result;
 	}
-	
+
 	pushValue(L, &getInfo);
 	lua_setglobal(L, "getInfo");
-		
+
 	unittest_lua(L, `
 		local name, age = getInfo(0)
 		assert(name == "foo")
@@ -481,7 +481,7 @@ unittest
 		{
 			list ~= i;
 		}
-		
+
 		return variableReturn(list);
 	}
 
@@ -496,7 +496,7 @@ unittest
 		assert(four == 4)
 	`);
 }
-	
+
 // D-style typesafe varargs
 unittest
 {
@@ -507,15 +507,15 @@ unittest
 			result ~= piece;
 		return result;
 	}
-	
+
 	pushValue(L, &concat);
 	lua_setglobal(L, "concat");
-	
+
 	unittest_lua(L, `
 		local whole = concat("he", "llo", ", ", "world!")
 		assert(whole == "hello, world!")
 	`);
-	
+
 	static const(char)[] concat2(char separator, const(char)[][] pieces...)
 	{
 		if(pieces.length == 0)
@@ -524,13 +524,13 @@ unittest
 		string result;
 		foreach(piece; pieces[0..$-1])
 			result ~= piece ~ separator;
-		
+
 		return result ~ pieces[$-1];
 	}
-	
+
 	pushValue(L, &concat2);
 	lua_setglobal(L, "concat2");
-	
+
 	unittest_lua(L, `
 		local whole = concat2(",", "one", "two", "three", "four")
 		assert(whole == "one,two,three,four")
@@ -542,9 +542,9 @@ unittest
 {
 	lua_getglobal(L, "string");
 	lua_getfield(L, -1, "match");
-	auto match = popValue!(string delegate(string, string))(L); 
+	auto match = popValue!(string delegate(string, string))(L);
 	lua_pop(L, 1);
-		
+
 	auto result = match("foobar@example.com", "([^@]+)@example.com");
 	assert(result == "foobar");
 
@@ -552,7 +552,7 @@ unittest
 	luaL_dostring(L, `function multRet(a) return "foo", a end`);
 	lua_getglobal(L, "multRet");
 	auto multRet = popValue!(Tuple!(string, int) delegate(int))(L);
-	
+
 	auto results = multRet(42);
 	assert(results[0] == "foo");
 	assert(results[1] == 42);
@@ -562,11 +562,11 @@ unittest
 unittest
 {
 	alias string delegate(string) MyFun;
-	
+
 	MyFun[string] funcs;
 
 	pushValue(L, (string name, MyFun fun) {
-		funcs[name] = fun;	
+		funcs[name] = fun;
 	});
 	lua_setglobal(L, "addFun");
 

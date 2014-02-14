@@ -18,7 +18,7 @@ extern(C) int openDModule(F)(lua_State* L, F initFunc)
 	static assert(Args.length > 0 && Args.length < 3 &&
 				  is(Args[0] == LuaState),
 				  "invalid initFunc signature");
-	
+
 	Args args;
 	args[0] = lua;
 

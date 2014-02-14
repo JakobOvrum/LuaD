@@ -26,15 +26,15 @@ private void pushMeta(T)(lua_State* L, T obj)
 {
 	if(luaL_newmetatable(L, T.mangleof.ptr) == 0)
 		return;
-	
+
 	pushValue(L, T.stringof);
 	lua_setfield(L, -2, "__dclass");
-	
+
 	pushValue(L, T.mangleof);
 	lua_setfield(L, -2, "__dmangle");
-	
+
 	lua_newtable(L); //__index fallback table
-	
+
 	foreach(member; __traits(derivedMembers, T))
 	{
 		static if(__traits(getProtection, __traits(getMember, T, member)) == "public" && //ignore non-public fields
@@ -50,33 +50,33 @@ private void pushMeta(T)(lua_State* L, T obj)
 			}
 		}
 	}
-	
+
 	lua_setfield(L, -2, "__index");
-	
+
 	pushMethod!(T, "toString")(L);
 	lua_setfield(L, -2, "__tostring");
-	
+
 	pushMethod!(T, "opEquals")(L);
 	lua_setfield(L, -2, "__eq");
 
 	//TODO: handle opCmp here
 
-	
+
 	lua_pushcfunction(L, &classCleaner);
 	lua_setfield(L, -2, "__gc");
-	
+
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -2, "__metatable");
 }
 
 void pushClassInstance(T)(lua_State* L, T obj) if (is(T == class))
-{	
+{
 	T* ud = cast(T*)lua_newuserdata(L, obj.sizeof);
 	*ud = obj;
-	
+
 	pushMeta(L, obj);
 	lua_setmetatable(L, -2);
-	
+
 	GC.addRoot(ud);
 }
 
@@ -87,9 +87,9 @@ T getClassInstance(T)(lua_State* L, int idx) if (is(T == class))
 	{
 		luaL_error(L, "attempt to get 'userdata: %p' as a D object", lua_topointer(L, idx));
 	}
-	
+
 	lua_getfield(L, -1, "__dmangle"); //must be a D object
-	
+
 	static if(!is(T == Object)) //must be the right object
 	{
 		size_t manglelen;
@@ -102,7 +102,7 @@ T getClassInstance(T)(lua_State* L, int idx) if (is(T == class))
 		}
 	}
 	lua_pop(L, 2); //metatable and metatable.__dmangle
-	
+
 	Object obj = *cast(Object*)lua_touserdata(L, idx);
 	return cast(T)obj;
 }
@@ -130,7 +130,7 @@ template isStaticMember(T, string member)
 void pushCallMetaConstructor(T)(lua_State* L)
 {
 	alias typeof(__traits(getOverloads, T.init, "__ctor")) Ctor;
-	
+
 	static T ctor(LuaObject self, ParameterTypeTuple!Ctor args)
 	{
 		return new T(args);
@@ -151,7 +151,7 @@ void pushStaticTypeInterface(T)(lua_State* L)
 		lua_setmetatable(L, -2);
 		return;
 	}
-	
+
 	static if(hasCtor!T)
 	{
 		pushCallMetaConstructor!T(L);
@@ -189,7 +189,7 @@ version(unittest)
 unittest
 {
 	L = luaL_newstate();
-	
+
 	static class A
 	{
 		private:
@@ -197,15 +197,15 @@ unittest
 
 		public:
 		int n;
-		
+
 		this(int n, string s)
 		{
 			this.n = n;
 			this.s = s;
 		}
-		
+
 		string foo(){ return s; }
-		
+
 		int bar(int i)
 		{
 			return n += i;
@@ -234,24 +234,24 @@ unittest
 		pushValue(L, a);
 		lua_setglobal(L, name);
 	}
-	
+
 	auto a = new A(2, "foo");
 	addA("a", a);
 
 	pushValue(L, a.toString());
 	lua_setglobal(L, "a_toString");
-	
+
 	auto b = new B(2, "foo");
 	addA("b", b);
 	addA("otherb", b);
-	
+
 	pushValue(L, (A a)
 	{
 		assert(a);
 		a.bar(2);
 	});
 	lua_setglobal(L, "func");
-	
+
 	luaL_openlibs(L);
 	unittest_lua(L, `
 		--assert(a.n == 2)
