@@ -51,8 +51,9 @@ public:
 			string message = cMessage[0 .. len].idup;
 			
 			lua_pop(L, 1);
-			
-			throw new LuaErrorException(message);
+
+			version(windows) throw new LuaErrorException(message);
+			return 1;
 		}
 		
 		lua_atpanic(L, &panic);

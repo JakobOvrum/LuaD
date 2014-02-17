@@ -108,7 +108,7 @@ const LUA_TLIGHTUSERDATA = 2;
 //C	 #define LUA_TSTRING		4
 const LUA_TNUMBER = 3;
 //C	 #define LUA_TTABLE		5
-const LUA_TSTRING = 4;
+const LUA_TSTRING = cast(size_t)4;
 //C	 #define LUA_TFUNCTION		6
 const LUA_TTABLE = 5;
 //C	 #define LUA_TUSERDATA		7
