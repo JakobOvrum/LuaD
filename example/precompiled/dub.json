@@ -1,0 +1,14 @@
+{
+	"name": "luad-example-precompiled",
+	"description": "Example of dumping and executing Lua bytecode using LuaD.",
+	"authors": ["Andrew Gough"],
+
+	"targetName": "precompiled",
+	"targetType": "executable",
+	"targetPath": "../bin",
+	"sourcePaths": ["."],
+
+	"dependencies": {
+		"luad": {"version": "~master", "path": "../../"}
+	}
+}

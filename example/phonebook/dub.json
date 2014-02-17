@@ -1,0 +1,15 @@
+{
+	"name": "luad-example-phonebook",
+	"description": "Example of using Lua as a data configuration language.",
+	"authors": ["Jakob Ovrum", "Github contributors"],
+
+	"targetName": "phonebook",
+	"targetType": "executable",
+	"targetPath": "../bin",
+	"sourcePaths": ["."],
+	"copyFiles": ["contacts.lua"],
+
+	"dependencies": {
+		"luad": {"version": "~master", "path": "../../"}
+	}
+}

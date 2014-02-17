@@ -1,7 +1,5 @@
 LuaD - Lua for the D Programming Language
 ============================================
-[![Build Status](http://joshrsimmons.com:8080/buildStatus/icon?job=LuaD_x86)](http://joshrsimmons.com:8080/job/LuaD_x86/)
-Hello, world!
 --------------------------------------------
 ```D
 import luad.all;
@@ -10,7 +8,7 @@ void main()
 {
 	auto lua = new LuaState;
 	lua.openLibs();
-	
+
 	auto print = lua.get!LuaFunction("print");
 	print("hello, world!");
 }
@@ -44,13 +42,25 @@ Directory Structure
 
 Usage
 ============================================
-To use, import the `luad.all` module in your project, and compile all the files in the `luad`, `luad.c` and `luad.conversions` packages. You can also compile the LuaD packages to a static libary, but you still need the full LuaD sources available at compile-time due to heavy use of templates. You must also link Lua version 5.1; on Unix-like systems, the library is typically called `liblua5.1.a` or similar. On Windows, you need a `lua51.lib` in OMF format to be linkable with DMD.
+The recommended way of using LuaD is with [dub](https://github.com/rejectedsoftware/dub). See [LuaD on the package repository](http://code.dlang.org/packages/luad) for instructions.
+
+The examples can be tested by running `dub run` in the example's
+directory ([see also the examples' readme](/example/README.md)).
+
+Apart from dub, there are [makefiles](#build-with-make) as well as [VisualD project files](#build-with-visualdwindows) for both the library and the examples.
+
+[Documentation](http://jakobovrum.github.com/LuaD/)
+============================================
+You can find automatically generated documentation on the [gh-pages branch](http://github.com/JakobOvrum/LuaD/tree/gh-pages/), or you can [browse it online](http://jakobovrum.github.com/LuaD/).
+
+### [Tutorial](https://github.com/JakobOvrum/LuaD/wiki/Tutorial)
+A tutorial can be found on the project's Wiki.
+
+Manual Usage
+============================================
+Import the `luad.all` module in your project, and compile all the files in the `luad`, `luad.c` and `luad.conversions` packages. You can also compile the LuaD packages to a static libary, but you still need the full LuaD sources available at compile-time due to heavy use of templates. You must also link Lua version 5.1; on Unix-like systems, the library is typically called `liblua5.1.a` or similar. On Windows, you need a `lua51.lib` in OMF format to be linkable with DMD.
 
 Check out the [binaries branch](http://github.com/JakobOvrum/LuaD/tree/binaries) for a `lua51.lib` import library and download instructions for a DMD-compatible library for Unix-like systems. Since the provided `lua51.lib` is only an import library, you also need the Lua DLLs at runtime (which can be found [here](http://sourceforge.net/projects/luabinaries/files/5.1.4/Executables/lua5_1_4_Win32_bin.zip/download)).
-
-The `example` directory is a work-in-progress collection of examples, it's a bit thin at the moment, in the mean-time look at the tutorial and the examples found throughout the documentation.
-
-Makefiles as well as VisualD project files are included for both the library and the examples.
 
 **Please report bugs and issues to the [Github issue tracker](https://github.com/JakobOvrum/LuaD/issues). Thanks!**
 
@@ -73,18 +83,6 @@ Project files for the examples can be found in `visuald/examples` and produce bi
 
 The location of `lua51.lib` needs to be configured for the LuaD Unittest configuration as well as for the examples. The projects are pre-configured to `%LUA_OMFLIB%/lua51.lib`; either add the `LUA_OMFLIB` environment variable, or edit the linker settings manually. `lua51.lib` in OMF format can be found on the [binaries branch](https://github.com/JakobOvrum/LuaD/tree/binaries).
 
-[Documentation](http://jakobovrum.github.com/LuaD/)
-============================================
-You can find automatically generated documentation on the [gh-pages branch](http://github.com/JakobOvrum/LuaD/tree/gh-pages/), or you can [browse it online](http://jakobovrum.github.com/LuaD/).
-
-[Tutorial](https://github.com/JakobOvrum/LuaD/wiki/Tutorial)
---------------------------------------------
-A tutorial can be found on the project's Wiki.
-
-Auto-Tester
-============================================
-An auto-tester running 32-bit Linux can be found [here](http://joshrsimmons.com:8080/view/LuaD/).
-
 License
 ============================================
-LuaD is licensed under the terms of the MIT license (see the [LICENSE file](http://github.com/JakobOvrum/LuaD/blob/master//LICENSE.txt) for details).
+LuaD is licensed under the terms of the MIT license (see the [LICENSE file](/LICENSE.txt) for details).

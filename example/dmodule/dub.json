@@ -1,0 +1,15 @@
+{
+	"name": "luad-example-dmodule",
+	"description": "Lua module for core.cpuid as a shared library.",
+	"authors": ["Jakob Ovrum", "Github contributors"],
+
+	"targetName": "dmodule",
+	"targetType": "dynamicLibrary",
+	"targetPath": "../bin",
+	"sourcePaths": ["."],
+	"copyFiles": ["module.lua"],
+
+	"dependencies": {
+		"luad": {"version": "~master", "path": "../../"}
+	}
+}
