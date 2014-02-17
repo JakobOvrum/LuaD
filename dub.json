@@ -1,5 +1,5 @@
 {
-	"name": "luad",
+	"name": "lua-d",
 	"description": "High-level Lua interface",
 	"authors": ["Jakob Ovrum", "Github contributors"],
 	"copyright": "Copyright© Jakob Ovrum 2010-2014",
