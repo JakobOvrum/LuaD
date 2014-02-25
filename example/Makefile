@@ -18,7 +18,7 @@ ifeq ($(LUA), )
 	$(error No Lua library set)
 endif
 
-DFLAGS = -w -wi -ignore -m$(MODEL) -I../ -L-L../lib -L-lluad -L-l$(LUA)
+DFLAGS = -w -wi -ignore -m$(MODEL) -I../ -L-L../lib -L-lluad-d -L-l$(LUA)
 
 ifeq ($(BUILD), release)
 	DFLAGS += -release -O -inline -noboundscheck
