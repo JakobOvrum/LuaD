@@ -295,12 +295,12 @@ T getFunction(T)(lua_State* L, int idx) if (is(T == delegate))
  *
  * Use $(D variableReturn) to instantiate it.
  * Params:
- *   T = any input range
+ *   Range = any input range
  */
-struct LuaVariableReturn(T) if(isInputRange!T)
+struct LuaVariableReturn(Range) if(isInputRange!Range)
 {
-	alias T wrappedType; /// The type of the wrapped input range.
-	T returnValues; /// The wrapped input range.
+	alias WrappedType = Range; /// The type of the wrapped input range.
+	Range returnValues; /// The wrapped input range.
 }
 
 /**
@@ -333,9 +333,10 @@ struct LuaVariableReturn(T) if(isInputRange!T)
 	`);
 -----------------------------
  */
-LuaVariableReturn!T variableReturn(T)(T returnValues) if(isInputRange!T)
+LuaVariableReturn!Range variableReturn(Range)(Range returnValues)
+	if(isInputRange!Range)
 {
-	return LuaVariableReturn!T(returnValues);
+	return typeof(return)(returnValues);
 }
 
 version(unittest)
@@ -485,15 +486,24 @@ unittest
 		return variableReturn(list);
 	}
 
+	auto makeList2(uint n)
+	{
+		return variableReturn(iota(1, n + 1));
+	}
+
 	pushValue(L, &makeList);
 	lua_setglobal(L, "makeList");
+	pushValue(L, &makeList2);
+	lua_setglobal(L, "makeList2");
 
 	unittest_lua(L, `
-		local one, two, three, four = makeList(4)
-		assert(one == 1)
-		assert(two == 2)
-		assert(three == 3)
-		assert(four == 4)
+		for i, f in pairs{makeList, makeList2} do
+			local one, two, three, four = f(4)
+			assert(one == 1)
+			assert(two == 2)
+			assert(three == 3)
+			assert(four == 4)
+		end
 	`);
 }
 

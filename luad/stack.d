@@ -418,7 +418,7 @@ template returnTypeSize(T)
 T popReturnValues(T)(lua_State* L, size_t nret)
 {
 	static if(isVariableReturnType!T)
-		return variableReturn(popStack!(ElementType!(T.wrappedType))(L, nret));
+		return variableReturn(popStack!(ElementType!(T.WrappedType))(L, nret));
 
 	else static if(isTuple!T)
 	{
