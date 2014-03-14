@@ -3,6 +3,9 @@ language: d
 #compiler:
 #  - dmd
 
+notifications:
+  email: false
+
 install:
   # dmd
   # dub
