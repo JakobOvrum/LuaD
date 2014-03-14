@@ -318,7 +318,7 @@ public:
 		static if(hasLength!Range)
 		{
 			immutable numElements = range.length;
-			assert(numElements <= int.max, "lua_createtable only supports int.max many elements");
+			assert(numElements < int.max, "lua_createtable only supports int.max many elements");
 		}
 		else
 		{
@@ -342,7 +342,7 @@ public:
 		{
 			lua_createtable(L, cast(int)numElements, 0);
 
-			size_t i = 1;
+			int i = 1;
 
 			foreach(value; range)
 			{
