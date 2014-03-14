@@ -346,17 +346,15 @@ public:
 
 			foreach(value; range)
 			{
-				pushValue(L, i);
 				pushValue(L, value);
-				lua_rawset(L, -3);
-
+				lua_rawseti(L, -2, i);
 				++i;
 			}
 		}
 
 		return popValue!LuaTable(L);
 	}
-	
+
 	/**
 	 * Wrap a D value in a Lua reference.
 	 *
@@ -441,10 +439,10 @@ version(unittest)
 unittest
 {
 	lua = new LuaState;
-	assert(LuaState.fromPointer(lua.L) == lua);
-	
+	assert(LuaState.fromPointer(lua.state) == lua);
+
 	lua.openLibs();
-	
+
 	//default panic handler
 	try
 	{
@@ -483,7 +481,7 @@ unittest
 	assert(results[2].type == LuaType.Number);
 }
 
-unittest // LuaTable.newTable(range)
+unittest // LuaState.newTable(range)
 {
 	import std.algorithm;
 
