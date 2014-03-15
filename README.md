@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/JakobOvrum/LuaD.png?branch=master)](https://travis-ci.org/JakobOvrum/LuaD)
+
 LuaD - Lua for the D Programming Language
 ============================================
 --------------------------------------------
