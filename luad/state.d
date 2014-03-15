@@ -562,6 +562,20 @@ unittest
 
 unittest
 {
+	version(linux)
+	{
+		version(X86)
+		{
+			import etc.linux.memoryerror;
+			registerMemoryErrorHandler();
+		}
+		else version(X86_64)
+		{
+			import etc.linux.memoryerror;
+			registerMemoryErrorHandler();
+		}
+	}
+
 	// setPanicHandler, keep this test last
 	static void panic(LuaState lua, in char[] error)
 	{
