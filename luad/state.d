@@ -560,7 +560,7 @@ unittest
 	`);
 }
 
-unittest
+version(Windows) unittest // Enable carefully, see issue #35
 {
 	// setPanicHandler, keep this test last
 	static void panic(LuaState lua, in char[] error)
