@@ -24,7 +24,7 @@ import luad.c.all;
 
 import luad.stack;
 
-private void argsError(lua_State* L, int nargs, int expected)
+private void argsError(lua_State* L, int nargs, ptrdiff_t expected)
 {
 	lua_Debug debugInfo;
 	lua_getstack(L, 0, &debugInfo);
@@ -140,8 +140,11 @@ extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 
 	//Check arguments
 	int top = lua_gettop(L);
-	if(top < Args.length + 1)
-		argsError(L, top, Args.length + 1);
+	auto requiredArgs = Args.length + 1;
+	if (variadicFunctionStyle!T != Variadic.no) requiredArgs--;
+
+	if(top < requiredArgs)
+		argsError(L, top, requiredArgs);
 
 	Class self =  *cast(Class*)luaL_checkudata(L, 1, toStringz(Class.mangleof));
 
@@ -182,8 +185,12 @@ extern(C) int functionWrapper(T)(lua_State* L)
 
 	//Check arguments
 	int top = lua_gettop(L);
-	if(top < Args.length)
-		argsError(L, top, Args.length);
+
+	auto requiredArgs = Args.length;
+	if (variadicFunctionStyle!T != Variadic.no) requiredArgs--;
+
+	if(top < requiredArgs)
+		argsError(L, top, requiredArgs);
 
 	//Get function
 	static if(is(T == function))
