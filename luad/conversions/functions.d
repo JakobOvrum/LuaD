@@ -138,10 +138,14 @@ extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 {
 	alias ParameterTypeTuple!T Args;
 
+	static assert ((variadicFunctionStyle!T != Variadic.d && variadicFunctionStyle!T != Variadic.c),
+		"Non-typesafe variadic functions are not supported.");
+
 	//Check arguments
 	int top = lua_gettop(L);
 	auto requiredArgs = Args.length + 1;
-	if (variadicFunctionStyle!T != Variadic.no) requiredArgs--;
+
+	if (variadicFunctionStyle!T == Variadic.typesafe) requiredArgs--;
 
 	if(top < requiredArgs)
 		argsError(L, top, requiredArgs);
@@ -183,11 +187,14 @@ extern(C) int functionWrapper(T)(lua_State* L)
 {
 	alias FillableParameterTypeTuple!T Args;
 
+	static assert ((variadicFunctionStyle!T != Variadic.d && variadicFunctionStyle!T != Variadic.c),
+		"Non-typesafe variadic functions are not supported.");
+
 	//Check arguments
 	int top = lua_gettop(L);
 
 	auto requiredArgs = Args.length;
-	if (variadicFunctionStyle!T != Variadic.no) requiredArgs--;
+	if (variadicFunctionStyle!T == Variadic.typesafe) requiredArgs--;
 
 	if(top < requiredArgs)
 		argsError(L, top, requiredArgs);
@@ -514,7 +521,7 @@ unittest
 	`);
 }
 
-// D-style typesafe varargs
+// Variadic function arguments
 unittest
 {
 	static string concat(const(char)[][] pieces...)
@@ -531,6 +538,12 @@ unittest
 	unittest_lua(L, `
 		local whole = concat("he", "llo", ", ", "world!")
 		assert(whole == "hello, world!")
+	`);
+
+	//Test with zero parameters.
+	unittest_lua(L, `
+		local blank = concat()
+		assert (string.len(blank) == 0)
 	`);
 
 	static const(char)[] concat2(char separator, const(char)[][] pieces...)
@@ -552,6 +565,44 @@ unittest
 		local whole = concat2(",", "one", "two", "three", "four")
 		assert(whole == "one,two,three,four")
 	`);
+
+	//C- and D-style variadic versions of concat for
+	//future use if/when these are supported.
+
+	//C varargs require at least one fixed argument.
+	static string concat_cvar (int count, ...)
+	{
+		import core.stdc.stdarg;
+		string result;
+
+		va_list args;
+
+		va_start(args, count);
+
+		for (int i = 0; i < count; i++) {
+			auto arg = va_arg!(LuaObject)(args);
+
+			result ~= arg.toString();
+		}
+
+		return result;
+	}
+
+	//D-style variadics have an _arguments array that specifies
+	//the type of each passed argument.
+	static string concat_dvar (...) {
+		import core.vararg;
+		string result;
+
+		foreach (argtype; _arguments) {
+			assert (argtype == typeid(LuaObject));
+			auto arg = va_arg!(LuaObject)(_argptr);
+
+			result ~= arg.toString();
+		}
+
+		return result;
+	}
 }
 
 // get delegates from Lua
