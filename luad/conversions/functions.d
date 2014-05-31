@@ -585,6 +585,8 @@ unittest
 			result ~= arg.toString();
 		}
 
+		va_end(args);
+
 		return result;
 	}
 
