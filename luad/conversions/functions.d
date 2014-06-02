@@ -24,7 +24,7 @@ import luad.c.all;
 
 import luad.stack;
 
-private void argsError(lua_State* L, int nargs, int expected)
+private void argsError(lua_State* L, int nargs, ptrdiff_t expected)
 {
 	lua_Debug debugInfo;
 	lua_getstack(L, 0, &debugInfo);
@@ -138,10 +138,19 @@ extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 {
 	alias ParameterTypeTuple!T Args;
 
+	static assert ((variadicFunctionStyle!T != Variadic.d && variadicFunctionStyle!T != Variadic.c),
+		"Non-typesafe variadic functions are not supported.");
+
 	//Check arguments
 	int top = lua_gettop(L);
-	if(top < Args.length + 1)
-		argsError(L, top, Args.length + 1);
+
+	static if (variadicFunctionStyle!T == Variadic.typesafe)
+		enum requiredArgs = Args.length;
+	else
+		enum requiredArgs = Args.length + 1;
+
+	if(top < requiredArgs)
+		argsError(L, top, requiredArgs);
 
 	Class self =  *cast(Class*)luaL_checkudata(L, 1, toStringz(Class.mangleof));
 
@@ -180,10 +189,19 @@ extern(C) int functionWrapper(T)(lua_State* L)
 {
 	alias FillableParameterTypeTuple!T Args;
 
+	static assert ((variadicFunctionStyle!T != Variadic.d && variadicFunctionStyle!T != Variadic.c),
+		"Non-typesafe variadic functions are not supported.");
+
 	//Check arguments
 	int top = lua_gettop(L);
-	if(top < Args.length)
-		argsError(L, top, Args.length);
+
+	static if (variadicFunctionStyle!T == Variadic.typesafe)
+		enum requiredArgs = Args.length - 1;
+	else
+		enum requiredArgs = Args.length;
+
+	if(top < requiredArgs)
+		argsError(L, top, requiredArgs);
 
 	//Get function
 	static if(is(T == function))
@@ -507,7 +525,7 @@ unittest
 	`);
 }
 
-// D-style typesafe varargs
+// Variadic function arguments
 unittest
 {
 	static string concat(const(char)[][] pieces...)
@@ -524,6 +542,12 @@ unittest
 	unittest_lua(L, `
 		local whole = concat("he", "llo", ", ", "world!")
 		assert(whole == "hello, world!")
+	`);
+
+	//Test with zero parameters.
+	unittest_lua(L, `
+		local blank = concat()
+		assert (string.len(blank) == 0)
 	`);
 
 	static const(char)[] concat2(char separator, const(char)[][] pieces...)
@@ -545,6 +569,46 @@ unittest
 		local whole = concat2(",", "one", "two", "three", "four")
 		assert(whole == "one,two,three,four")
 	`);
+
+	//C- and D-style variadic versions of concat for
+	//future use if/when these are supported.
+
+	//C varargs require at least one fixed argument.
+	static string concat_cvar (int count, ...)
+	{
+		import core.stdc.stdarg;
+		string result;
+
+		va_list args;
+
+		va_start(args, count);
+
+		for (int i = 0; i < count; i++) {
+			auto arg = va_arg!(LuaObject)(args);
+
+			result ~= arg.toString();
+		}
+
+		va_end(args);
+
+		return result;
+	}
+
+	//D-style variadics have an _arguments array that specifies
+	//the type of each passed argument.
+	static string concat_dvar (...) {
+		import core.vararg;
+		string result;
+
+		foreach (argtype; _arguments) {
+			assert (argtype == typeid(LuaObject));
+			auto arg = va_arg!(LuaObject)(_argptr);
+
+			result ~= arg.toString();
+		}
+
+		return result;
+	}
 }
 
 // get delegates from Lua
