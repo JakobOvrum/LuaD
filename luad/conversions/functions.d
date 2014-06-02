@@ -143,9 +143,11 @@ extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 
 	//Check arguments
 	int top = lua_gettop(L);
-	auto requiredArgs = Args.length + 1;
 
-	if (variadicFunctionStyle!T == Variadic.typesafe) requiredArgs--;
+	static if (variadicFunctionStyle!T == Variadic.typesafe)
+		enum requiredArgs = Args.length;
+	else
+		enum requiredArgs = Args.length + 1;
 
 	if(top < requiredArgs)
 		argsError(L, top, requiredArgs);
@@ -193,8 +195,10 @@ extern(C) int functionWrapper(T)(lua_State* L)
 	//Check arguments
 	int top = lua_gettop(L);
 
-	auto requiredArgs = Args.length;
-	if (variadicFunctionStyle!T == Variadic.typesafe) requiredArgs--;
+	static if (variadicFunctionStyle!T == Variadic.typesafe)
+		enum requiredArgs = Args.length - 1;
+	else
+		enum requiredArgs = Args.length;
 
 	if(top < requiredArgs)
 		argsError(L, top, requiredArgs);
