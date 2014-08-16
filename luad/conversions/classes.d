@@ -303,12 +303,12 @@ unittest
 	{
 		int n = 5;
 
-		void foo(int x) @property @ScriptAffix("set")
+		@ScriptAffix("set")  @property void foo(int x)
 		{
 			n = x;
 		}
 
-		int foo() @property @ScriptRename("givefoo") { return n; }
+		@ScriptRename("givefoo")  @property int foo() { return n; }
 
 		void bar() @NoScript { }
 	}
