@@ -43,10 +43,19 @@ private void pushMeta(T)(lua_State* L, T obj)
 			member != "toString" && member != "opEquals" && //handle below
 			member != "opCmp") //handle below
 		{
-			static if(__traits(getOverloads, T.init, member).length > 0 && !__traits(isStaticFunction, mixin("T." ~ member)))
+			enum overloadCount = __traits(getOverloads, T.init, member).length;
+
+			static if(!__traits(isStaticFunction, mixin("T." ~ member)))
 			{
-				pushMethod!(T, member)(L);
-				lua_setfield(L, -2, toStringz(member));
+				static if(overloadCount == 1)
+				{	
+					string methodName = pushMethod!(T, member)(L);
+
+					if(methodName != null)
+						lua_setfield(L, -2, toStringz(methodName));
+				}
+				else static if(overloadCount > 1)
+					pushOverloadedMethod!(T, member)(L);
 			}
 		}
 	}
@@ -285,4 +294,33 @@ unittest
 	pushValue(L, (B b) => assert(b is null));
 	lua_setglobal(L, "checkNull");
 	unittest_lua(L, `checkNull(nil)`);
+}
+
+// User defined attribute test
+unittest
+{
+	static class A
+	{
+		int n = 5;
+
+		void foo(int x) @property @ScriptAffix("set")
+		{
+			n = x;
+		}
+
+		int foo() @property @ScriptRename("givefoo") { return n; }
+
+		void bar() @NoScript { }
+	}
+
+	L = luaL_newstate();
+
+	A a = new A();
+	pushValue(L, a);
+	lua_setglobal(L, "A");
+
+	unittest_lua(L, "assert(A != nil)");
+	unittest_lua(L, "assert(A:givefoo() == 5)");
+	unittest_lua(L, "A:setfoo(10); assert(A:givefoo() == 10)");
+	unittest_lua(L, "assert(A.bar == nil)");
 }
