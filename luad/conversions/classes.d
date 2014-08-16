@@ -310,7 +310,7 @@ unittest
 
 		@ScriptRename("givefoo")  @property int foo() { return n; }
 
-		void bar() @NoScript { }
+		@NoScript void bar() { }
 	}
 
 	L = luaL_newstate();
