@@ -14,11 +14,15 @@ Typesafe varargs is supported when pushing _functions to Lua, but as of DMD 2.05
 */
 module luad.conversions.functions;
 
+import luad.conversions.helpers;
+import luad.all;
+
 import core.memory;
 import std.range;
 import std.string : toStringz;
 import std.traits;
 import std.typetuple;
+import std.typecons;
 
 import luad.c.all;
 
@@ -35,71 +39,85 @@ private void argsError(lua_State* L, int nargs, ptrdiff_t expected)
 
 template StripHeadQual(T : const(T*))
 {
-	alias const(T)* StripHeadQual;
+	alias StripHeadQual = const(T)*;
 }
 
 template StripHeadQual(T : const(T[]))
 {
-	alias const(T)[] StripHeadQual;
+	alias StripHeadQual = const(T)[];
 }
 
 template StripHeadQual(T : immutable(T*))
 {
-	alias immutable(T)* StripHeadQual;
+	alias StripHeadQual = immutable(T)*;
 }
 
 template StripHeadQual(T : immutable(T[]))
 {
-	alias immutable(T)[] StripHeadQual;
+	alias StripHeadQual = immutable(T)[];
 }
 
 template StripHeadQual(T : T[])
 {
-	alias T[] StripHeadQual;
+	alias StripHeadQual = T[];
 }
 
 template StripHeadQual(T : T*)
 {
-	alias T* StripHeadQual;
+	alias StripHeadQual = T*;
 }
 
 template StripHeadQual(T : T[N], size_t N)
 {
-	alias T[N] StripHeadQual;
+	alias StripHeadQual = T[N];
 }
 
 template StripHeadQual(T)
 {
-	alias T StripHeadQual;
+	alias StripHeadQual = T;
 }
 
 template FillableParameterTypeTuple(T)
 {
-	alias staticMap!(StripHeadQual, ParameterTypeTuple!T) FillableParameterTypeTuple;
+	alias FillableParameterTypeTuple = staticMap!(StripHeadQual, ParameterTypeTuple!T);
 }
 
 template BindableReturnType(T)
 {
-	alias StripHeadQual!(ReturnType!T) BindableReturnType;
+	alias BindableReturnType = StripHeadQual!(ReturnType!T);
+}
+
+template TreatArgs(T...)
+{
+	static if(T.length == 0)
+		alias TreatArgs = TypeTuple!();
+	else static if(isUserStruct!(T[0])) // TODO: we might do this for static arrays too in future...?
+		// we need to convert struct's into Ref's because 'ref' isn't part of the type in D, and it gets lots in the function calling logic
+		alias TreatArgs = TypeTuple!(Ref!(T[0]), TreatArgs!(T[1..$]));
+	else static if(is(T[0] == class))
+		alias TreatArgs = TypeTuple!(Rebindable!(T[0]), TreatArgs!(T[1..$]));
+	else
+		alias TreatArgs = TypeTuple!(T[0], TreatArgs!(T[1..$]));
 }
 
 //Call with or without return value, propagating Exceptions as Lua errors.
 //This should rather be throwing a userdata with __tostring and a reference to
 //the thrown exception, as it is now, everything but the error type and message is lost.
-int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
-	if(!is(BindableReturnType!T == const) &&
-	   !is(BindableReturnType!T == immutable))
+int callFunction(T, RT = BindableReturnType!T)(lua_State* L, T func, ParameterTypeTuple!T args)
+	if((returnsRef!T && isUserStruct!RT) ||
+	   (!is(RT == const) && !is(RT == immutable)))
 {
-	alias BindableReturnType!T RetType;
-	enum hasReturnValue = !is(RetType == void);
-
-	static if(hasReturnValue)
-		RetType ret;
-
 	try
 	{
-		static if(hasReturnValue)
-			ret = func(args);
+		static if(!is(RT == void))
+		{
+			// TODO: should we support references for all types?
+			static if(returnsRef!T && isUserStruct!RT)
+				auto ret = Ref!RT(func(args));
+			else
+				RT ret = func(args);
+			return pushReturnValues(L, ret);
+		}
 		else
 			func(args);
 	}
@@ -108,18 +126,17 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 		luaL_error(L, "%s", toStringz(e.toString()));
 	}
 
-	static if(hasReturnValue)
-		return pushReturnValues(L, ret);
-	else
-		return 0;
+	return 0;
 }
 
 // Ditto, but wrap the try-catch in a nested function because the return value's
 // declaration and initialization cannot be separated.
-int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
-	if(is(BindableReturnType!T == const) ||
-	   is(BindableReturnType!T == immutable))
+int callFunction(T, RT = BindableReturnType!T)(lua_State* L, T func, ParameterTypeTuple!T args)
+	if((!returnsRef!T || !isUserStruct!RT) &&
+	   (is(RT == const) || is(RT == immutable)))
 {
+	// TODO: reconsider if this is necessary?
+	//       surely it would be easier just to wrap the return statement in the try?
 	auto ref call()
 	{
 		try
@@ -131,20 +148,20 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 	return pushReturnValues(L, call());
 }
 
-private:
+package:
 
 // TODO: right now, virtual functions on specialized classes can be called with base classes as 'self', not safe!
-extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
+extern(C) int methodWrapper(M, T, bool virtual)(lua_State* L)
 {
-	alias ParameterTypeTuple!T Args;
+	alias Args = ParameterTypeTuple!M;
 
-	static assert ((variadicFunctionStyle!T != Variadic.d && variadicFunctionStyle!T != Variadic.c),
+	static assert ((variadicFunctionStyle!M != Variadic.d && variadicFunctionStyle!M != Variadic.c),
 		"Non-typesafe variadic functions are not supported.");
 
 	//Check arguments
 	int top = lua_gettop(L);
 
-	static if (variadicFunctionStyle!T == Variadic.typesafe)
+	static if (variadicFunctionStyle!M == Variadic.typesafe)
 		enum requiredArgs = Args.length;
 	else
 		enum requiredArgs = Args.length + 1;
@@ -152,42 +169,54 @@ extern(C) int methodWrapper(T, Class, bool virtual)(lua_State* L)
 	if(top < requiredArgs)
 		argsError(L, top, requiredArgs);
 
-	Class self =  *cast(Class*)luaL_checkudata(L, 1, toStringz(Class.mangleof));
+	static if(is(T == struct))
+		Ref!T self = *cast(Ref!T*)luaL_checkudata(L, 1, toStringz(T.mangleof));
+	else
+		T self = *cast(T*)luaL_checkudata(L, 1, toStringz(T.mangleof));
 
 	static if(virtual)
 	{
-		alias ReturnType!T function(Class, Args) VirtualWrapper;
+		alias RT = InOutReturnType!(M.init, T);
+		static if(returnsRef!M && isUserStruct!RT)
+			alias VirtualWrapper = ref RT function(T, Args);
+		else
+			alias VirtualWrapper = RT function(T, Args);
 		VirtualWrapper func = cast(VirtualWrapper)lua_touserdata(L, lua_upvalueindex(1));
 	}
 	else
 	{
-		T func;
-		func.ptr = cast(void*)self;
+		M func;
+		static if(is(T == struct))
+			func.ptr = cast(void*)&self.__instance();
+		else
+			func.ptr = cast(void*)self;
 		func.funcptr = cast(typeof(func.funcptr))lua_touserdata(L, lua_upvalueindex(1));
 	}
 
 	//Assemble arguments
 	static if(virtual)
 	{
-		ParameterTypeTuple!VirtualWrapper allArgs;
+		TreatArgs!(ParameterTypeTuple!VirtualWrapper) allArgs;
 		allArgs[0] = self;
-		alias allArgs[1..$] args;
+		alias args = allArgs[1..$];
 	}
 	else
 	{
-		Args allArgs;
-		alias allArgs args;
+		// TODO: maybe we should build a tuple of 'ReturnType!(getArgument!(T, i))' for each arg?
+		//       then we could get rid of this TreatArgs! rubbish...
+		TreatArgs!Args allArgs;
+		alias args = allArgs;
 	}
 
 	foreach(i, Arg; Args)
-		args[i] = getArgument!(T, i)(L, i + 2);
+		args[i] = getArgument!(M, i)(L, i + 2);
 
 	return callFunction!(typeof(func))(L, func, allArgs);
 }
 
 extern(C) int functionWrapper(T)(lua_State* L)
 {
-	alias FillableParameterTypeTuple!T Args;
+	alias Args = FillableParameterTypeTuple!T;
 
 	static assert ((variadicFunctionStyle!T != Variadic.d && variadicFunctionStyle!T != Variadic.c),
 		"Non-typesafe variadic functions are not supported.");
@@ -210,17 +239,11 @@ extern(C) int functionWrapper(T)(lua_State* L)
 		T func = *cast(T*)lua_touserdata(L, lua_upvalueindex(1));
 
 	//Assemble arguments
-	Args args;
+	TreatArgs!Args args;
 	foreach(i, Arg; Args)
 		args[i] = getArgument!(T, i)(L, i + 1);
 
 	return callFunction!T(L, func, args);
-}
-
-extern(C) int functionCleaner(lua_State* L)
-{
-	GC.removeRoot(lua_touserdata(L, 1));
-	return 0;
 }
 
 public:
@@ -238,7 +261,7 @@ void pushFunction(T)(lua_State* L, T func) if (isSomeFunction!T)
 
 		if(luaL_newmetatable(L, "__dcall") == 1)
 		{
-			lua_pushcfunction(L, &functionCleaner);
+			lua_pushcfunction(L, &userdataCleaner);
 			lua_setfield(L, -2, "__gc");
 		}
 
@@ -249,18 +272,37 @@ void pushFunction(T)(lua_State* L, T func) if (isSomeFunction!T)
 }
 
 // TODO: optimize for non-virtual functions
-void pushMethod(Class, string member)(lua_State* L) if (isSomeFunction!(__traits(getMember, Class, member)))
+void pushMethod(T, string member)(lua_State* L) if (isSomeFunction!(__traits(getMember, T, member)))
 {
-	alias typeof(mixin("&Class.init." ~ member)) T;
+	alias M = typeof(mixin("&T.init." ~ member));
 
-	// Delay vtable lookup until the right time
-	static ReturnType!T virtualWrapper(Class self, ParameterTypeTuple!T args)
+	enum isVirtual = !is(T == struct); // TODO: final methods should also be handled...
+
+	static if(isVirtual)
 	{
-		return mixin("self." ~ member)(args);
-	}
+		alias RT = InOutReturnType!(mixin("T." ~ member), T);
 
-	lua_pushlightuserdata(L, &virtualWrapper);
-	lua_pushcclosure(L, &methodWrapper!(T, Class, true), 1);
+		// Delay vtable lookup until the right time
+		static if(returnsRef!M && isUserStruct!RT)
+		{
+			static ref RT virtualWrapper(T self, ParameterTypeTuple!M args)
+			{
+				return mixin("self." ~ member)(args);
+			}
+		}
+		else
+		{
+			static RT virtualWrapper(T self, ParameterTypeTuple!M args)
+			{
+				return mixin("self." ~ member)(args);
+			}
+		}
+		lua_pushlightuserdata(L, &virtualWrapper);
+	}
+	else
+		lua_pushlightuserdata(L, mixin("&T.init." ~ member).funcptr);
+
+	lua_pushcclosure(L, &methodWrapper!(M, T, isVirtual), 1);
 }
 
 /**
