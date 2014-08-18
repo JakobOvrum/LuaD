@@ -8,6 +8,7 @@ import std.typecons : isTuple;
 import luad.c.all;
 import luad.stack;
 import luad.conversions.classes;
+import luad.conversions.enums;
 
 import luad.base, luad.table, luad.lfunction, luad.dynamic, luad.error;
 
