@@ -11,6 +11,7 @@ import luad.all;
 import core.memory;
 
 import std.traits;
+import std.typetuple;
 
 package:
 
@@ -133,7 +134,7 @@ template skipMember(T, string member)
 			  __traits(getProtection, __traits(getMember, T, member)) != "public")
 		enum skipMember = true;
 	else
-		enum skipMember = false;
+		enum skipMember = hasAttribute!(__traits(getMember, T, member), noscript) >= 0;
 }
 
 template returnsRef(F...)
@@ -142,6 +143,41 @@ template returnsRef(F...)
 		enum returnsRef = !!(functionAttributes!(F[0]) & FunctionAttribute.ref_);
 	else
 		enum returnsRef = false;
+}
+
+template hasAttribute(alias x, alias attr)
+{
+	template typeImpl(int i, A...)
+	{
+		static if(A.length == 0)
+			enum typeImpl = -1;
+		else static if(is(A[0]))
+			enum typeImpl = is(A[0] == attr) ? i : typeImpl!(i+1, A[1..$]);
+		else
+			enum typeImpl = is(typeof(A[0]) == attr) ? i : typeImpl!(i+1, A[1..$]);
+	}
+	template valImpl(int i, A...)
+	{
+		static if(A.length == 0)
+			enum valImpl = -1;
+		else static if(is(A[0]) || !is(typeof(A[0]) : typeof(attr)))
+			enum valImpl = valImpl!(i+1, A[1..$]);
+		else
+			enum valImpl = A[0] == attr ? i : valImpl!(i+1, A[1..$]);
+	}
+	static if(is(attr))
+		enum hasAttribute = typeImpl!(0, __traits(getAttributes, x));
+	else
+		enum hasAttribute = valImpl!(0, __traits(getAttributes, x));
+}
+
+template getAttribute(alias x, size_t i)
+{
+	alias Attrs = TypeTuple!(__traits(getAttributes, x));
+	static if(is(Attrs[i]))
+		alias getAttribute = TypeTuple!(Attrs[i]);
+	else
+		enum getAttribute = TypeTuple!(Attrs[i]);
 }
 
 
