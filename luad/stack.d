@@ -71,6 +71,7 @@ import luad.conversions.arrays;
 import luad.conversions.structs;
 import luad.conversions.assocarrays;
 import luad.conversions.classes;
+import luad.conversions.enums;
 import luad.conversions.variant;
 
 /**
@@ -89,6 +90,9 @@ void pushValue(T)(lua_State* L, T value)
 
 	else static if(is(T == Nil))
 		lua_pushnil(L);
+
+	else static if(is(T == enum))
+		pushEnum(L, value);
 
 	else static if(is(T == bool))
 		lua_pushboolean(L, cast(bool)value);
@@ -157,7 +161,10 @@ template isVoidArray(T)
  */
 template luaTypeOf(T)
 {
-	static if(is(T == bool))
+	static if(is(T == enum))
+		enum luaTypeOf = LUA_TSTRING;
+
+	else static if(is(T == bool))
 		enum luaTypeOf = LUA_TBOOLEAN;
 
 	else static if(is(T == Nil))
@@ -250,6 +257,9 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 
 	else static if(is(T == Nil))
 		return nil;
+
+	else static if(is(T == enum))
+		return getEnum!T(L, idx);
 
 	else static if(is(T == bool))
 		return lua_toboolean(L, idx);
