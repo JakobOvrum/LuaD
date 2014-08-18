@@ -99,7 +99,7 @@ public:
 	}
 
 	/// The underlying $(D lua_State) pointer for interfacing with C.
-	@property lua_State* state() nothrow pure @safe
+	@property inout(lua_State)* state() inout nothrow pure @safe
 	{
 		return L;
 	}

@@ -78,6 +78,41 @@ string getEnumFromValue(Enum)(Enum value)
 	return null;
 }
 
+/+ TODO: I'd quite like to support bitfields too...
+uint getBitfieldValue(Enum)(const(char)[] flags)
+{
+	uint value;
+	foreach(token; flags.splitter('|').map!(a => a.strip).filter!(a => !a.empty))
+	{
+		Enum val = getEnumValue!Enum(token);
+		if(val != cast(Enum)-1)
+			value |= val;
+	}
+	return value;
+}
+
+string getBitfieldFromValue(Enum)(uint bits)
+{
+	string bitfield;
+	foreach(i; 0..32)
+	{
+		uint bit = 1 << i;
+		if(!(bits & bit))
+			continue;
+
+		string key = getEnumFromValue(cast(Enum)bit);
+		if(key)
+		{
+			if(!bitfield)
+				bitfield = key;
+			else
+				bitfield = bitfield ~ "|" ~ key;
+		}
+	}
+	return bitfield;
+}
++/
+
 void pushEnum(T)(lua_State* L, T value) if (is(T == enum))
 {
 	string key = getEnumFromValue(value);
