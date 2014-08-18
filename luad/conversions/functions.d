@@ -24,22 +24,6 @@ import luad.c.all;
 
 import luad.stack;
 
-// User defined attributes that can be placed on functions in order to change the binding behavior
-// Prevents this function from being registered
-enum NoScript = "NoScript";
-
-// Changes the name used to register this function
-struct ScriptRename
-{
-	string NewName;
-}
-
-struct ScriptAffix
-{
-	string Affix;
-	bool IsSuffix = false;
-}
-
 private void argsError(lua_State* L, int nargs, ptrdiff_t expected)
 {
 	lua_Debug debugInfo;
@@ -145,6 +129,54 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 	}
 
 	return pushReturnValues(L, call());
+}
+
+// User defined attributes that can be placed on functions in order to change the binding behavior
+// Prevents this function from being registered
+struct noscript {}
+
+// Changes the name used to register this function
+struct rename
+{
+	string Name;
+}
+
+struct prefix
+{
+	string Affix;
+}
+
+struct suffix
+{
+	string Affix;
+}
+
+private:
+
+bool isNoScript(Attributes...)()
+{
+	foreach (attribute; Attributes)
+	{
+		static if(is(typeof(attribute) == noscript))
+			return true;
+	}
+
+	return false;
+}
+
+string getProperName(string member, Attributes...)()
+{
+	foreach (attribute; Attributes)
+	{
+		static if(is(typeof(attribute) == rename))
+			return attribute.Name;
+		else static if(is(typeof(attribute) == prefix))
+			return attribute.Affix ~ member;
+		else static if(is(typeof(attribute) == suffix))
+			return member ~ attribute.Affix;
+	}
+
+	return member;
 }
 
 private:
@@ -264,100 +296,55 @@ void pushFunction(T)(lua_State* L, T func) if (isSomeFunction!T)
 	lua_pushcclosure(L, &functionWrapper!T, 1);
 }
 
-// Utility template that creates an iterable range
-template StaticRange(int count)
-{
-	static if (count == 0)
-		alias TypeTuple!() StaticRange;
-	else
-		alias TypeTuple!(StaticRange!(count - 1), count - 1) StaticRange;
-}
-
-// TODO: optimize for non-virtual functions
 string pushMethod(Class, string member)(lua_State* L) if (isSomeFunction!(__traits(getMember, Class, member)))
 {
 	alias typeof(mixin("&Class.init." ~ member)) T;
-	enum attributes = __traits(getAttributes, __traits(getMember, Class, member));
-	string funcName = member;
+	alias attributes = TypeTuple!(__traits(getAttributes, __traits(getMember, Class, member)));
 
-	foreach (attrib; attributes)
+	static if ((attributes.length == 0) || !isNoScript!attributes)
 	{
-		static if(is(typeof(attrib) == string) && (attrib == NoScript))
-			return null;
+		// Delay vtable lookup until the right time
+		static ReturnType!T virtualWrapper(Class self, ParameterTypeTuple!T args)
+		{
+			return mixin("self." ~ member)(args);
+		}
 
-		static if(is(typeof(attrib) == ScriptRename))
-			funcName = attrib.NewName;
-		else static if(is(typeof(attrib) == ScriptAffix))
-			funcName = attrib.IsSuffix ? (funcName ~ attrib.Affix) : (attrib.Affix ~ funcName);
+		lua_pushlightuserdata(L, &virtualWrapper);
+		lua_pushcclosure(L, &methodWrapper!(T, Class, true), 1);
+
+		static if(attributes.length > 0)
+			return getProperName!(member, attributes);
+		else
+			return member;
 	}
-
-	// Delay vtable lookup until the right time
-	static ReturnType!T virtualWrapper(Class self, ParameterTypeTuple!T args)
-	{
-		return mixin("self." ~ member)(args);
-	}
-
-	lua_pushlightuserdata(L, &virtualWrapper);
-	lua_pushcclosure(L, &methodWrapper!(T, Class, true), 1);
-	return funcName;
+	else
+		return null;
 }
 
 // Called when binding a method that has multiple overloads, also used for properties for obvious reasons
 void pushOverloadedMethod(Class, string member)(lua_State* L) if (isSomeFunction!(__traits(getMember, Class, member)))
 {
-	enum overloadCount = __traits(getOverloads, Class, member).length;
-	alias TypeTuple!(__traits(getOverloads, Class, member)) Overloads;
+	alias Overloads = TypeTuple!(__traits(getOverloads, Class, member));
 
-	foreach(overloadidx; StaticRange!overloadCount)
+	template virtualWrapper(alias Args, FuncT)
 	{
-		alias Overloads[overloadidx] T;
-
-		// Find out if any known UDAs are defined for this overload and apply them
-		enum attributes = __traits(getAttributes, T);
-		bool noScript = false;
-		string funcName = member;
-
-		foreach (attrib; attributes)
+		static ReturnType!FuncT vwFunc(Class self, ParameterTypeTuple!Args args)
 		{
-			static if(is(typeof(attrib) == string) && (attrib == NoScript))
-			{
-				noScript = true;
-				break;
-			}
-
-			static if(is(typeof(attrib) == ScriptRename))
-			{
-				funcName = attrib.NewName;
-
-				// Delay vtable lookup until the right time
-				mixin("
-					  static ReturnType!T vw" ~ attrib.NewName ~ "(Class self, ParameterTypeTuple!T args)
-					  {
-						return mixin(\"self.\" ~ member)(args);
-					  }
-					  lua_pushlightuserdata(L, &vw" ~ attrib.NewName ~ ");
-					  ");
-			}
-			else static if(is(typeof(attrib) == ScriptAffix))
-			{
-				funcName = attrib.IsSuffix ? (funcName ~ attrib.Affix) : (attrib.Affix ~ funcName);
-
-				// Delay vtable lookup until the right time
-				mixin("
-					  static ReturnType!T vw" ~ attrib.Affix ~ "(Class self, ParameterTypeTuple!T args)
-					  {
-						return mixin(\"self.\" ~ member)(args);
-					  }
-					  lua_pushlightuserdata(L, &vw" ~ attrib.Affix ~ ");
-					  ");
-			}
+			return mixin("self." ~ member)(args);
 		}
+	}
 
-		if(noScript)
-			continue;
+	foreach(overload; Overloads)
+	{
+		alias FnType = FunctionTypeOf!overload;
+		alias attributes = TypeTuple!(__traits(getAttributes, overload));
 
-		lua_pushcclosure(L, &methodWrapper!(FunctionTypeOf!T, Class, true), 1);
-		lua_setfield(L, -2, toStringz(funcName));
+		static if ((attributes.length == 0) || !isNoScript!attributes)
+		{
+			lua_pushlightuserdata(L, &virtualWrapper!(overload, FnType).vwFunc);
+			lua_pushcclosure(L, &methodWrapper!(FnType, Class, true), 1);
+			lua_setfield(L, -2, toStringz(getProperName!(member, attributes)));
+		}
 	}
 }
 

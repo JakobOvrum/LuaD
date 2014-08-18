@@ -303,14 +303,15 @@ unittest
 	{
 		int n = 5;
 
-		@ScriptAffix("set")  @property void foo(int x)
+		@prefix("set")  @property void foo(int x)
 		{
 			n = x;
 		}
 
-		@ScriptRename("givefoo")  @property int foo() { return n; }
+		@rename("givefoo")  @property int foo() { return n; }
 
-		@NoScript void bar() { }
+		@noscript() @rename("shouldntExist") void bar() { }
+		@rename("shouldExist") void newbar() { }
 	}
 
 	L = luaL_newstate();
@@ -321,7 +322,10 @@ unittest
 	lua_setglobal(L, "A");
 
 	unittest_lua(L, "assert(A ~= nil)");
+	unittest_lua(L, "assert(A.shouldntExist == nil)");
+	unittest_lua(L, "assert(A.bar == nil)");
+	unittest_lua(L, "assert(A.shouldExist ~= nil)");
+	unittest_lua(L, "assert(A.newbar == nil)");
 	unittest_lua(L, "assert(A:givefoo() == 5)");
 	unittest_lua(L, "A:setfoo(10); assert(A:givefoo() == 10)");
-	unittest_lua(L, "assert(A.bar == nil)");
 }
