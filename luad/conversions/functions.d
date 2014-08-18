@@ -626,6 +626,8 @@ unittest
 // Variadic function arguments
 unittest
 {
+	import core.vararg;
+
 	static string concat(const(char)[][] pieces...)
 	{
 		string result;
@@ -674,7 +676,6 @@ unittest
 	//C varargs require at least one fixed argument.
 	static string concat_cvar (int count, ...)
 	{
-		import core.vararg;
 		string result;
 
 		va_list args;
@@ -694,8 +695,8 @@ unittest
 
 	//D-style variadics have an _arguments array that specifies
 	//the type of each passed argument.
-	static string concat_dvar (...) {
-		import core.vararg;
+	static string concat_dvar (...) 
+	{
 		string result;
 
 		foreach (argtype; _arguments) {
