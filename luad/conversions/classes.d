@@ -314,12 +314,13 @@ unittest
 	}
 
 	L = luaL_newstate();
+	luaL_openlibs(L);
 
 	A a = new A();
 	pushValue(L, a);
 	lua_setglobal(L, "A");
 
-	unittest_lua(L, "assert(A != nil)");
+	unittest_lua(L, "assert(A ~= nil)");
 	unittest_lua(L, "assert(A:givefoo() == 5)");
 	unittest_lua(L, "A:setfoo(10); assert(A:givefoo() == 10)");
 	unittest_lua(L, "assert(A.bar == nil)");

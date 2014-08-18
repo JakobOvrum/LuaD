@@ -674,7 +674,7 @@ unittest
 	//C varargs require at least one fixed argument.
 	static string concat_cvar (int count, ...)
 	{
-		import core.stdc.stdarg;
+		import core.vararg;
 		string result;
 
 		va_list args;
