@@ -298,6 +298,7 @@
     <File path="..\luad\conversions\classes.d" />
     <File path="..\luad\conversions\functions.d" />
     <File path="..\luad\conversions\helpers.d" />
+    <File path="..\luad\conversions\pointers.d" />
     <File path="..\luad\conversions\structs.d" />
     <File path="..\luad\conversions\variant.d" />
    </Folder>

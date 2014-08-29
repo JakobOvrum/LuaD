@@ -71,6 +71,7 @@ import luad.conversions.arrays;
 import luad.conversions.structs;
 import luad.conversions.assocarrays;
 import luad.conversions.classes;
+import luad.conversions.pointers;
 import luad.conversions.variant;
 import luad.conversions.helpers;
 
@@ -132,6 +133,12 @@ void pushValue(T)(lua_State* L, T value) if(!isUserStruct!T)
 	else static if(isSomeFunction!T)
 		pushFunction(L, value);
 
+	else static if(isPointer!T)
+	{
+		// TODO: if value == null -> lua_pushnil(L);
+		pushPointer(L, value);
+	}
+
 	else static if(is(T == class))
 	{
 		if(value is null)
@@ -188,7 +195,7 @@ template luaTypeOf(T)
 	else static if(isArray!T || isAssociativeArray!T || is(T == LuaTable))
 		enum luaTypeOf = LUA_TTABLE;
 
-	else static if(is(T : const(Object)) || is(T == struct))
+	else static if(is(T : const(Object)) || is(T == struct) || isPointer!T)
 		enum luaTypeOf = LUA_TUSERDATA;
 
 	else
@@ -236,7 +243,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		enum expectedType = luaTypeOf!T;
 
 		//if a class reference, return null for nil values
-		static if(is(T : const(Object)))
+		static if(is(T : const(Object)) || isPointer!T)
 		{
 			if(type == LuaType.Nil)
 				return null;
@@ -304,6 +311,9 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 
 	else static if(isSomeFunction!T)
 		return getFunction!T(L, idx);
+
+	else static if(isPointer!T)
+		return getPointer!T(L, idx);
 
 	else static if(is(T : const(Object)))
 		return getClassInstance!T(L, idx);
