@@ -22,9 +22,10 @@ void pushArray(T)(lua_State* L, ref T arr) if (isArray!T)
 	}
 }
 
+// TODO: do the immutable/const initialization *properly*
 T getArray(T)(lua_State* L, int idx) if (isArray!T)
 {
-	alias ElementType!T ElemType;
+	alias ElemType = ElementType!T;
 	auto len = lua_objlen(L, idx);
 
 	static if(isStaticArray!T)
@@ -32,10 +33,10 @@ T getArray(T)(lua_State* L, int idx) if (isArray!T)
 		if(len != T.length)
 			luaL_error(L, "Incorrect number of array elements: %d, expected: %d", len, T.length);
 
-		T arr;
+		Unqual!ElemType[T.length] arr;
 	}
 	else
-		auto arr = new ElemType[len];
+		auto arr = new Unqual!ElemType[len];
 
 	foreach(i; 0 .. len)
 	{
@@ -44,7 +45,7 @@ T getArray(T)(lua_State* L, int idx) if (isArray!T)
 		arr[i] = popValue!ElemType(L);
 	}
 
-	return arr;
+	return cast(T)arr;
 }
 
 void fillStaticArray(T)(lua_State* L, ref T arr) if(isStaticArray!T)
