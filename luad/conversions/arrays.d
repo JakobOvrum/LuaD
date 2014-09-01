@@ -27,7 +27,16 @@ T getArray(T)(lua_State* L, int idx) if (isArray!T)
 	alias ElementType!T ElemType;
 	auto len = lua_objlen(L, idx);
 
-	auto arr = new ElemType[len];
+	static if(isStaticArray!T)
+	{
+		if(len != T.length)
+			luaL_error(L, "Incorrect number of array elements: %d, expected: %d", len, T.length);
+
+		T arr;
+	}
+	else
+		auto arr = new ElemType[len];
+
 	foreach(i; 0 .. len)
 	{
 		lua_pushinteger(L, i + 1);
