@@ -599,9 +599,13 @@ unittest
 	assert(lua_gettop(L) == 0, "bad popValue semantics for primitives");
 
 	// arrays
-	immutable int[] arr = [1, 2, 3];
+	static int[] arr = [3, 2, 1];
 	pushValue(L, arr);
-	assert(lua_istable(L, -1) && popValue!(typeof(arr))(L) == arr);
+	assert(lua_istable(L, -1) && popValue!(int[])(L) == arr);
+
+	immutable int[] iarr = [1, 2, 3];
+	pushValue(L, iarr);
+	assert(lua_istable(L, -1) && popValue!(typeof(arr))(L) == iarr);
 
 	//void arrays
 	immutable void[] voidiarr = "foobar";
