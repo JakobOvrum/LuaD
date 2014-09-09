@@ -109,6 +109,14 @@ private void pushMeta(T)(lua_State* L)
 
 	// TODO: operators, etc...
 
+	// set the parent metatable
+	static if(BaseClassesTuple!T.length > 0)
+	{
+		pushMeta!(BaseClassesTuple!T[0])(L);
+		lua_setmetatable(L, -2);
+	}
+
+	// create a '__metatable' entry to protect the metatable against modification
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -2, "__metatable");
 }
@@ -129,8 +137,7 @@ T getClassInstance(T)(lua_State* L, int idx) if (is(T == class))
 	//TODO: handle foreign userdata properly (i.e. raise errors)
 	verifyType!T(L, idx);
 
-	Object obj = *cast(Object*)lua_touserdata(L, idx);
-	return cast(T)obj;
+	return *cast(T*)lua_touserdata(L, idx);
 }
 
 template hasCtor(T)

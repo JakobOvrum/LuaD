@@ -60,10 +60,21 @@ template SetterTypes(T, string member)
 		alias SetterTypes = TypeTuple!(typeof(mixin("T."~member)));
 }
 
+// produce a tuple of aliases to overloads which aren't properties
 template MethodsExclusingProperties(T, string member)
 {
 	// TODO: this should be used when populating methods. it should filter out getter/setter overloads
 	alias MethodsExclusingProperties = Alias!(__traits(getOverloads, T, member));
+}
+
+// produce a tuple of types that may be assigned to T
+template TypeCandidates(T)
+{
+	// TODO: this doesn't work when types have an indirection (ie, const(int)[])
+	static if(is(T == const(U), U))
+		alias TypeCandidates = TypeTuple!(U, T, immutable(U));
+	else
+		alias TypeCandidates = T;
 }
 
 struct Ref(T)
@@ -308,25 +319,49 @@ template isStaticMember(T, string member)
 		enum isStaticMember = false;
 }
 
+template mangledTypeCandidates(T)
+{
+	template impl(Ty...)
+	{
+		static if(Ty.length == 0)
+			alias impl = TypeTuple!();
+		else
+			alias impl = TypeTuple!(Ty[0].mangleof, impl!(Ty[1..$]));
+	}
+	alias mangledTypeCandidates = impl!(TypeCandidates!T);
+}
+
 void verifyType(T)(lua_State* L, int idx)
 {
 	if(lua_getmetatable(L, idx) == 0)
 		luaL_error(L, "attempt to get 'userdata: %p' as a D object", lua_topointer(L, idx));
 
-	lua_getfield(L, -1, "__dmangle"); //must be a D object
-
-	// TODO: support pointers...
-
-	// TODO: if is(T == const), then we need to check __dmangle == T, const(T) or immutable(T)
-	size_t manglelen;
-	auto cmangle = lua_tolstring(L, -1, &manglelen);
-	if(cmangle[0 .. manglelen] != T.mangleof)
+	int popNum = 0;
+	do
 	{
-		lua_getfield(L, -2, "__dtype");
-		auto cname = lua_tostring(L, -1);
-		luaL_error(L, `attempt to get instance %s as type "%s"`, cname, toStringz(T.stringof));
+		lua_getfield(L, -1, "__dmangle"); //must be a D object
+
+		popNum += 2; // metatable and metatable.__dmangle
+
+		// TODO: support pointers...
+
+		size_t manglelen;
+		auto cmangle = lua_tolstring(L, -1, &manglelen);
+
+		foreach(ty; mangledTypeCandidates!T)
+		{
+			if(cmangle[0 .. manglelen] == ty)
+			{
+				lua_pop(L, popNum);
+				return;
+			}
+		}
 	}
-	lua_pop(L, 2); //metatable and metatable.__dmangle
+	while(is(T == class) && lua_getmetatable(L, -2) != 0);
+
+	lua_getfield(L, -popNum, "__dtype");
+	auto cname = lua_tostring(L, -1);
+	luaL_error(L, `attempt to get instance %s as type "%s"`, cname, T.stringof.ptr);
 }
 
 
