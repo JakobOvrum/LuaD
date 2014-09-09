@@ -209,6 +209,17 @@ struct LuaTable
 	}
 
 	/**
+	* Get the array length of the table.
+	*/
+	size_t length() @trusted
+	{
+		this.push();
+		size_t len = lua_objlen(this.state, -1);
+		lua_pop(this.state, 1);
+		return len;
+	}
+
+	/**
 	 * Iterate over the values in this table.
 	 */
 	int opApply(T)(int delegate(ref T value) dg) @trusted
@@ -283,6 +294,11 @@ unittest
 	t["foo", "outer", "inner"] = "hello!";
 	auto s2 = t.get!(string)("foo", "outer", "inner");
 	assert(s2 == "hello!");
+
+	// length
+	t.set("array", ["one", "two"]);
+	auto a = t.get!LuaTable("array");
+	assert(a.length == 2);
 
 	// readString
 	t[2] = "two";
