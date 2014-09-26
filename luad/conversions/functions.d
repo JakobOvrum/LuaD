@@ -131,6 +131,54 @@ int callFunction(T)(lua_State* L, T func, ParameterTypeTuple!T args)
 	return pushReturnValues(L, call());
 }
 
+// User defined attributes that can be placed on functions in order to change the binding behavior
+// Prevents this function from being registered
+struct noscript {}
+
+// Changes the name used to register this function
+struct rename
+{
+	string Name;
+}
+
+struct prefix
+{
+	string Affix;
+}
+
+struct suffix
+{
+	string Affix;
+}
+
+private:
+
+bool isNoScript(Attributes...)()
+{
+	foreach (attribute; Attributes)
+	{
+		static if(is(typeof(attribute) == noscript))
+			return true;
+	}
+
+	return false;
+}
+
+string getProperName(string member, Attributes...)()
+{
+	foreach (attribute; Attributes)
+	{
+		static if(is(typeof(attribute) == rename))
+			return attribute.Name;
+		else static if(is(typeof(attribute) == prefix))
+			return attribute.Affix ~ member;
+		else static if(is(typeof(attribute) == suffix))
+			return member ~ attribute.Affix;
+	}
+
+	return member;
+}
+
 private:
 
 // TODO: right now, virtual functions on specialized classes can be called with base classes as 'self', not safe!
@@ -248,19 +296,56 @@ void pushFunction(T)(lua_State* L, T func) if (isSomeFunction!T)
 	lua_pushcclosure(L, &functionWrapper!T, 1);
 }
 
-// TODO: optimize for non-virtual functions
-void pushMethod(Class, string member)(lua_State* L) if (isSomeFunction!(__traits(getMember, Class, member)))
+string pushMethod(Class, string member)(lua_State* L) if (isSomeFunction!(__traits(getMember, Class, member)))
 {
 	alias typeof(mixin("&Class.init." ~ member)) T;
+	alias attributes = TypeTuple!(__traits(getAttributes, __traits(getMember, Class, member)));
 
-	// Delay vtable lookup until the right time
-	static ReturnType!T virtualWrapper(Class self, ParameterTypeTuple!T args)
+	static if ((attributes.length == 0) || !isNoScript!attributes)
 	{
-		return mixin("self." ~ member)(args);
+		// Delay vtable lookup until the right time
+		static ReturnType!T virtualWrapper(Class self, ParameterTypeTuple!T args)
+		{
+			return mixin("self." ~ member)(args);
+		}
+
+		lua_pushlightuserdata(L, &virtualWrapper);
+		lua_pushcclosure(L, &methodWrapper!(T, Class, true), 1);
+
+		static if(attributes.length > 0)
+			return getProperName!(member, attributes);
+		else
+			return member;
+	}
+	else
+		return null;
+}
+
+// Called when binding a method that has multiple overloads, also used for properties for obvious reasons
+void pushOverloadedMethod(Class, string member)(lua_State* L) if (isSomeFunction!(__traits(getMember, Class, member)))
+{
+	alias Overloads = TypeTuple!(__traits(getOverloads, Class, member));
+
+	template virtualWrapper(alias Args, FuncT)
+	{
+		static ReturnType!FuncT vwFunc(Class self, ParameterTypeTuple!Args args)
+		{
+			return mixin("self." ~ member)(args);
+		}
 	}
 
-	lua_pushlightuserdata(L, &virtualWrapper);
-	lua_pushcclosure(L, &methodWrapper!(T, Class, true), 1);
+	foreach(overload; Overloads)
+	{
+		alias FnType = FunctionTypeOf!overload;
+		alias attributes = TypeTuple!(__traits(getAttributes, overload));
+
+		static if ((attributes.length == 0) || !isNoScript!attributes)
+		{
+			lua_pushlightuserdata(L, &virtualWrapper!(overload, FnType).vwFunc);
+			lua_pushcclosure(L, &methodWrapper!(FnType, Class, true), 1);
+			lua_setfield(L, -2, toStringz(getProperName!(member, attributes)));
+		}
+	}
 }
 
 /**
@@ -528,6 +613,8 @@ unittest
 // Variadic function arguments
 unittest
 {
+	import core.vararg;
+
 	static string concat(const(char)[][] pieces...)
 	{
 		string result;
@@ -576,7 +663,6 @@ unittest
 	//C varargs require at least one fixed argument.
 	static string concat_cvar (int count, ...)
 	{
-		import core.stdc.stdarg;
 		string result;
 
 		va_list args;
@@ -596,8 +682,8 @@ unittest
 
 	//D-style variadics have an _arguments array that specifies
 	//the type of each passed argument.
-	static string concat_dvar (...) {
-		import core.vararg;
+	static string concat_dvar (...) 
+	{
 		string result;
 
 		foreach (argtype; _arguments) {
