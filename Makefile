@@ -60,7 +60,7 @@ all: $(LUAD_OUTPUT)
 clean:
 	-rm -f lib/$(LUAD_NAME).o
 	-rm -f lib/$(LUAD_NAME).a
-	-rm -f lib/$(LUAD_NAME).so
+	-rm -f $(wildcard lib/$(LUAD_NAME).so*)
 	-rm -f $(wildcard lib/libluad*.deps)
 	-rm -f $(wildcard lib/libluad*.json)
 	-rm -f $(wildcard lib/luad.*.lst)
@@ -74,7 +74,7 @@ ifneq ($(BUILD), test)
 	ifeq ($(LIB), static)
 		LUAD_DFLAGS += -lib -X -Xf"lib/libluad.json" -deps="lib/libluad.deps"
 	else
-		LUAD_DFLAGS += -shared -fPIC -defaultlib=libphobos2.so -X -Xf"lib/libluad.json" -deps="lib/libluad.deps"
+		LUAD_DFLAGS += -shared -fPIC -defaultlib=libphobos2.so -L-soname=$(LUAD_NAME).so.0 -X -Xf"lib/libluad.json" -deps="lib/libluad.deps"
 	endif
 else
 	LUAD_DFLAGS += -version=luad_unittest_main
@@ -88,11 +88,13 @@ lib/libluad-d.a: $(LUAD_SOURCES)
 	if ! test -d lib; then mkdir lib; fi
 	dmd $(LUAD_DFLAGS) -of$@ $(LUAD_SOURCES);
 
-lib/libluad.so: $(LUAD_SOURCES)
-	if ! test -d lib; then mkdir lib; fi
-	dmd $(LUAD_DFLAGS) -of$@ $(LUAD_SOURCES);
+lib/libluad.so lib/libluad-d.so: lib/$(LUAD_NAME).so.0
+	ln -sf $(LUAD_NAME).so.0 $@
 
-lib/libluad-d.so: $(LUAD_SOURCES)
+lib/libluad.so.0 lib/libluad-d.so.0: lib/$(LUAD_NAME).so.0.0.0
+	ln -sf $(LUAD_NAME).so.0.0.0 $@
+
+lib/libluad.so.0.0.0 lib/libluad-d.so.0.0.0: $(LUAD_SOURCES)
 	if ! test -d lib; then mkdir lib; fi
 	dmd $(LUAD_DFLAGS) -of$@ $(LUAD_SOURCES);
 
