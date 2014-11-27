@@ -204,7 +204,7 @@ extern(C) int functionWrapper(T)(lua_State* L)
 		argsError(L, top, requiredArgs);
 
 	//Get function
-	static if(is(T == function))
+	static if(isFunctionPointer!T)
 		T func = cast(T)lua_touserdata(L, lua_upvalueindex(1));
 	else
 		T func = *cast(T*)lua_touserdata(L, lua_upvalueindex(1));
@@ -227,7 +227,7 @@ public:
 
 void pushFunction(T)(lua_State* L, T func) if (isSomeFunction!T)
 {
-	static if(is(T == function))
+	static if(isFunctionPointer!T)
 		lua_pushlightuserdata(L, func);
 	else
 	{
