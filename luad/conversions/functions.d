@@ -574,18 +574,19 @@ unittest
 	//future use if/when these are supported.
 
 	//C varargs require at least one fixed argument.
-	static string concat_cvar (int count, ...)
+	import core.vararg;
+	// C-style varargs broken on Linux for 2.066.1?
+	version(none) extern(C) static string concat_cvar (size_t count, ...)
 	{
-		import core.stdc.stdarg;
 		string result;
 
 		va_list args;
 
 		va_start(args, count);
 
-		for (int i = 0; i < count; i++) {
-			auto arg = va_arg!(LuaObject)(args);
-
+		foreach(immutable i; 0 .. count)
+		{
+			auto arg = va_arg!LuaObject(args);
 			result ~= arg.toString();
 		}
 
@@ -596,7 +597,6 @@ unittest
 
 	//D-style variadics have an _arguments array that specifies
 	//the type of each passed argument.
-	import core.vararg;
 	static string concat_dvar (...) {
 		string result;
 
