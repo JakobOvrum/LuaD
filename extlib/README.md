@@ -5,6 +5,9 @@ with the more commonly used COFF format, they are not compatible, so
 this binary is included for convenience. It is not an import library - 
 there is no dependency on a DLL.
 
+## Lua static library with frame pointers for Linux
+[Issue 10671](https://issues.dlang.org/show_bug.cgi?id=10671) necessitates Lua to be built with `-fno-omit-frame-pointer`, so a distribution-agnostic `liblua.a` is included and used by default for both x86-32 and x86-64 Linux targets. For other targets that are hit by [issue 10671](https://issues.dlang.org/show_bug.cgi?id=10671), an appropriately compiled library needs to be supplied by the user.
+
 ### Reproducing the build
 Copy `dmc.mak` from this directory to the top level directory
 of the Lua source code release. Then edit `src/luaconf.h` to manually disable `popen` support. Then invoke the makefile with GNU make:

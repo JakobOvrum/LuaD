@@ -12,7 +12,10 @@
 	"sourcePaths": ["luad"],
 	"importPaths": ["."],
 
-	"libs-posix": ["lua5.1"],
+	"libs-posix": ["dl"],
 	"libs-windows-x86_64-dmd": ["lua5.1"],
-	"sourceFiles-windows-x86-dmd": ["extlib/lua5.1.lib"]
+
+	"sourceFiles-windows-x86-dmd": ["extlib/lua5.1.lib"],
+	"sourceFiles-linux-x86": ["extlib/x86_32-linux-gnu/liblua.a"],
+	"sourceFiles-linux-x86_64": ["extlib/x86_64-linux-gnu/liblua.a"],
 }
