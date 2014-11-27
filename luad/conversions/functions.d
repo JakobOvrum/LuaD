@@ -596,8 +596,8 @@ unittest
 
 	//D-style variadics have an _arguments array that specifies
 	//the type of each passed argument.
+	import core.vararg;
 	static string concat_dvar (...) {
-		import core.vararg;
 		string result;
 
 		foreach (argtype; _arguments) {
