@@ -1,1 +1,1 @@
-bootDoc/generate .. --extra=index.d
+rdmd bootDoc/generate.d .. --extra=index.d
