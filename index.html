@@ -152,7 +152,6 @@
 Unlike many other libraries built on the Lua C API, LuaD doesn't expose the Lua stack - instead,
 it has wrappers for references to Lua objects, and supports seamlessly and directly converting any D type into a Lua type and vice versa.
 </p>
-
 <p>See <a href="luad.state.html#LuaState"><span class="inlinecode">luad.state.LuaState</span></a> to get started.
 
 </p>
@@ -183,8 +182,7 @@ Another "Hello, world"
 	lua.openLibs();
 
 	<span class="d_comment">//LuaState also works as an alias for the global table
-</span>
-	<span class="d_keyword">auto</span> print = lua.get!LuaFunction(<span class="d_string">"print"</span>);
+</span>	<span class="d_keyword">auto</span> print = lua.get!LuaFunction(<span class="d_string">"print"</span>);
 	print(<span class="d_string">"Hello, world!"</span>);
 }
 </pre>
@@ -245,7 +243,7 @@ Version = 1.23
 				</footer>
 				
 				<footer class="pull-right">
-					<p>&copy; Jakob Ovrum 2010-2013</p>
+					<p>&copy; Jakob Ovrum 2010-2014</p>
 				</footer>
 			</div>
 		</div>
@@ -263,4 +261,3 @@ Version = 1.23
 	
 	</body>
 </html>
-
