@@ -78,12 +78,12 @@ struct LuaFunction
 	 *   catch multiple return values.
 	 * Examples:
 	 * ------------------
-	lua.doString(`function ask(question) return 42 end`);
-	auto ask = lua.get!LuaFunction("ask");
+	lua.doString(`function answerD(question, a, b, c, d) print(question) return d end`);
+	auto answerD = lua.get!LuaFunction("answerD");
 
 	auto params = ["How many letters are in the alphabet?", "5", "20", "10", "26"];
 
-	auto answer = ask.call!int(params);
+	auto answer = answerD.call!int(params);
 	assert(answer == "26");
 	 * ------------------
 	 */
