@@ -204,7 +204,7 @@ void pushGetter(T, string member)(lua_State* L)
 			{
 				ref RT get()
 				{
-					T _this = *cast(T*)&this;
+					T _this = cast(T)cast(void*)this;
 					return mixin("_this."~member);
 				}
 			}
@@ -212,7 +212,7 @@ void pushGetter(T, string member)(lua_State* L)
 			{
 				RT get()
 				{
-					T _this = *cast(T*)&this;
+					T _this = cast(T)cast(void*)this;
 					return mixin("_this."~member);
 				}
 			}
@@ -263,7 +263,7 @@ void pushSetter(T, string member)(lua_State* L)
 			{
 				final void set(ref ArgType value)
 				{
-					T _this = *cast(T*)&this;
+					T _this = cast(T)cast(void*)this;
 					mixin("_this."~member) = value;
 				}
 			}
@@ -271,7 +271,7 @@ void pushSetter(T, string member)(lua_State* L)
 			{
 				final void set(ArgType value)
 				{
-					T _this = *cast(T*)&this;
+					T _this = cast(T)cast(void*)this;
 					mixin("_this."~member) = value;
 				}
 			}
