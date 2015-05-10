@@ -40,9 +40,9 @@ public:
 	 *
 	 * See_Also: $(MREF LuaState.openLibs)
 	 */
-	this()
+	this(lua_Alloc alloc = null, void* userdata = null)
 	{
-		lua_State* L = luaL_newstate();
+		lua_State* L = alloc ? lua_newstate(alloc, userdata) : luaL_newstate();
 		owner = true;
 
 		extern(C) static int panic(lua_State* L)

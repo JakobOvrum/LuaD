@@ -15,6 +15,7 @@ module luad.conversions.enums;
 import luad.c.all;
 import luad.stack;
 
+import std.typetuple;
 import std.traits;
 import std.conv;
 import std.range;
