@@ -36,7 +36,12 @@ env:
     - ARCH=x86_64
 
 script:
-  - dub test --arch=$ARCH
+  - if [ $DC == ldc2 ] && [ $ARCH == x86_64 ];
+    then
+      dub test;
+    else
+      dub test --arch=$ARCH;
+    fi
 
 after_success:
   - ./push-ddoc.sh
