@@ -10,3 +10,5 @@
 
 # Dub
 .dub
+/dub.selections.json
+
