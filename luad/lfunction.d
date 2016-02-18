@@ -68,6 +68,35 @@ struct LuaFunction
 	}
 
 	/**
+	 * Call this function using an array.
+	 * Params:
+	 *	 T = expected return type.
+	 *	 args = list of arguments.
+	 * Returns:
+	 *	 Return value of type $(D T), or nothing if $(D T) was unspecified.
+	 *   See $(DPMODULE2 conversions,functions) for how to
+	 *   catch multiple return values.
+	 * Examples:
+	 * ------------------
+	lua.doString(`function answerD(question, a, b, c, d) print(question) return d end`);
+	auto answerD = lua.get!LuaFunction("answerD");
+
+	auto params = ["How many letters are in the alphabet?", "5", "20", "10", "26"];
+
+	auto answer = answerD.call!int(params);
+	assert(answer == "26");
+	 * ------------------
+	 */
+	T call(T = void, U)(U[] args...)
+	{
+		this.push();
+		foreach(arg; args)
+			pushValue(this.state, arg);
+
+		return callWithRet!T(this.state, args.length);
+	}
+
+	/**
 	 * Set a new environment for this function.
 	 *
 	 * The environment of a function is the table used for looking up non-local (global) variables.
