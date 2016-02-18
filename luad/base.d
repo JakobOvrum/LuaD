@@ -3,7 +3,7 @@ module luad.base;
 import luad.c.all;
 import luad.stack;
 
-import std.c.string : strlen;
+import core.stdc.string : strlen;
 
 /**
  * Enumerates all Lua types.
