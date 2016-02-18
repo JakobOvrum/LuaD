@@ -3,7 +3,7 @@ module luad.testing;
 
 import luad.c.all;
 
-import std.c.string : strcmp;
+import core.stdc.string : strcmp;
 import std.string : format;
 import std.string : toStringz;
 
