@@ -1,6 +1,7 @@
 MODEL ?= $(shell getconf LONG_BIT)
 BUILD ?= debug
 LUA ?= lua
+LIB ?= static
 
 ifneq ($(MODEL), 32)
 	ifneq ($(MODEL), 64)
@@ -18,6 +19,12 @@ endif
 
 ifeq ($(LUA), )
 	$(error No Lua library set)
+endif
+
+ifneq ($(LIB), static)
+	ifneq ($(LIB), shared)
+		$(error Unknown library type: $(LIB))
+	endif
 endif
 
 DFLAGS = -w -wi -ignore -m$(MODEL)
@@ -41,7 +48,11 @@ else
 	else
 		LUAD_NAME = libluad
 	endif
-	LUAD_OUTPUT = lib/$(LUAD_NAME).a
+	ifeq ($(LIB), static)
+		LUAD_OUTPUT = lib/$(LUAD_NAME).a
+	else
+		LUAD_OUTPUT = lib/$(LUAD_NAME).so
+	endif
 endif
 
 all: $(LUAD_OUTPUT)
@@ -49,8 +60,9 @@ all: $(LUAD_OUTPUT)
 clean:
 	-rm -f lib/$(LUAD_NAME).o
 	-rm -f lib/$(LUAD_NAME).a
-	-rm -f lib/$(LUAD_NAME).deps
-	-rm -f lib/$(LUAD_NAME).json
+	-rm -f $(wildcard lib/$(LUAD_NAME).so*)
+	-rm -f $(wildcard lib/libluad*.deps)
+	-rm -f $(wildcard lib/libluad*.json)
 	-rm -f $(wildcard lib/luad.*.lst)
 	-rm -f test/luad_unittest
 	-rm -f test/luad_unittest.o
@@ -59,7 +71,11 @@ clean:
 LUAD_DFLAGS = $(DFLAGS) -L-l$(LUA)
 
 ifneq ($(BUILD), test)
-	LUAD_DFLAGS += -lib -X -Xf"lib/libluad.json" -deps="lib/libluad.deps"
+	ifeq ($(LIB), static)
+		LUAD_DFLAGS += -lib -X -Xf"lib/libluad.json" -deps="lib/libluad.deps"
+	else
+		LUAD_DFLAGS += -shared -fPIC -defaultlib=libphobos2.so -L-soname=$(LUAD_NAME).so.0 -X -Xf"lib/libluad.json" -deps="lib/libluad.deps"
+	endif
 else
 	LUAD_DFLAGS += -version=luad_unittest_main
 endif
@@ -69,6 +85,16 @@ lib/libluad.a: $(LUAD_SOURCES)
 	dmd $(LUAD_DFLAGS) -of$@ $(LUAD_SOURCES);
 
 lib/libluad-d.a: $(LUAD_SOURCES)
+	if ! test -d lib; then mkdir lib; fi
+	dmd $(LUAD_DFLAGS) -of$@ $(LUAD_SOURCES);
+
+lib/libluad.so lib/libluad-d.so: lib/$(LUAD_NAME).so.0
+	ln -sf $(LUAD_NAME).so.0 $@
+
+lib/libluad.so.0 lib/libluad-d.so.0: lib/$(LUAD_NAME).so.0.0.0
+	ln -sf $(LUAD_NAME).so.0.0.0 $@
+
+lib/libluad.so.0.0.0 lib/libluad-d.so.0.0.0: $(LUAD_SOURCES)
 	if ! test -d lib; then mkdir lib; fi
 	dmd $(LUAD_DFLAGS) -of$@ $(LUAD_SOURCES);
 
