@@ -12,9 +12,12 @@ import luad.c.all;
 
 import luad.stack;
 
-private template isInternal(string field)
+enum internal;
+
+private template isInternal(T, string field)
 {
-	enum isInternal = field.length >= 2 && field[0..2] == "__";
+	import std.traits : hasUDA;
+	enum isInternal = hasUDA!(mixin("T."~field), internal) || field.length >= 2 && field[0..2] == "__";
 }
 
 //TODO: ignore static fields, post-blits, destructors, etc?
@@ -24,7 +27,8 @@ void pushStruct(T)(lua_State* L, ref T value) if (is(T == struct))
 
 	foreach(field; __traits(allMembers, T))
 	{
-		static if(!isInternal!field &&
+		static if(__traits(getProtection, mixin("T."~field))=="public" &&
+		          !isInternal!(T, field) &&
 		          field != "this" &&
 		          field != "opAssign")
 		{
@@ -53,7 +57,11 @@ void fillStruct(T)(lua_State* L, int idx, ref T s) if(is(T == struct))
 {
 	foreach(field; __traits(allMembers, T))
 	{
-		static if(field != "this" && !isInternal!(field))
+		static if(
+			field != "this"
+			&& __traits(getProtection, mixin("T."~field))=="public"
+			&& !isInternal!(T, field)
+			)
 		{
 			static if(__traits(getOverloads, T, field).length == 0)
 			{
