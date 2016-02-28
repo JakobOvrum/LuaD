@@ -8,3 +8,4 @@ module luad.all;
 public import luad.base, luad.table, luad.lfunction, luad.dynamic, luad.state, luad.lmodule;
 
 public import luad.conversions.functions : LuaVariableReturn, variableReturn;
+public import luad.conversions.structs : internal;

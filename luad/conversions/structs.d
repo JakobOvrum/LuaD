@@ -12,10 +12,12 @@ import luad.c.all;
 
 import luad.stack;
 
+enum internal;
+
 private template isInternal(T, string field)
 {
 	import std.traits : hasUDA;
-	enum isInternal = hasUDA!(mixin("T."~field), "internal") || field.length >= 2 && field[0..2] == "__";
+	enum isInternal = hasUDA!(mixin("T."~field), internal) || field.length >= 2 && field[0..2] == "__";
 }
 
 //TODO: ignore static fields, post-blits, destructors, etc?
