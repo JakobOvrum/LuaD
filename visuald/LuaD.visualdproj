@@ -296,6 +296,7 @@
     <File path="..\luad\conversions\arrays.d" />
     <File path="..\luad\conversions\assocarrays.d" />
     <File path="..\luad\conversions\classes.d" />
+    <File path="..\luad\conversions\enums.d" />
     <File path="..\luad\conversions\functions.d" />
     <File path="..\luad\conversions\structs.d" />
     <File path="..\luad\conversions\variant.d" />
