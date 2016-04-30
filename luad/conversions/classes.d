@@ -5,6 +5,7 @@ See the source code for details.
 */
 module luad.conversions.classes;
 
+import luad.conversions.helpers;
 import luad.conversions.functions;
 
 import luad.c.all;
@@ -14,56 +15,99 @@ import luad.base;
 import core.memory;
 
 import std.traits;
-import std.string : toStringz;
+import std.typetuple;
+import std.typecons;
 
-extern(C) private int classCleaner(lua_State* L)
+
+private void pushGetters(T)(lua_State* L)
 {
-	GC.removeRoot(lua_touserdata(L, 1));
-	return 0;
+	lua_newtable(L); // -2 is getters
+	lua_newtable(L); // -1 is methods
+
+	// populate getters
+	foreach(member; __traits(derivedMembers, T))
+	{
+		static if(!skipMember!(T, member) &&
+		          !isStaticMember!(T, member) &&
+		          member != "Monitor")
+		{
+			static if(isMemberFunction!(T, member) && !isProperty!(T, member))
+			{
+				static if(canCall!(T, member))
+				{
+					pushMethod!(T, member)(L);
+					lua_setfield(L, -2, member.ptr);
+				}
+			}
+			else static if(canRead!(T, member)) // TODO: move into the getter for inaccessable fields (...and throw a useful error messasge)
+			{
+				pushGetter!(T, member)(L);
+				lua_setfield(L, -3, member.ptr);
+			}
+		}
+	}
+
+	lua_pushcclosure(L, &index, 2);
 }
 
-private void pushMeta(T)(lua_State* L, T obj)
+private void pushSetters(T)(lua_State* L)
+{
+	lua_newtable(L);
+
+	// populate setters
+	foreach(member; __traits(derivedMembers, T))
+	{
+		static if(!skipMember!(T, member) &&
+		          !isStaticMember!(T, member) &&
+		          canWrite!(T, member) && // TODO: move into the setter for readonly fields (...and throw a useful error messasge)
+		          member != "Monitor")
+		{
+			static if(!isMemberFunction!(T, member) || isProperty!(T, member))
+			{
+				pushSetter!(T, member)(L);
+				lua_setfield(L, -2, member.ptr);
+			}
+		}
+	}
+
+	lua_pushcclosure(L, &newIndex, 1);
+}
+
+private void pushMeta(T)(lua_State* L)
 {
 	if(luaL_newmetatable(L, T.mangleof.ptr) == 0)
 		return;
 
 	pushValue(L, T.stringof);
-	lua_setfield(L, -2, "__dclass");
+	lua_setfield(L, -2, "__dtype");
 
+	// TODO: mangled names can get REALLY long in D, it might be nicer to store a hash instead?
 	pushValue(L, T.mangleof);
 	lua_setfield(L, -2, "__dmangle");
 
-	lua_newtable(L); //__index fallback table
+	lua_pushcfunction(L, &userdataCleaner);
+	lua_setfield(L, -2, "__gc");
 
-	foreach(member; __traits(derivedMembers, T))
+	pushGetters!T(L);
+	lua_setfield(L, -2, "__index");
+	pushSetters!T(L);
+	lua_setfield(L, -2, "__newindex");
+
+	// TODO: look into why we can't call these on const objects... that's insane, right?
+	static if(canCall!(T, "toString"))
 	{
-		static if(__traits(getProtection, __traits(getMember, T, member)) == "public" && //ignore non-public fields
-			member != "this" && member != "__ctor" && //do not handle
-			member != "Monitor" && member != "toHash" && //do not handle
-			member != "toString" && member != "opEquals" && //handle below
-			member != "opCmp") //handle below
-		{
-			static if(__traits(getOverloads, T.init, member).length > 0 && !__traits(isStaticFunction, mixin("T." ~ member)))
-			{
-				pushMethod!(T, member)(L);
-				lua_setfield(L, -2, toStringz(member));
-			}
-		}
+		pushMethod!(T, "toString")(L);
+		lua_setfield(L, -2, "__tostring");
+	}
+	static if(canCall!(T, "opEquals"))
+	{
+		pushMethod!(T, "opEquals")(L);
+		lua_setfield(L, -2, "__eq");
 	}
 
-	lua_setfield(L, -2, "__index");
+	// TODO: handle opCmp here
 
-	pushMethod!(T, "toString")(L);
-	lua_setfield(L, -2, "__tostring");
-
-	pushMethod!(T, "opEquals")(L);
-	lua_setfield(L, -2, "__eq");
-
-	//TODO: handle opCmp here
-
-
-	lua_pushcfunction(L, &classCleaner);
-	lua_setfield(L, -2, "__gc");
+	// TODO: operators, etc...
 
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -2, "__metatable");
@@ -71,37 +115,19 @@ private void pushMeta(T)(lua_State* L, T obj)
 
 void pushClassInstance(T)(lua_State* L, T obj) if (is(T == class))
 {
-	T* ud = cast(T*)lua_newuserdata(L, obj.sizeof);
+	Rebindable!T* ud = cast(Rebindable!T*)lua_newuserdata(L, obj.sizeof);
 	*ud = obj;
 
-	pushMeta(L, obj);
-	lua_setmetatable(L, -2);
-
 	GC.addRoot(ud);
+
+	pushMeta!T(L);
+	lua_setmetatable(L, -2);
 }
 
-//TODO: handle foreign userdata properly (i.e. raise errors)
 T getClassInstance(T)(lua_State* L, int idx) if (is(T == class))
 {
-	if(lua_getmetatable(L, idx) == 0)
-	{
-		luaL_error(L, "attempt to get 'userdata: %p' as a D object", lua_topointer(L, idx));
-	}
-
-	lua_getfield(L, -1, "__dmangle"); //must be a D object
-
-	static if(!is(T == Object)) //must be the right object
-	{
-		size_t manglelen;
-		auto cmangle = lua_tolstring(L, -1, &manglelen);
-		if(cmangle[0 .. manglelen] != T.mangleof)
-		{
-			lua_getfield(L, -2, "__dclass");
-			auto cname = lua_tostring(L, -1);
-			luaL_error(L, `attempt to get instance %s as type "%s"`, cname, toStringz(T.stringof));
-		}
-	}
-	lua_pop(L, 2); //metatable and metatable.__dmangle
+	//TODO: handle foreign userdata properly (i.e. raise errors)
+	verifyType!T(L, idx);
 
 	Object obj = *cast(Object*)lua_touserdata(L, idx);
 	return cast(T)obj;
@@ -112,36 +138,42 @@ template hasCtor(T)
 	enum hasCtor = __traits(compiles, __traits(getOverloads, T.init, "__ctor"));
 }
 
-// TODO: exclude private members (I smell DMD bugs...)
-template isStaticMember(T, string member)
-{
-	static if(__traits(compiles, mixin("&T." ~ member)))
-	{
-		static if(is(typeof(mixin("&T.init." ~ member)) == delegate))
-			enum isStaticMember = __traits(isStaticFunction, mixin("T." ~ member));
-		else
-			enum isStaticMember = true;
-	}
-	else
-		enum isStaticMember = false;
-}
-
 // For use as __call
 void pushCallMetaConstructor(T)(lua_State* L)
 {
-	alias typeof(__traits(getOverloads, T.init, "__ctor")) Ctor;
-
-	static T ctor(LuaObject self, ParameterTypeTuple!Ctor args)
+	static if(!hasCtor!T)
 	{
-		return new T(args);
+		static T ctor(LuaObject self)
+		{
+			static if(is(T == class))
+				return new T;
+			else
+				return T.init;
+		}
+	}
+	else
+	{
+		// TODO: handle each constructor overload in a loop.
+		//   TODO: handle each combination of default args
+		alias Ctors = typeof(__traits(getOverloads, T.init, "__ctor"));
+		alias Args = ParameterTypeTuple!(Ctors[0]);
+
+		static T ctor(LuaObject self, Args args)
+		{
+			static if(is(T == class))
+				return new T(args);
+			else
+				return T(args);
+		}
 	}
 
 	pushFunction(L, &ctor);
+	lua_setfield(L, -2, "__call");
 }
 
 // TODO: Private static fields are mysteriously pushed without error...
 // TODO: __index should be a function querying the static fields directly
-void pushStaticTypeInterface(T)(lua_State* L)
+void pushStaticTypeInterface(T)(lua_State* L) if(is(T == class) || is(T == struct))
 {
 	lua_newtable(L);
 
@@ -152,11 +184,7 @@ void pushStaticTypeInterface(T)(lua_State* L)
 		return;
 	}
 
-	static if(hasCtor!T)
-	{
-		pushCallMetaConstructor!T(L);
-		lua_setfield(L, -2, "__call");
-	}
+	pushCallMetaConstructor!T(L);
 
 	lua_newtable(L);
 
@@ -165,7 +193,12 @@ void pushStaticTypeInterface(T)(lua_State* L)
 		static if(isStaticMember!(T, member))
 		{
 			enum isFunction = is(typeof(mixin("T." ~ member)) == function);
+			static if(isFunction)
+				enum isProperty = (functionAttributes!(mixin("T." ~ member)) & FunctionAttribute.property);
+			else
+				enum isProperty = false;
 
+			// TODO: support static properties
 			static if(isFunction)
 				pushValue(L, mixin("&T." ~ member));
 			else
