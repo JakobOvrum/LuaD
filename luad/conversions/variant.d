@@ -110,7 +110,8 @@ unittest
 
 		void f(){}
 	}
-	pushValue(L, Algebraic!(S, int)(S(1, 2.3, "hello")));
+	auto s = Algebraic!(S, int)(S(1, 2.3, "hello"));
+	pushValue(L, s);
 	assert(lua_istable(L, -1));
 	lua_setglobal(L, "struct");
 
