@@ -8,6 +8,7 @@ import std.typecons : isTuple;
 import luad.c.all;
 import luad.stack;
 import luad.conversions.classes;
+import luad.conversions.enums;
 
 import luad.base, luad.table, luad.lfunction, luad.dynamic, luad.error;
 
@@ -39,9 +40,9 @@ public:
 	 *
 	 * See_Also: $(MREF LuaState.openLibs)
 	 */
-	this()
+	this(lua_Alloc alloc = null, void* userdata = null)
 	{
-		lua_State* L = luaL_newstate();
+		lua_State* L = alloc ? lua_newstate(alloc, userdata) : luaL_newstate();
 		owner = true;
 
 		extern(C) static int panic(lua_State* L)
@@ -98,7 +99,7 @@ public:
 	}
 
 	/// The underlying $(D lua_State) pointer for interfacing with C.
-	@property lua_State* state() nothrow pure @safe
+	@property inout(lua_State)* state() inout nothrow pure @safe
 	{
 		return L;
 	}
