@@ -1,71 +1,157 @@
 /**
-Internal module for pushing and getting _structs.
-
-A struct is treated as a table layout schema.
-Pushing a struct to Lua will create a table and fill it with key-value pairs - corresponding to struct fields - from the struct; the field name becomes the table key as a string.
-Struct methods are treated as if they were delegate fields pointing to the method.
+Internal module for pushing and getting structs.
+Structs are handled by-value across the LuaD API boundary, but internally managed by reference, with semantics equivalent to tables.
+Fields and properties are handled via a thin shim implemented in __index/__newindex. Methods are registered directly.
+mutable, const and immutable are all supported as expected. immutable structs will capture a direct reference to the D instance, and not be duplicated by LuaD.
 For an example, see the "Configuration File" example on the $(LINK2 $(REFERENCETOP),front page).
 */
 module luad.conversions.structs;
 
-import luad.c.all;
+import luad.conversions.helpers;
+import luad.conversions.functions;
 
+import luad.c.all;
 import luad.stack;
 
-private template isInternal(string field)
-{
-	enum isInternal = field.length >= 2 && field[0..2] == "__";
-}
+import core.memory;
 
-//TODO: ignore static fields, post-blits, destructors, etc?
-void pushStruct(T)(lua_State* L, ref T value) if (is(T == struct))
-{
-	lua_createtable(L, 0, value.tupleof.length);
+import std.traits;
+import std.conv;
 
-	foreach(field; __traits(allMembers, T))
+
+private void pushGetters(T)(lua_State* L)
+{
+	lua_newtable(L); // -2 is getters
+	lua_newtable(L); // -1 is methods
+
+	// populate getters
+	foreach(member; __traits(allMembers, T))
 	{
-		static if(!isInternal!field &&
-		          field != "this" &&
-		          field != "opAssign")
+		static if(!skipMember!(T, member) &&
+		          !isStaticMember!(T, member))
 		{
-			pushValue(L, field);
-
-			enum isMemberFunction = mixin("is(typeof(&value." ~ field ~ ") == delegate)");
-
-			static if(isMemberFunction)
-				pushValue(L, mixin("&value." ~ field));
-			else
-				pushValue(L, mixin("value." ~ field));
-
-			lua_settable(L, -3);
-		}
-	}
-}
-
-T getStruct(T)(lua_State* L, int idx) if(is(T == struct))
-{
-	T s;
-	fillStruct(L, idx, s);
-	return s;
-}
-
-void fillStruct(T)(lua_State* L, int idx, ref T s) if(is(T == struct))
-{
-	foreach(field; __traits(allMembers, T))
-	{
-		static if(field != "this" && !isInternal!(field))
-		{
-			static if(__traits(getOverloads, T, field).length == 0)
+			static if(isMemberFunction!(T, member) && !isProperty!(T, member))
 			{
-				lua_getfield(L, idx, field.ptr);
-				if(lua_isnil(L, -1) == 0) {
-					mixin("s." ~ field ~
-					  " = popValue!(typeof(s." ~ field ~ "))(L);");
-				} else
-					lua_pop(L, 1);
+				static if(canCall!(T, member))
+				{
+					pushMethod!(T, member)(L);
+					lua_setfield(L, -2, member.ptr);
+				}
+			}
+			else static if(canRead!(T, member)) // TODO: move into the getter for inaccessable fields (...and throw a useful error messasge)
+			{
+				pushGetter!(T, member)(L);
+				lua_setfield(L, -3, member.ptr);
 			}
 		}
 	}
+
+	lua_pushcclosure(L, &index, 2);
+}
+
+private void pushSetters(T)(lua_State* L)
+{
+	lua_newtable(L);
+
+	// populate setters
+	foreach(member; __traits(allMembers, T))
+	{
+		static if(!skipMember!(T, member) &&
+		          !isStaticMember!(T, member) &&
+		          canWrite!(T, member)) // TODO: move into the setter for readonly fields
+		{
+			static if(!isMemberFunction!(T, member) || isProperty!(T, member))
+			{
+				pushSetter!(T, member)(L);
+				lua_setfield(L, -2, member.ptr);
+			}
+		}
+	}
+
+	lua_pushcclosure(L, &newIndex, 1);
+}
+
+private void pushMeta(T)(lua_State* L)
+{
+	if(luaL_newmetatable(L, T.mangleof.ptr) == 0)
+		return;
+
+	pushValue(L, T.stringof);
+	lua_setfield(L, -2, "__dtype");
+
+	// TODO: mangled names can get REALLY long in D, it might be nicer to store a hash instead?
+	pushValue(L, T.mangleof);
+	lua_setfield(L, -2, "__dmangle");
+
+	lua_pushcfunction(L, &userdataCleaner);
+	lua_setfield(L, -2, "__gc");
+
+	pushGetters!T(L);
+	lua_setfield(L, -2, "__index");
+	pushSetters!T(L);
+	lua_setfield(L, -2, "__newindex");
+
+	static if(__traits(hasMember, T, "toString"))
+	{
+		pushMethod!(T, "toString")(L);
+		lua_setfield(L, -2, "__tostring");
+	}
+
+	static if(__traits(hasMember, T, "opEquals"))
+	{
+		pushMethod!(T, "opEquals")(L);
+		lua_setfield(L, -2, "__eq");
+	}
+	// TODO: __lt,__le (wrap opCmp)
+
+	// TODO: operators, etc...
+
+	lua_pushvalue(L, -1);
+	lua_setfield(L, -2, "__metatable");
+}
+
+void pushStruct(T)(lua_State* L, ref T value) if (is(T == struct))
+{
+	// if T is immutable, we can capture a reference, otherwise we need to take a copy
+	static if(is(T == immutable)) // TODO: verify that this is actually okay?
+	{
+		auto udata = cast(Ref!T*)lua_newuserdata(L, Ref!T.sizeof);
+		*udata = Ref!T(value);
+	}
+	else
+	{
+		Ref!T* udata = cast(Ref!T*)lua_newuserdata(L, Ref!T.sizeof);
+		// TODO: we should try and call the postblit here maybe...?
+//		T* copy = new T(value);
+//		T* copy = std.conv.emplace(cast(T*)GC.malloc(T.sizeof), value);
+		Unqual!T* copy = cast(Unqual!T*)GC.malloc(T.sizeof);
+		*copy = value;
+		*udata = Ref!T(*copy);
+	}
+
+	GC.addRoot(udata);
+
+	pushMeta!T(L);
+	lua_setmetatable(L, -2);
+}
+
+void pushStruct(R : Ref!T, T)(lua_State* L, R value) if (is(T == struct))
+{
+	auto udata = cast(Ref!T*)lua_newuserdata(L, Ref!T.sizeof);
+	*udata = Ref!T(value);
+
+	GC.addRoot(udata);
+
+	pushMeta!T(L);
+	lua_setmetatable(L, -2);
+}
+
+ref T getStruct(T)(lua_State* L, int idx) if(is(T == struct))
+{
+	verifyType!T(L, idx);
+
+	Ref!T* udata = cast(Ref!T*)lua_touserdata(L, idx);
+	return *udata;
 }
 
 version(unittest)

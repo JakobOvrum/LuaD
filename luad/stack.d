@@ -72,6 +72,7 @@ import luad.conversions.structs;
 import luad.conversions.assocarrays;
 import luad.conversions.classes;
 import luad.conversions.variant;
+import luad.conversions.helpers;
 
 /**
  * Push a value of any type to the stack.
@@ -79,7 +80,7 @@ import luad.conversions.variant;
  *	 L = stack to push to
  *	 value = value to push
  */
-void pushValue(T)(lua_State* L, T value)
+void pushValue(T)(lua_State* L, T value) if(!isUserStruct!T)
 {
 	static if(is(T : LuaObject))
 		value.push();
@@ -120,7 +121,7 @@ void pushValue(T)(lua_State* L, T value)
 	else static if(isArray!T)
 		pushArray(L, value);
 
-	else static if(is(T == struct))
+	else static if(is(T == Ref!S, S) && isUserStruct!S)
 		pushStruct(L, value);
 
 	// luaCFunction's are directly pushed
@@ -140,6 +141,18 @@ void pushValue(T)(lua_State* L, T value)
 	}
 	else
 		static assert(false, "Unsupported type `" ~ T.stringof ~ "` in stack push operation");
+}
+
+void pushValue(T)(lua_State* L, ref T value)  if(isUserStruct!T)
+{
+	static if(isArray!T)
+		pushArray(L, value);
+	else static if(is(T == struct))
+		pushStruct(L, value);
+	else
+	{
+		static assert(false, "Shouldn't be here! `" ~ T.stringof ~ "` should be handled by the other overload.");
+	}
 }
 
 template isVoidArray(T)
@@ -172,10 +185,10 @@ template luaTypeOf(T)
 	else static if(isSomeFunction!T || is(T == LuaFunction))
 		enum luaTypeOf = LUA_TFUNCTION;
 
-	else static if(isArray!T || isAssociativeArray!T || is(T == struct) || is(T == LuaTable))
+	else static if(isArray!T || isAssociativeArray!T || is(T == LuaTable))
 		enum luaTypeOf = LUA_TTABLE;
 
-	else static if(is(T : Object))
+	else static if(is(T : const(Object)) || is(T == struct))
 		enum luaTypeOf = LUA_TUSERDATA;
 
 	else
@@ -202,7 +215,7 @@ private void argumentTypeMismatch(lua_State* L, int idx, int expectedType)
  *	 L = stack to get from
  *	 idx = value stack index
  */
-T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int idx)
+T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int idx) if(!isUserStruct!T)
 {
 	debug //ensure unchanged stack
 	{
@@ -223,7 +236,7 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 		enum expectedType = luaTypeOf!T;
 
 		//if a class reference, return null for nil values
-		static if(is(T : Object))
+		static if(is(T : const(Object)))
 		{
 			if(type == LuaType.Nil)
 				return null;
@@ -288,13 +301,11 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 
 		return getVariant!T(L, idx);
 	}
-	else static if(is(T == struct))
-		return getStruct!T(L, idx);
 
 	else static if(isSomeFunction!T)
 		return getFunction!T(L, idx);
 
-	else static if(is(T : Object))
+	else static if(is(T : const(Object)))
 		return getClassInstance!T(L, idx);
 
 	else
@@ -303,11 +314,49 @@ T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int
 	}
 }
 
+// we need an overload that handles struct and static arrays (which need to return by ref)
+ref T getValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L, int idx) if(isUserStruct!T)
+{
+	debug //ensure unchanged stack
+	{
+		int _top = lua_gettop(L);
+		scope(success) assert(lua_gettop(L) == _top);
+	}
+
+	// TODO: confirm that we need this in this overload...?
+	static if(!is(T == LuaObject) && !is(T == LuaDynamic) && !isVariant!T)
+	{
+		int type = lua_type(L, idx);
+		enum expectedType = luaTypeOf!T;
+
+		//if a class reference, return null for nil values
+		static if(is(T : const(Object)))
+		{
+			if(type == LuaType.Nil)
+				return null;
+		}
+
+		if(type != expectedType)
+			typeMismatchHandler(L, idx, expectedType);
+	}
+
+	static if(isArray!T)
+		return getArray!T(L, idx);
+
+	else static if(is(T == struct))
+		return getStruct!T(L, idx);
+
+	else
+	{
+		static assert(false, "Shouldn't be here! `" ~ T.stringof ~ "` should be handled by the other overload.");
+	}
+}
+
 /**
  * Same as calling getValue!(T, typeMismatchHandler)(L, -1), then popping one value from the stack.
  * See_Also: $(MREF getValue)
  */
-T popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
+auto ref popValue(T, alias typeMismatchHandler = defaultTypeMismatch)(lua_State* L)
 {
 	scope(success) lua_pop(L, 1);
 	return getValue!(T, typeMismatchHandler)(L, -1);
@@ -374,7 +423,13 @@ auto getArgument(T, int narg)(lua_State* L, int idx)
 		return cstr[0 .. len];
 	}
 	else
-		return getValue!(Arg, argumentTypeMismatch)(L, idx);
+	{
+		// TODO: make an overload to handle struct and static array, and remove this Ref! hack?
+		static if(isUserStruct!Arg) // user struct's need to return wrapped in a Ref
+			return Ref!Arg(getValue!(Arg, argumentTypeMismatch)(L, idx));
+		else
+			return getValue!(Arg, argumentTypeMismatch)(L, idx);
+	}
 }
 
 template isVariableReturnType(T : LuaVariableReturn!U, U)
@@ -477,7 +532,7 @@ int pushReturnValues(T)(lua_State* L, T value)
 		pushTuple(L, value);
 		return cast(int)T.Types.length;
 	}
-	else static if(isStaticArray!T)
+	else static if(isStaticArray!T) // TODO: remove this special case when we fix pushValue for static arrays
 	{
 		pushStaticArray(L, value);
 		return cast(int)value.length;
