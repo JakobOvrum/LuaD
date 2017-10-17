@@ -177,7 +177,7 @@ struct LuaTable
 	{
 		push();
 		fillStruct(this.state, -1, s);
-		lua_pop(L, 1);
+		lua_pop(this.state, 1);
 	}
 
 	/**
