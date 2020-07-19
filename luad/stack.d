@@ -58,6 +58,7 @@ module luad.stack;
 import std.range;
 import std.traits;
 import std.typecons;
+import core.stdc.string;
 
 import luad.c.all;
 
