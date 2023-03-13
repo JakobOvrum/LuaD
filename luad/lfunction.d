@@ -86,7 +86,7 @@ struct LuaFunction
 	 */
 	void setEnvironment(ref LuaTable env)
 	in { assert(this.state == env.state); }
-	body
+	do
 	{
 		this.push();
 		env.push();
