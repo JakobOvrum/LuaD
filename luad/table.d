@@ -187,7 +187,7 @@ struct LuaTable
  	 */
 	void setMetaTable(ref LuaTable meta) @trusted
 	in{ assert(this.state == meta.state); }
-	body
+	do
 	{
 		this.push();
 		meta.push();
